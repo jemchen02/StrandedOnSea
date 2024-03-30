@@ -2,8 +2,4 @@ node_modules
 
 .vscode
 
-dist/*
-
-!dist/builtin
-
-!dist/hw4_assets/
+dist/bundle.js
