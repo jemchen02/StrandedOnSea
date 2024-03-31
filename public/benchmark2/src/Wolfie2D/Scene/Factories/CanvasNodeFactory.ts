@@ -178,8 +178,7 @@ export default class CanvasNodeFactory {
 	buildLabel(options?: Record<string, any>): Label {
 		this.checkIfPropExists("Label", options, "position", Vec2, "Vec2");
 		this.checkIfPropExists("Label", options, "text", "string");
-
-		return new Label(options.position, options.text)
+		return new Label(options.position, options.text, options.fontSize, options.textColor);
 	}
 
 	buildSlider(options: Record<string, any>): Slider {
