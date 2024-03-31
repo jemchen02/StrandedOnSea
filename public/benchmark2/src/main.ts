@@ -1,5 +1,5 @@
 import Game from "./Wolfie2D/Loop/Game";
-import MainMenu from "./hw4/Scenes/MainMenu";
+import SplashScreen from "./hw4/Scenes/SplashScreen";
 import { PlayerInput } from "./hw4/AI/Player/PlayerController";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
@@ -31,7 +31,7 @@ import { PlayerInput } from "./hw4/AI/Player/PlayerController";
     const game = new Game(options);
 
     // Start our game
-    game.start(MainMenu, {});
+    game.start(SplashScreen, {});
 
 })();
 
