@@ -3,8 +3,8 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import ShipDesigner from "./ShipDesigner";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import MainScene from "./MainScene";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -112,7 +112,7 @@ export default class MainMenu extends Scene {
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
             case "play": {
-                this.sceneManager.changeToScene(ShipDesigner);
+                this.sceneManager.changeToScene(MainScene);
                 break;
             }
             case "controls": {

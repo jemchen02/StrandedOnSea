@@ -4,7 +4,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import MapScene from "./MapScene";
+import MainScene from "./MainScene";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 export default class ShipDesigner extends Scene {
@@ -29,13 +29,13 @@ export default class ShipDesigner extends Scene {
         background.position.set(center.x, center.y);
         background.scale.set(1.1, 1.4);
 
-        const shipImage = this.add.sprite("gameLogo", "background");
-        shipImage.position.set(center.x - 280, center.y - 260);
-        shipImage.scale.set(.7, .7);
-
         const coinStorage = this.add.sprite("coinStorage", "background");
         coinStorage.position.set(center.x + 360, center.y - 400);
         coinStorage.scale.set(.7, .5);
+
+        const shipImage = this.add.sprite("gameLogo", "background");
+        shipImage.position.set(center.x - 280, center.y - 260);
+        shipImage.scale.set(.7, .7);
 
         this.buttonLayer = this.addUILayer("buttons");
         this.labelLayer = this.addUILayer("labels");
@@ -103,7 +103,7 @@ export default class ShipDesigner extends Scene {
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
             case "ready": {
-                this.sceneManager.changeToScene(MapScene);
+                this.sceneManager.changeToScene(MainScene);
                 break;
             }
         }
