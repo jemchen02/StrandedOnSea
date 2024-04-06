@@ -50,7 +50,9 @@ export default class BattleScene extends SosScene {
      */
     public override loadScene() {
         // Load the player and enemy spritesheets
-        this.load.spritesheet("player1", "hw4_assets/spritesheets/player1.json");
+        this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+        // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
+        // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
 
         // Load the tilemap
         this.load.tilemap("level", "hw4_assets/tilemaps/MainTilemap.json");
