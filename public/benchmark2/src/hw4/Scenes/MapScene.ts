@@ -20,7 +20,6 @@ export default class MapScene extends Scene {
         this.load.image("coinStorage", "hw4_assets/sprites/coinStorage.png");
         this.load.image("gameLogo", "hw4_assets/sprites/gameLogo.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
-        this.load.image("pause", "hw4_assets/sprites/pause.png");
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
 
         this.load.image("playerIcon", "hw4_assets/map/playerIcon.png");
@@ -99,10 +98,6 @@ export default class MapScene extends Scene {
         coinStorage.position.set(center.x + 360, center.y - 400);
         coinStorage.scale.set(.7, .5);
         this.add.uiElement(UIElementType.LABEL, "hud", {position: new Vec2(center.x + 380, center.y - 410), text: "800", fontSize: 30, textColor: Color.BLACK});
-
-        const pauseButton = this.add.sprite("pause", "hud");
-        pauseButton.position.set(center.x - 450, center.y - 450);
-        pauseButton.scale.set(.6, .6);
 
         const inventoryTab = this.add.sprite("inventoryTab", "hud");
         inventoryTab.position.set(center.x - 425, center.y);

@@ -1,12 +1,11 @@
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-
+import Color from "../../../Wolfie2D/Utils/Color";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import Color from "../../../Wolfie2D/Utils/Color";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Item from "../ItemSystem/Item";
@@ -16,7 +15,8 @@ interface HUDOptions {
     start: Vec2;
     padding: number;
     slotLayer: string,
-    itemLayer: string
+    itemLayer: string,
+    staticLayer: string
 }
 
 /**
@@ -44,6 +44,7 @@ export default class InventoryHUD implements Updateable {
     private slotSprite: string;
     private itemLayer: string;
     private slotLayer: string;
+    private staticLayer: string;
 
     /* UI Components for the inventory */
     private itemSlots: Array<Sprite>;
@@ -63,31 +64,31 @@ export default class InventoryHUD implements Updateable {
         // Init the layers for the items
         this.slotLayer = options.slotLayer;
         this.itemLayer = options.itemLayer;
+        this.staticLayer = options.staticLayer;
 
         // Set up the scales for scaling to the viewport
-        let scale = scene.getViewScale();
-        let scalar = new Vec2(scale, scale);
 
         // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
-            this.itemSlots[i].scale.div(scalar);
+            this.itemSlots[i].scale.set(0.4, 0.4);
         }
         // Set the positions of the item slot sprites
         let width = this.itemSlots[0].size.x;
         let height = this.itemSlots[0].size.y;
         for (let i = 0; i < this.size; i += 1) {
-            this.itemSlots[i].position.set(this.start.x + i*(width + this.padding), this.start.y).div(scalar);
+            this.itemSlots[i].position.set(this.start.x, this.start.y + i*(40 + this.padding));
         }
         // Set the slot numbers in the user interface
         this.itemSlotNums = new Array<Label>();
         for (let i = 0; i < this.size; i += 1) {
-            this.itemSlotNums[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + i*(width + this.padding), this.start.y + height/2 + 8).div(scalar), text: `${i + 1}`});
-            this.itemSlotNums[i].fontSize = 12;
+            this.itemSlotNums[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + i*(40 + this.padding) + 10), text: `${i + 1}`, fontSize: 24, textColor:Color.BLACK});
             this.itemSlotNums[i].font = "Courier";
-            this.itemSlotNums[i].textColor = Color.WHITE;
         }
+        const inventoryTab = this.scene.add.sprite("inventoryTab", this.staticLayer);
+        inventoryTab.position.set(50, 250);
+        inventoryTab.scale.set(.3, .3);
     }
 
     public update(deltaT: number): void {

@@ -22,9 +22,18 @@ import BasicTargetable from "../GameSystems/Targeting/BasicTargetable";
 import Position from "../GameSystems/Targeting/Position";
 import AstarStrategy from "../Pathfinding/AstarStrategy";
 import SosScene from "./SosScene";
+import InventoryHUD from "../GameSystems/HUD/InventoryHUD";
+import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
+import CoinHUD from "../GameSystems/HUD/CoinHUD";
+import PauseHUD from "../GameSystems/HUD/PauseHUD";
 
 
 export default class BattleScene extends SosScene {
+
+    private inventoryHud: InventoryHUD;
+    private healthHUD: PlayerHealthHUD;
+    private coinHUD: CoinHUD;
+    private pauseHUD: PauseHUD;
 
     // The wall layer of the tilemap
     private walls: OrthogonalTilemap;
@@ -45,6 +54,14 @@ export default class BattleScene extends SosScene {
 
         // Load the tilemap
         this.load.tilemap("level", "hw4_assets/tilemaps/MainTilemap.json");
+
+        this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
+        this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
+
+        this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
+        this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
+
+        this.load.image("pause", "hw4_assets/sprites/pause.png");
     }
     /**
      * @see Scene.startScene
@@ -92,10 +109,12 @@ export default class BattleScene extends SosScene {
     /** Initializes the layers in the scene */
     protected initLayers(): void {
         this.addLayer("primary", 10);
+        this.addUILayer("staticHUD");
         this.addUILayer("slots");
-        this.addUILayer("items");
-        this.getLayer("slots").setDepth(1);
-        this.getLayer("items").setDepth(2);
+        this.addUILayer("updateHUD");
+        this.getLayer("staticHUD").setDepth(1);
+        this.getLayer("slots").setDepth(2);
+        this.getLayer("updateHUD").setDepth(3);
     }
 
 
@@ -110,6 +129,18 @@ export default class BattleScene extends SosScene {
 
         player.health = 10;
         player.maxHealth = 10;
+
+        this.inventoryHud = new InventoryHUD(this, player.inventory, "inventorySlot", {
+            start: new Vec2(36, 175),
+            slotLayer: "slots",
+            padding: 8,
+            itemLayer: "updateHUD",
+            staticLayer: "staticHUD"
+        });
+
+        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD");
+        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD");
+        this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
 
         // Give the player physics
         player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 8)));
