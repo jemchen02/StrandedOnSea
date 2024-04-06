@@ -138,8 +138,8 @@ export default class BattleScene extends SosScene {
             staticLayer: "staticHUD"
         });
 
-        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD");
-        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD");
+        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);
+        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 1, 1);
         this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
 
         // Give the player physics

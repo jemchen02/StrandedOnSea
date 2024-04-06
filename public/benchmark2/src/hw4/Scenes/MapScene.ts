@@ -6,18 +6,23 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import BattleScene from "./BattleScene";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
+import CoinHUD from "../GameSystems/HUD/CoinHUD";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
     private backgroundLayer: Layer;
-    private hudLayer: Layer;
+    private staticHUD: Layer;
+    private updateHUD: Layer;
     private mapLayer: Layer;
     private mapOverlay: Layer;
     private shipLayer: Layer;
     
+    private healthHUD: PlayerHealthHUD;
+    private coinHUD: CoinHUD;
     public loadScene(){
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
-        this.load.image("coinStorage", "hw4_assets/sprites/coinStorage.png");
+        this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
         this.load.image("gameLogo", "hw4_assets/sprites/gameLogo.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
@@ -90,22 +95,11 @@ export default class MapScene extends Scene {
         }
     }
     private initHUD() {
-        const center = this.viewport.getCenter();
-        this.hudLayer = this.addUILayer("hud");
-        this.hudLayer.disable();
+        this.staticHUD = this.addUILayer("staticHUD");
+        this.updateHUD = this.addUILayer("updateHUD");
 
-        const coinStorage = this.add.sprite("coinStorage", "hud");
-        coinStorage.position.set(center.x + 360, center.y - 400);
-        coinStorage.scale.set(.7, .5);
-        this.add.uiElement(UIElementType.LABEL, "hud", {position: new Vec2(center.x + 380, center.y - 410), text: "800", fontSize: 30, textColor: Color.BLACK});
-
-        const inventoryTab = this.add.sprite("inventoryTab", "hud");
-        inventoryTab.position.set(center.x - 425, center.y);
-        inventoryTab.scale.set(.6, .6);
-
-        const healthTab = this.add.sprite("healthTab", "hud");
-        healthTab.position.set(center.x, center.y + 460);
-        healthTab.scale.set(.4, .4);
+        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 2, 2);
+        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 2, 2);
     }
     private initShip() {
         const center = this.viewport.getCenter();
@@ -115,12 +109,6 @@ export default class MapScene extends Scene {
         const shipImage = this.add.sprite("gameLogo", "ship");
         shipImage.position.set(center.x - 280, center.y - 260);
         shipImage.scale.set(.7, .7);
-
-        const coinStorage = this.add.sprite("coinStorage", "ship");
-        coinStorage.position.set(center.x + 360, center.y - 400);
-        coinStorage.scale.set(.7, .5);
-
-        this.add.uiElement(UIElementType.LABEL, "ship", {position: new Vec2(center.x + 380, center.y - 410), text: "800", fontSize: 30, textColor: Color.BLACK});
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design");
 
@@ -241,7 +229,6 @@ export default class MapScene extends Scene {
                 this.shipLayer.disable();
                 this.mapLayer.enable();
                 this.mapOverlay.enable();
-                this.hudLayer.enable();
                 break;
             }
         }

@@ -22,16 +22,16 @@ export default class CoinHUD implements Updateable {
     private coinCount: Label;
 
 
-    public constructor(scene: Scene, coinTabSprite: string, staticLayer: string, updatingHUDLayer: string) {
+    public constructor(scene: Scene, coinTabSprite: string, staticLayer: string, updatingHUDLayer: string, scaleX: number, scaleY: number) {
 
         this.scene = scene;
         this.staticLayer = staticLayer;
         const coinTab = this.scene.add.sprite(coinTabSprite, staticLayer);
-        const x = 460;
-        const y = 40;
+        const x = 460*scaleX;
+        const y = 40*scaleY;
         coinTab.position.set(x, y);
-        coinTab.scale.set(.4, .3);
-        this.coinCount = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5, y - 5), text: "800", fontSize: 30, textColor: Color.BLACK});
+        coinTab.scale.set(.4*scaleX, .3*scaleY);
+        this.coinCount = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5*scaleX, y - 5*scaleY), text: "800", fontSize: 30, textColor: Color.BLACK});
     }
 
     public update(deltaT: number): void {

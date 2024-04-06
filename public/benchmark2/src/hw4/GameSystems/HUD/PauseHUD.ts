@@ -7,14 +7,12 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
-export default class PauseHUD implements Updateable {
+export default class PauseHUD {
 
     /* The scene */
     private scene: Scene;
 
     private staticLayer: string;
-
-
 
     public constructor(scene: Scene, pauseSprite: string, staticLayer: string) {
 

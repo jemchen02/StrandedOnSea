@@ -67,7 +67,7 @@ export default class InventoryHUD implements Updateable {
         this.staticLayer = options.staticLayer;
 
         // Set up the scales for scaling to the viewport
-
+        
         // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
@@ -84,7 +84,6 @@ export default class InventoryHUD implements Updateable {
         this.itemSlotNums = new Array<Label>();
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlotNums[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + i*(40 + this.padding) + 10), text: `${i + 1}`, fontSize: 24, textColor:Color.BLACK});
-            this.itemSlotNums[i].font = "Courier";
         }
         const inventoryTab = this.scene.add.sprite("inventoryTab", this.staticLayer);
         inventoryTab.position.set(50, 250);
