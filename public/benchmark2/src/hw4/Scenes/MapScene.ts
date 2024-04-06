@@ -4,16 +4,15 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import MainHW4Scene from "./MainHW4Scene";
+import BattleScene from "./BattleScene";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
-export default class MainScene extends Scene {
+export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
     private backgroundLayer: Layer;
     private hudLayer: Layer;
     private mapLayer: Layer;
     private mapOverlay: Layer;
-    private levelLayer: Layer;
     private shipLayer: Layer;
     
     public loadScene(){
@@ -39,7 +38,10 @@ export default class MainScene extends Scene {
         this.initHUD();
         this.initShip();
         // Subscribe to the button events
-        this.receiver.subscribe("play");
+        this.receiver.subscribe("playBattle");
+        this.receiver.subscribe("playShipwreck");
+        this.receiver.subscribe("playWhirlpool");
+        this.receiver.subscribe("playLand");
         this.receiver.subscribe("ready");
     }
     private initBackground() {
@@ -188,22 +190,22 @@ export default class MainScene extends Scene {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", "play", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playBattle", 100, "mapButton");
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", "play", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playShipwreck", 100, "mapButton");
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", "play", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playWhirlpool", 100, "mapButton");
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
             case 4:
-                this.createButton("map", new Vec2(x, y), "", "play", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playLand", 100, "mapButton");
                 const land = this.add.sprite("land", "map");
                 land.position.set(x, y);
                 break;
@@ -235,10 +237,9 @@ export default class MainScene extends Scene {
 
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
-            case "play": {
-                //uncomment this to use MainHW4Scene
-                //this.sceneManager.changeToScene(MainHW4Scene);
-                this.mapLayer.disable();
+            case "playBattle": {
+                this.sceneManager.changeToScene(BattleScene);
+                //this.mapLayer.disable();
                 break;
             }
             case "ready": {
@@ -246,6 +247,7 @@ export default class MainScene extends Scene {
                 this.mapLayer.enable();
                 this.mapOverlay.enable();
                 this.hudLayer.enable();
+                break;
             }
         }
     }
