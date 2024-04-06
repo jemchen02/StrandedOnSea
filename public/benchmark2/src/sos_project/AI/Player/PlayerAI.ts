@@ -8,13 +8,12 @@ import Inventory from "../../GameSystems/ItemSystem/Inventory";
 import Item from "../../GameSystems/ItemSystem/Item";
 import PlayerController from "./PlayerController";
 import { Idle, Invincible, Moving, Dead, PlayerStateType } from "./PlayerStates/PlayerState";
-import ShipAI from "./ShipAI";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
  * with 4 states; Idle, Moving, Invincible, and Dead.
  */
-export default class PlayerAI extends StateMachineAI extends ShipAI {
+export default class PlayerAI extends StateMachineAI implements AI {
 
     /** The GameNode that owns this AI */
     public owner: PlayerActor;
