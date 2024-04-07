@@ -53,7 +53,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("player1", "hw4_assets/spritesheets/player1.json");
 
         // Load the tilemap
-        this.load.tilemap("level", "hw4_assets/tilemaps/MainTilemap.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
