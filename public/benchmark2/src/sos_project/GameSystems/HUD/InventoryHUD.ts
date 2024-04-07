@@ -8,15 +8,17 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
-import Item from "../ItemSystem/Item";
-import Inventory from "../ItemSystem/Inventory";
+import { GameStateManager } from "../../GameStateManager";
 
 interface HUDOptions {
     start: Vec2;
     padding: number;
     slotLayer: string,
     itemLayer: string,
-    staticLayer: string
+    staticLayer: string,
+    cannonSprite: string,
+    torpedoSprite: string,
+    repairSprite: string
 }
 
 /**
@@ -28,9 +30,6 @@ export default class InventoryHUD implements Updateable {
 
     /* The scene */
     private scene: Scene;
-
-    /* The inventory */
-    private inventory: Inventory
 
     /* Event handling stuff */
     private receiver: Receiver;
@@ -51,14 +50,13 @@ export default class InventoryHUD implements Updateable {
     private itemSlotNums: Array<Label>;
 
 
-    public constructor(scene: Scene, inventory: Inventory, slotSprite: string, options: HUDOptions) {
+    public constructor(scene: Scene, slotSprite: string, options: HUDOptions) {
 
         this.scene = scene;
-        this.inventory = inventory;
         this.slotSprite = slotSprite;
 
         // Set the size and padding for the item slots
-        this.size = this.inventory.capacity;
+        this.size = 4;
         this.padding = options.padding;
         this.start = options.start;
         // Init the layers for the items
@@ -74,6 +72,12 @@ export default class InventoryHUD implements Updateable {
             this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
             this.itemSlots[i].scale.set(0.4, 0.4);
         }
+        this.itemSlots[0] = this.scene.add.sprite(options.cannonSprite, this.slotLayer);
+        this.itemSlots[0].scale.set(0.4, 0.4);
+        this.itemSlots[1] = this.scene.add.sprite(options.torpedoSprite, this.slotLayer);
+        this.itemSlots[1].scale.set(0.4, 0.4);
+        this.itemSlots[2] = this.scene.add.sprite(options.repairSprite, this.slotLayer);
+        this.itemSlots[2].scale.set(0.4, 0.4);
         // Set the positions of the item slot sprites
         let width = this.itemSlots[0].size.x;
         let height = this.itemSlots[0].size.y;
@@ -82,22 +86,16 @@ export default class InventoryHUD implements Updateable {
         }
         // Set the slot numbers in the user interface
         this.itemSlotNums = new Array<Label>();
-        for (let i = 0; i < this.size; i += 1) {
-            this.itemSlotNums[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + i*(40 + this.padding) + 10), text: `${i + 1}`, fontSize: 24, textColor:Color.BLACK});
-        }
+        this.itemSlotNums[0] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y), text: `${GameStateManager.get().numCannon}`, fontSize: 24, textColor:Color.BLACK});
+        this.itemSlotNums[1] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + 1*(40 + this.padding) + 10), text: `${GameStateManager.get().numTorpedo}`, fontSize: 24, textColor:Color.BLACK});
+        this.itemSlotNums[2] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + 2*(40 + this.padding) + 10), text: `${GameStateManager.get().numRepairs}`, fontSize: 24, textColor:Color.BLACK});
+
         const inventoryTab = this.scene.add.sprite("inventoryTab", this.staticLayer);
         inventoryTab.position.set(50, 250);
         inventoryTab.scale.set(.3, .3);
     }
 
     public update(deltaT: number): void {
-        
-        let index = 0;
-        for (let item of this.inventory.items()) {
-            item.position.copy(this.itemSlots[index].position);
-            item.visible = true;
-            index += 1;
-        }
     }
 
 }
