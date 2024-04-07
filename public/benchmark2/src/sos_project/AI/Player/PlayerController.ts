@@ -11,8 +11,8 @@ export enum PlayerInput {
     TURN_LEFT = "MOVE_LEFT",
     TURN_RIGHT = "MOVE_RIGHT",
     ATTACKING = "ATTACKING",
-    PICKUP_ITEM = "PICKUP_ITEM",
-    DROP_ITEM = "DROP_ITEM"
+    FIRE_STARBOARD = "PICKUP_ITEM",
+    FIRE_PORT = "DROP_ITEM"
 }
 
 /**
@@ -59,13 +59,13 @@ export default class PlayerController {
      * Checks if the player is attempting to pick up an item or not.
      * @return true if the player is attempting to pick up an item; false otherwise.
      */
-    public get pickingUp(): boolean { return Input.isJustPressed(PlayerInput.PICKUP_ITEM); }
+    public get pickingUp(): boolean { return Input.isJustPressed(PlayerInput.FIRE_STARBOARD); }
 
     /** 
      * Checks if the player is attempting to drop their held item or not.
      * @return true if the player is attempting to drop their held item; false otherwise.
      */
-    public get dropping(): boolean { return Input.isJustPressed(PlayerInput.DROP_ITEM); }
+    public get dropping(): boolean { return Input.isJustPressed(PlayerInput.FIRE_PORT); }
 
     public get isColliding(): boolean { return this.owner.isColliding }
 }
