@@ -4,10 +4,14 @@ import { SOSLevel } from "./SOSLevel";
 export class GameStateManager {
     private static instance: GameStateManager;
     public static get(): GameStateManager {
-      if (GameStateManager.instance)
+      if (GameStateManager.instance){
         return GameStateManager.instance;
-      else
-      GameStateManager.instance = new GameStateManager();
+      }
+      
+      else {
+        GameStateManager.instance = new GameStateManager();
+        return GameStateManager.instance;
+      }
     }
 
     public money : number;
@@ -51,7 +55,20 @@ export class GameStateManager {
         }
     }
 
-    public movePlayer(newX : number, newY : number) : boolean {
+    public movePlayer(location : Vec2) : boolean {
+        let dummyLocation1 : Vec2 = this.playerLocation.clone();
+        let dummyLocation2 : Vec2 = this.playerLocation.clone();
+        let dummyLocation3 : Vec2 = this.playerLocation.clone();
+        let dummyLocation4 : Vec2 = this.playerLocation.clone();
+        dummyLocation1.x += 1;
+        dummyLocation2.x -= 1;
+        dummyLocation3.y += 1;
+        dummyLocation4.y -= 1;
+
+        if(location != dummyLocation1 && location != dummyLocation2 && location != dummyLocation3 && location != dummyLocation4){
+            return false;
+        }
+        
 
         return true;
     }
