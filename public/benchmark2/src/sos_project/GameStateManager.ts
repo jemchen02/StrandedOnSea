@@ -16,6 +16,7 @@ export class GameStateManager {
 
     public money : number;
     public health : number;
+    public maxHealth : number;
 
     public numRepairs : number;
     public numPumps : number;
@@ -38,6 +39,7 @@ export class GameStateManager {
     constructor(){
         this.money = 800;
         this.health = 100;
+        this.maxHealth = 100;
         this.numRepairs = 0;
         this.numPumps = 0;
         this.numCannon = 0;
