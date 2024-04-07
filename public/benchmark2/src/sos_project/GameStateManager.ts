@@ -1,5 +1,5 @@
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
-import { SOSLevel } from "./SOSLevel";
+import { OverlayStatus, SOSLevel } from "./SOSLevel";
 
 export class GameStateManager {
     private static instance: GameStateManager;
@@ -7,7 +7,7 @@ export class GameStateManager {
       if (GameStateManager.instance){
         return GameStateManager.instance;
       }
-      
+
       else {
         GameStateManager.instance = new GameStateManager();
         return GameStateManager.instance;
@@ -15,25 +15,27 @@ export class GameStateManager {
     }
 
     public money : number;
-    public health : number
+    public health : number;
 
     public numRepairs : number;
     public numPumps : number;
 
-    public numCannon : number
-    public numTorpedo : number
+    public numCannon : number;
+    public numTorpedo : number;
 
-    public hasCrowsNest : boolean
-    public hasRadar : boolean
+    public hasCrowsNest : boolean;
+    public hasRadar : boolean;
 
     public shipType : ShipType;
     public movementType : MovementType;
 
     public playerLocation : Vec2;
-    public gameMap: SOSLevel[][];
+
+    public gameMap: SOSLevel[][]; 
+    public mapOverlays: OverlayStatus[][];
 
     // We define starting amounts here.
-    GameStateManager(){
+    constructor(){
         this.money = 800;
         this.health = 100;
         this.numRepairs = 0;
@@ -47,12 +49,15 @@ export class GameStateManager {
 
         this.playerLocation = new Vec2(0, 4);
         
-        this.gameMap = new SOSLevel[5][5];
-        for(let i = 0; i < 5; i++){
-            for(let j = 0; j < 5; j++){
-                this.gameMap[i][j] = new SOSLevel();
-            }
-        }
+        this.gameMap = Array.from({ length: 5 }, () =>
+            Array.from({ length: 5 }, () => new SOSLevel())
+        );
+
+        this.mapOverlays = Array.from({ length: 5 }, () =>
+            Array.from({ length: 5 }, () => new OverlayStatus())
+        );
+
+        this.movePlayer(this.playerLocation);
     }
 
     public movePlayer(location : Vec2) : boolean {
@@ -67,6 +72,10 @@ export class GameStateManager {
 
         if(location != dummyLocation1 && location != dummyLocation2 && location != dummyLocation3 && location != dummyLocation4){
             return false;
+        }
+
+        function isInBounds(row: number, col: number): boolean {
+            return row >= 0 && row < this.mapOverlays.length && col >= 0 && col < this.mapOverlays[row].length;
         }
         
 
