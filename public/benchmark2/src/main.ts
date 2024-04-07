@@ -12,10 +12,10 @@ import { PlayerInput } from "./sos_project/AI/Player/PlayerController";
         canvasSize: {x: 1024, y: 1024},          // The size of the game
         clearColor: {r: 0.1, g: 0.1, b: 0.1},   // The color the game clears to
         inputs: [
-            {name: PlayerInput.MOVE_UP, keys: ["w"]},
-            {name: PlayerInput.MOVE_DOWN, keys: ["s"]},
-            {name: PlayerInput.MOVE_LEFT, keys: ["a"]},
-            {name: PlayerInput.MOVE_RIGHT, keys: ["d"]},
+            {name: PlayerInput.MOVE_FORWARD, keys: ["w"]},
+            {name: PlayerInput.MOVE_BACKWARD, keys: ["s"]},
+            {name: PlayerInput.TURN_LEFT, keys: ["a"]},
+            {name: PlayerInput.TURN_RIGHT, keys: ["d"]},
             {name: PlayerInput.PICKUP_ITEM, keys: ["e"]},
             {name: PlayerInput.DROP_ITEM, keys: ["q"]},
             {name: "slot1", keys: ["1"]},
