@@ -63,23 +63,24 @@ export class GameStateManager {
     }
 
     public movePlayer(location : Vec2) : boolean {
-        let dummyLocation1 : Vec2 = this.playerLocation.clone();
-        let dummyLocation2 : Vec2 = this.playerLocation.clone();
-        let dummyLocation3 : Vec2 = this.playerLocation.clone();
-        let dummyLocation4 : Vec2 = this.playerLocation.clone();
-        dummyLocation1.x += 1;
-        dummyLocation2.x -= 1;
-        dummyLocation3.y += 1;
-        dummyLocation4.y -= 1;
-
-        if(location != dummyLocation1 && location != dummyLocation2 && location != dummyLocation3 && location != dummyLocation4){
-            return false;
+        function isInBounds(location : Vec2): boolean {
+            return location.x >= 0 && location.x < this.mapOverlays.length && location.y >= 0 && location.y < this.mapOverlays[location.x].length;
         }
 
-        function isInBounds(row: number, col: number): boolean {
-            return row >= 0 && row < this.mapOverlays.length && col >= 0 && col < this.mapOverlays[row].length;
+        let checkDirections : Vec2[] = [new Vec2(1, 0), new Vec2(1, 0), new Vec2(1, 0), new Vec2(1, 0)]
+
+        if(!checkDirections.includes(location.sub(this.playerLocation))) return false;
+        if(!isInBounds(location)) return false;
+
+        //Removes fog in adjacent tiles
+        //TODO account for crows nest and radar...
+        for(let i = 0; i < checkDirections.length; i++){
+            if(isInBounds(location.clone().add(checkDirections[i]))){
+                this.mapOverlays[this.playerLocation.x + checkDirections[i].x][this.playerLocation.y + checkDirections[i].y].isFog = false;
+            }
         }
-        
+
+        this.playerLocation = location;
 
         return true;
     }
