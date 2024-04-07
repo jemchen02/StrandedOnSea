@@ -59,6 +59,9 @@ export default class BattleScene extends SosScene {
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
+        this.load.image("cannon", "hw4_assets/sprites/cannon.png");
+        this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
+        this.load.image("repair", "hw4_assets/sprites/repair.png");
 
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
@@ -95,6 +98,9 @@ export default class BattleScene extends SosScene {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
+        this.inventoryHud.update(deltaT);
+        this.coinHUD.update(deltaT);
+        this.healthHUD.update(deltaT);
     }
 
     /**
@@ -132,12 +138,15 @@ export default class BattleScene extends SosScene {
         player.health = 10;
         player.maxHealth = 10;
 
-        this.inventoryHud = new InventoryHUD(this, player.inventory, "inventorySlot", {
+        this.inventoryHud = new InventoryHUD(this, "inventorySlot", {
             start: new Vec2(36, 175),
             slotLayer: "slots",
             padding: 8,
             itemLayer: "updateHUD",
-            staticLayer: "staticHUD"
+            staticLayer: "staticHUD",
+            cannonSprite: "cannon",
+            torpedoSprite: "torpedo",
+            repairSprite: "repair"
         });
 
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);

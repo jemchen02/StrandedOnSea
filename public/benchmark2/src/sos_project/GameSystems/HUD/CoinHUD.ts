@@ -4,11 +4,10 @@ import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes
 import Color from "../../../Wolfie2D/Utils/Color";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
-
+import { GameStateManager } from "../../GameStateManager";
 export default class CoinHUD implements Updateable {
 
     /* The scene */
@@ -31,11 +30,11 @@ export default class CoinHUD implements Updateable {
         const y = 40*scaleY;
         coinTab.position.set(x, y);
         coinTab.scale.set(.4*scaleX, .3*scaleY);
-        this.coinCount = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5*scaleX, y - 5*scaleY), text: "800", fontSize: 30, textColor: Color.BLACK});
+        this.coinCount = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5*scaleX, y - 5*scaleY), text: `${GameStateManager.get().money}`, fontSize: 30, textColor: Color.BLACK});
     }
 
     public update(deltaT: number): void {
-        
+        this.coinCount.setText(`${GameStateManager.get().money}`);
     }
 
 }

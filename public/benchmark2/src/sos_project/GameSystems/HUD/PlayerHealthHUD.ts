@@ -8,6 +8,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Updateable from "../../../Wolfie2D/DataTypes/Interfaces/Updateable";
+import { GameStateManager } from "../../GameStateManager";
 
 export default class PlayerHealthHUD implements Updateable {
 
@@ -20,15 +21,17 @@ export default class PlayerHealthHUD implements Updateable {
     private staticLayer: string;
     private updateLayer: string;
 
-    private maxHealth: number = 100;
-    private currHealth: number = 100;
     private healthLabel: Label;
 
     private healthBar: Label;
+    
+    private scaleX: number;
+    private scaleY: number;
 
     public constructor(scene: Scene, healthTab: string, staticLayer: string, updateLayer:string, scaleX: number, scaleY: number) {
         this.scene = scene;
-
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
         const healthBar = this.scene.add.sprite(healthTab, staticLayer);
         healthBar.position.set(256*scaleX, 500*scaleY);
         healthBar.scale.set(.2*scaleX, .2*scaleY);
@@ -37,11 +40,14 @@ export default class PlayerHealthHUD implements Updateable {
         this.healthBar.size = new Vec2(350, 35);
         this.healthBar.backgroundColor = Color.GREEN;
 
-        this.healthLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, updateLayer, {position: new Vec2(256*scaleX, 495*scaleY), text: `${this.currHealth}/${this.maxHealth}`, fontSize: 30, textColor: Color.BLACK});
+        this.healthLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, updateLayer, {position: new Vec2(256*scaleX, 495*scaleY), text: `${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`, fontSize: 30, textColor: Color.BLACK});
     }
 
     public update(deltaT: number): void {
-        
+        const fraction = GameStateManager.get().health / GameStateManager.get().maxHealth;
+        this.healthBar.size.set(fraction * 350, 35);
+        this.healthBar.position.set(255 * this.scaleX - ((1-fraction) * 350 / 4), 493.5*this.scaleY)
+        this.healthLabel.setText(`${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`);
     }
 
 }
