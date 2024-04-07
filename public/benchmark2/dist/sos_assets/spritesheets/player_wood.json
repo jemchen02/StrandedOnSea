@@ -1,0 +1,19 @@
+{
+"name": "TopdownPlayer1",
+    "spriteSheetImage": "player_wood.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "columns": 1,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "IDLE",
+            "frames": [ {"index": 0, "duration": 1} ]
+        },
+        {
+            "name": "WALK",
+            "frames": [ {"index": 0, "duration": 1} ]
+        }
+    ]
+}

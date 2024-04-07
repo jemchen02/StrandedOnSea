@@ -1,6 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
-import SplashScreen from "./hw4/Scenes/SplashScreen";
-import { PlayerInput } from "./hw4/AI/Player/PlayerController";
+import SplashScreen from "./sos_project/Scenes/SplashScreen";
+import { PlayerInput } from "./sos_project/AI/Player/PlayerController";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
