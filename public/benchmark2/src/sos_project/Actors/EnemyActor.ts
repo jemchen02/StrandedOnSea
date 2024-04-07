@@ -3,25 +3,20 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite"
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
 import { BattlerEvent, HudEvent } from "../Events";
-import Inventory from "../GameSystems/ItemSystem/Inventory";
 import HW4Scene from "../Scenes/SosScene";
-import BasicTargetable from "../GameSystems/Targeting/BasicTargetable";
-import BasicTargeting from "../GameSystems/Targeting/BasicTargeting";
 
 import Battler from "../GameSystems/BattleSystem/Battler";
-import { TargetableEntity } from "../GameSystems/Targeting/TargetableEntity";
-import { TargetingEntity } from "../GameSystems/Targeting/TargetingEntity";
 import BasicBattler from "../GameSystems/BattleSystem/BasicBattler";
 import Timer from "../../Wolfie2D/Timing/Timer";
 
 
-export default class NPCActor extends AnimatedSprite implements Battler, TargetingEntity {
+export default class EnemyActor extends AnimatedSprite{
 
     /** Override the type of the scene to be the HW4 scene */
     protected scene: HW4Scene
 
     // An invincible timer for our NPCs
-    protected invincibleTimer: Timer;
+    protected attackCooldown: Timer;
 
     // The key of the Navmesh to use to build paths for this NPCActor
     protected _navkey: string;
@@ -29,30 +24,11 @@ export default class NPCActor extends AnimatedSprite implements Battler, Targeti
     // The NPCs battler object
     protected _battler: Battler;
 
-    protected _targeting: TargetingEntity
-
     public constructor(sheet: Spritesheet) {
         super(sheet);
         this._navkey = "navkey";
         this._battler = new BasicBattler(this);
-        this._targeting = new BasicTargeting(this);
-        this.invincibleTimer = new Timer(1000);
-
-        this.receiver.subscribe("use-hpack");
-    }
-
-    /** The TargetingEntity interface */
-
-    public clearTarget(): void { this._targeting.clearTarget(); }
-    public setTarget(targetable: TargetableEntity): void { this._targeting.setTarget(targetable); }
-    public hasTarget(): boolean { return this._targeting.hasTarget(); }
-    public getTarget(): TargetableEntity { return this._targeting.getTarget(); }
-    
-    /** The TargetableEntity interface */
-
-
-    atTarget(): boolean {
-        return this._targeting.getTarget().position.distanceSqTo(this.position) < 625;
+        this.attackCooldown = new Timer(1000);
     }
 
     public get battlerActive(): boolean { return this.battler.battlerActive; }
@@ -61,7 +37,6 @@ export default class NPCActor extends AnimatedSprite implements Battler, Targeti
         this.visible = value;
         this.aiActive = value;
     }
-
 
     public get maxHealth(): number { return this.battler.maxHealth }
     public set maxHealth(maxHealth: number) { 
@@ -86,13 +61,6 @@ export default class NPCActor extends AnimatedSprite implements Battler, Targeti
     public get navkey(): string { return this._navkey; }
     public set navkey(navkey: string) { this._navkey = navkey; }
 
-    getPath(to: Vec2, from: Vec2): NavigationPath { 
-        return this.scene.getNavigationManager().getPath(this.navkey, to, from);
-    }
-
-
-    /** Protected getters for the different components */
 
     protected get battler(): Battler { return this._battler; }
-    protected get targeting(): TargetingEntity { return this._targeting; }
 }
