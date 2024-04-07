@@ -56,7 +56,7 @@ export default class InventoryHUD implements Updateable {
         this.slotSprite = slotSprite;
 
         // Set the size and padding for the item slots
-        this.size = 4;
+        this.size = 3;
         this.padding = options.padding;
         this.start = options.start;
         // Init the layers for the items
@@ -69,8 +69,8 @@ export default class InventoryHUD implements Updateable {
         // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
-            this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
-            this.itemSlots[i].scale.set(0.4, 0.4);
+            //this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
+            //this.itemSlots[i].scale.set(0.4, 0.4);
         }
         this.itemSlots[0] = this.scene.add.sprite(options.cannonSprite, this.slotLayer);
         this.itemSlots[0].scale.set(0.4, 0.4);
