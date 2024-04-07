@@ -6,10 +6,10 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
  * Strings used in the key binding for the player
  */
 export enum PlayerInput {
-    MOVE_UP = "MOVE_UP",
-    MOVE_DOWN = "MOVE_DOWN",
-    MOVE_LEFT = "MOVE_LEFT",
-    MOVE_RIGHT = "MOVE_RIGHT",
+    MOVE_FORWARD = "MOVE_UP",
+    MOVE_BACKWARD = "MOVE_DOWN",
+    TURN_LEFT = "MOVE_LEFT",
+    TURN_RIGHT = "MOVE_RIGHT",
     ATTACKING = "ATTACKING",
     PICKUP_ITEM = "PICKUP_ITEM",
     DROP_ITEM = "DROP_ITEM"
@@ -28,15 +28,12 @@ export default class PlayerController {
         this.owner = owner;
     }
 
-    /**
-     * Gets the direction the player should move based on input from the keyboard. 
-     * @returns a Vec2 indicating the direction the player should move. 
-     */
-    public get moveDir(): Vec2 { 
-        let dir: Vec2 = Vec2.ZERO;
-        dir.y = (Input.isPressed(PlayerInput.MOVE_UP) ? -1 : 0) + (Input.isPressed(PlayerInput.MOVE_DOWN) ? 1 : 0);
-		dir.x = (Input.isPressed(PlayerInput.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(PlayerInput.MOVE_RIGHT) ? 1 : 0);
-        return dir.normalize();
+    public get acceleration(): number {
+        return (Input.isPressed(PlayerInput.MOVE_FORWARD) ? 1 : 0) + (Input.isPressed(PlayerInput.MOVE_BACKWARD) ? -1 : 0);
+    }
+
+    public get rotation(): number {
+        return (Input.isPressed(PlayerInput.TURN_LEFT) ? -1 : 0) + (Input.isPressed(PlayerInput.TURN_RIGHT) ? 1 : 0)
     }
 
     /** 
@@ -44,14 +41,13 @@ export default class PlayerController {
      * mouse around the player
      * @return a Vec2 representing the direction the player should face.
      */
-    public get faceDir(): Vec2 { return this.owner.position.dirTo(Input.getGlobalMousePosition()); }
+    public get aim(): Vec2 { 
+        return this.owner.position.dirTo(Input.getGlobalMousePosition());
+    }
 
-    /**
-     * Gets the rotation of the players sprite based on the direction the player
-     * should be facing.
-     * @return a number representing how much the player should be rotated
-     */
-    public get rotation(): number { return Vec2.UP.angleToCCW(this.faceDir); }
+    public get fireTorpedo(): boolean {
+        return Input.isMouseJustPressed()
+    }
 
     /** 
      * Checks if the player is attempting to use a held item or not.
@@ -71,4 +67,5 @@ export default class PlayerController {
      */
     public get dropping(): boolean { return Input.isJustPressed(PlayerInput.DROP_ITEM); }
 
+    public get isColliding(): boolean { return this.owner.isColliding }
 }

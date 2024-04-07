@@ -1,35 +1,34 @@
+import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
-import Input from "../../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 
-export default class ShipAI implements AI {
-	// We want to be able to control our owner, so keep track of them
-	private owner: AnimatedSprite;
+export default class ShipAI extends StateMachineAI implements AI {
 
-	// The direction the spaceship is moving
+	// Parameters that are either constants or used for ship control
 	private direction: Vec2;
-	private MIN_SPEED: number = 0;
-	private MAX_SPEED: number = 300;
+    protected forwardAxis: number = 0;
+    protected turnDirection: number = 0;
+    protected frictionConstant: number = 0.02;
+    protected collision: boolean = false;
+
+    // Parameters that may change based on the ship state
+	private MIN_SPEED: number = -25;
+	private MAX_SPEED: number = 100;
 	private speed: number;
-	private ACCELERATION: number = 4;
+	private ACCELERATION: number = 1;
 	private rotationSpeed: number;
-    private forwardAxis: number = 0;
-    private turnDirection: number = 0;
+
+    
 
 	private isDead: boolean = false;
 
-	// A receiver and emitter to hook into the event queue
-	private receiver: Receiver;
-	private emitter: Emitter;
-
-	// HOMEWORK 2 - Marked Done
 	/**
 	 * This method initializes all variables inside of this AI class, and sets
 	 * up anything we need it do.
@@ -45,9 +44,10 @@ export default class ShipAI implements AI {
 		this.owner = owner;
 
 		// SOS_TODO These parameters need to change based on the hull of the ship
+        // Better alternative: have this class request parameters from enums based on the ship type and propulsion type
 		this.direction = new Vec2(0, 1);
 		this.speed = 0;
-		this.rotationSpeed = 2;
+		this.rotationSpeed = 1.5;
 
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
@@ -67,14 +67,26 @@ export default class ShipAI implements AI {
 			this.handleEvent(this.receiver.getNextEvent());
 		}
 
-		// We need to handle player input
-		this.forwardAxis = (Input.isPressed('forward') ? 1 : 0) + (Input.isPressed('backward') ? -1 : 0);
-		this.turnDirection = (Input.isPressed('turn_ccw') ? -1 : 0) + (Input.isPressed('turn_cw') ? 1 : 0);
+        // Apply friction
+        if (this.forwardAxis == 0) {        
+            if(Math.abs(this.speed) > 10) {
+                this.speed -= MathUtils.clamp(this.speed, -1, 1) * Math.max(Math.round(this.frictionConstant*this.speed), 1);
+            }
+            else{
+                this.speed = 0;
+            }
+        }
 
 		// Space controls - speed stays the same if nothing happens
 		// Forward to speed up, backward to slow down
-		this.speed += this.ACCELERATION * this.forwardAxis;
-		this.speed = MathUtils.clamp(this.speed, this.MIN_SPEED, this.MAX_SPEED);
+		if (this.collision) {
+            // Deal damage to the player
+            this.speed = 0
+        }
+        else{
+            this.speed += this.ACCELERATION * this.forwardAxis;
+	    	this.speed = MathUtils.clamp(this.speed, this.MIN_SPEED, this.MAX_SPEED);
+        }
 
 		// Rotate the player
 		this.direction.rotateCCW(this.turnDirection * this.rotationSpeed * deltaT);
@@ -83,19 +95,14 @@ export default class ShipAI implements AI {
 		this.owner.rotation = -(Math.atan2(this.direction.y, this.direction.x) - Math.PI/2);
 		
 		// Move the player
-		this.owner.position.add(this.direction.scaled(-this.speed * deltaT));
+		this.owner.move(this.direction.scaled(-this.speed * deltaT));
 
 		Debug.log("player_pos", "Player Position: " + this.owner.position.toString());
 	
-		// If the player clicked, we need to spawn in a fleet member
-		if(Input.isMouseJustPressed()){
-			// SOS_TODO Add torpedo event
-		}
+
 
         // SOS_TODO Add events for firing cannons on port side and starboard side
 
 		// Animations
 	}
-
-    destroy(): void {}
 } 
