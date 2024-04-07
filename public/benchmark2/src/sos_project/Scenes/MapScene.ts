@@ -8,6 +8,8 @@ import BattleScene from "./BattleScene";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
 import CoinHUD from "../GameSystems/HUD/CoinHUD";
+import { GameStateManager } from "../GameStateManager";
+import { OverlayStatus, SOSLevel } from "../SOSLevel";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -60,25 +62,11 @@ export default class MapScene extends Scene {
     private initMap() {
         const center = this.viewport.getCenter();
 
-        const mapInit = [[4, 1, 3, 2, 1], [1, 3, 2, 1, 0], [1, 1, 2, 3, 2], [4, 1, 2, 2, 2], [0, 3, 1, 1, 4]];
-        const n = mapInit.length;
-        const m = mapInit[0].length;
+        const mapInit : SOSLevel[][] = GameStateManager.get().gameMap;
+        let n = mapInit.length;
+        let m = mapInit[0].length;
+        const overlayInit : OverlayStatus[][] = GameStateManager.get().mapOverlays;
 
-        const overlayInit = [];
-        for(let i = 0; i < n; i++) {
-            overlayInit[i] = [];
-            for(let j = 0; j < m; j++) {
-                if(i == 0 && j == 0) {
-                    overlayInit[i][j] = 1;
-                } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
-                    overlayInit[i][j] = 0;
-                } else if (mapInit[i][j] == 0) {
-                    overlayInit[i][j] = 0;
-                } else {
-                    overlayInit[i][j] = 3;
-                }
-            }
-        }
 
         this.mapLayer = this.addUILayer("map");
         this.mapLayer.disable();
@@ -89,8 +77,12 @@ export default class MapScene extends Scene {
             let y = center.y + 120 * (n - 1) / 2 - 120 * i;
             for(let j = 0; j < m; j++) {
                 let x = center.x - 120 * (m - 1) / 2 + 120 * j;
-                this.createMapIcon(x, y, mapInit[i][j]);
-                this.createOverlayIcon(x, y, overlayInit[i][j]);
+
+                let iconType : number = GameStateManager.get().gameMap[i][j].iconType;
+                this.createMapIcon(x, y, iconType);
+
+                let overlay : OverlayStatus = GameStateManager.get().mapOverlays[i][j];
+                this.createOverlayIcon(x, y, overlay, i, j);
             }
         }
     }
@@ -194,22 +186,18 @@ export default class MapScene extends Scene {
                 break;
         }
     }
-    private createOverlayIcon(x: number, y: number, iconType: number) {
-        switch(iconType) {
-            case 0:
-                break;
-            case 1:
-                const playerIcon = this.add.sprite("playerIcon", "map");
-                playerIcon.position.set(x, y);
-                break;
-            case 2:
-                const storm = this.add.sprite("storm", "map");
-                storm.position.set(x, y);
-                break;
-            case 3:
-                const hidden = this.add.sprite("hidden", "map");
-                hidden.position.set(x, y);
-                break;
+    private createOverlayIcon(x: number, y: number, overlay : OverlayStatus, i, j) {
+        if(GameStateManager.get().playerLocation.x == i && GameStateManager.get().playerLocation.y == j){
+            const playerIcon = this.add.sprite("playerIcon", "map");
+            playerIcon.position.set(x, y);
+        }
+        else if(overlay.isStorm){
+            const storm = this.add.sprite("storm", "map");
+            storm.position.set(x, y);
+        }
+        else if(overlay.isFog){
+            const hidden = this.add.sprite("hidden", "map");
+            hidden.position.set(x, y);
         }
     }
     public updateScene(){
