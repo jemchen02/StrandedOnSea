@@ -59,11 +59,12 @@ export default class BattleScene extends SosScene {
     public override loadScene() {
         // Load the player and enemy spritesheets
         this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+        this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
         // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
 
         this.load.object("enemies", "hw4_assets/data/enemies/battle1/enemies.json");
-        this.load.image("enemyBoat", "sos_assets/spritesheets/hostile.png");
+        
 
         // Load the tilemap
         this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
@@ -180,7 +181,7 @@ export default class BattleScene extends SosScene {
     protected initializeNPCs(): void {
         let enemies = this.load.getObject("enemies");
         for (let i = 0; i < enemies.boats.length; i++) {
-            let npc = this.add.animatedSprite(EnemyActor, "player1", "primary");
+            let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
             npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
             npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
             npc.speed = 10;

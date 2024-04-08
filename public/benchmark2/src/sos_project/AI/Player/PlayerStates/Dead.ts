@@ -1,12 +1,12 @@
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import { PlayerEvent } from "../../../Events";
-import PlayerState from "./PlayerState";
+import ShipState from "../../ShipStates/ShipState";
 
 /**
  * The Dead state for the PlayerAI. While the player is in the "Dead" state, the player does not
  * get updated and all incoming events to the PlayerAI are ignored.
  */
-export default class Dead extends PlayerState {
+export default class Dead extends ShipState {
 
     /**
      * When the PlayerAI enters the dead state, an event is fired to alert the system

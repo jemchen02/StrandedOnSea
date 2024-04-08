@@ -1,15 +1,17 @@
-import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
-import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import Debug from "../../../Wolfie2D/Debug/Debug";
-import Emitter from "../../../Wolfie2D/Events/Emitter";
-import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import Receiver from "../../../Wolfie2D/Events/Receiver";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
+import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Debug from "../../Wolfie2D/Debug/Debug";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Receiver from "../../Wolfie2D/Events/Receiver";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
+import { Idle, Moving } from "./ShipStates/ShipState";
+import { ShipStateType } from "./ShipStates/ShipState";
 
-export default class ShipAI extends StateMachineAI implements AI {
+export default class ShipAI extends StateMachineAI {
 
 	// Parameters that are either constants or used for ship control
 	private direction: Vec2;
@@ -30,8 +32,8 @@ export default class ShipAI extends StateMachineAI implements AI {
 
 	private isDead: boolean = false;
 
-	public get getSpeed() {
-		return this.speed;
+	public get isMoving() {
+		return this.forwardAxis != 0
 	}
 
 	public get checkSail() {
@@ -61,6 +63,10 @@ export default class ShipAI extends StateMachineAI implements AI {
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
 
+		this.addState(ShipStateType.IDLE, new Idle(this, this.owner as AnimatedSprite));
+        this.addState(ShipStateType.MOVING, new Moving(this, this.owner as AnimatedSprite));
+        this.initialize(ShipStateType.IDLE);
+
 	}
 
 	activate(options: Record<string, any>){};
@@ -89,7 +95,7 @@ export default class ShipAI extends StateMachineAI implements AI {
 		// Space controls - speed stays the same if nothing happens
 		// Forward to speed up, backward to slow down
 		if (this.collision) {
-            // Deal damage to the player
+            // Remember to deal damage to the ship
             this.speed = 0
         }
         else{
@@ -97,19 +103,18 @@ export default class ShipAI extends StateMachineAI implements AI {
 	    	this.speed = MathUtils.clamp(this.speed, this.MIN_SPEED, this.MAX_SPEED);
         }
 
-		// Rotate the player
+		// Rotate the ship
 		this.direction.rotateCCW(this.turnDirection * this.rotationSpeed * deltaT);
 
-		// Update the visual direction of the player
+		// Update the visual direction of the ship
 		this.owner.rotation = -(Math.atan2(this.direction.y, this.direction.x) - Math.PI/2);
 		
-		// Move the player
+		// Move the ship
 		this.owner.move(this.direction.scaled(-this.speed * deltaT));
 
 		Debug.log("player_pos", "Player Position: " + this.owner.position.toString());
-	
 
-
+		super.update(deltaT);
         // SOS_TODO Add events for firing cannons on port side and starboard side
 
 		// Animations

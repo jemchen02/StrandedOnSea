@@ -1,4 +1,4 @@
-import State from "../../../../Wolfie2D/DataTypes/State/State";
+import ShipState from "../../ShipStates/ShipState";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import { BattlerEvent, HudEvent, ItemEvent } from "../../../Events"
 import Item from "../../../GameSystems/ItemSystem/Item";
@@ -25,14 +25,13 @@ export enum PlayerStateType {
     DEAD = "DEAD"
 }
 
-export default abstract class PlayerState extends State {
+export default abstract class PlayerState extends ShipState {
 
     protected parent: PlayerAI;
     protected owner: PlayerActor;
 
-    public constructor(parent: PlayerAI, owner: PlayerActor) {
-        super(parent);
-        this.owner = owner;
+    public constructor(parent: PlayerAI, owner: AnimatedSprite) {
+        super(parent, owner);
     }
 
     public override onEnter(options: Record<string, any>): void {}
@@ -65,9 +64,8 @@ export default abstract class PlayerState extends State {
 
 }
 
-import Idle from "./Idle";
 import Invincible from "./Invincible";
-import Moving from "./Moving";
 import Dead from "./Dead";
 import PlayerActor from "../../../Actors/PlayerActor";
-export { Idle, Invincible, Moving, Dead} 
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+export { Invincible, Dead} 

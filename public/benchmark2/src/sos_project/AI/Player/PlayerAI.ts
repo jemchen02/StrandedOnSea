@@ -9,8 +9,10 @@ import { GameStateManager } from "../../GameStateManager";
 import Inventory from "../../GameSystems/ItemSystem/Inventory";
 import Item from "../../GameSystems/ItemSystem/Item";
 import PlayerController from "./PlayerController";
-import { Idle, Invincible, Moving, Dead, PlayerStateType } from "./PlayerStates/PlayerState";
-import ShipAI from "./ShipAI";
+import { ShipStateType } from "../ShipStates/ShipState";
+import { Invincible,  Dead } from "./PlayerStates/PlayerState";
+import ShipAI from "../ShipAI";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -30,13 +32,10 @@ export default class PlayerAI extends ShipAI {
         this.controller = new PlayerController(owner);
 
         // Add the players states to it's StateMachine
-        this.addState(PlayerStateType.IDLE, new Idle(this, this.owner as PlayerActor));
-        this.addState(PlayerStateType.INVINCIBLE, new Invincible(this, this.owner as PlayerActor));
-        this.addState(PlayerStateType.MOVING, new Moving(this, this.owner as PlayerActor));
-        this.addState(PlayerStateType.DEAD, new Dead(this, this.owner as PlayerActor));
+        this.addState(ShipStateType.INVINCIBLE, new Invincible(this, this.owner as PlayerActor));
+        this.addState(ShipStateType.DEAD, new Dead(this, this.owner as AnimatedSprite));
         
-        // Initialize the players state to Idle
-        this.initialize(PlayerStateType.IDLE);
+        
         this.receiver.subscribe("ramCollision");
     }
 

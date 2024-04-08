@@ -7,7 +7,7 @@ import PlayerActor from "../../Actors/PlayerActor";
 import { ItemEvent } from "../../Events";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
-import ShipAI from "../Player/ShipAI";
+import ShipAI from "../ShipAI";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
