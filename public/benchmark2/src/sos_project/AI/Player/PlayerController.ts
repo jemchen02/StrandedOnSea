@@ -49,6 +49,14 @@ export default class PlayerController {
         return Input.isMouseJustPressed()
     }
 
+    public get firePort(): boolean {
+        return Input.isJustPressed(PlayerInput.FIRE_PORT);
+    }
+
+    public get fireStarBoard(): boolean {
+        return Input.isJustPressed(PlayerInput.FIRE_STARBOARD);
+    }
+
     /** 
      * Checks if the player is attempting to use a held item or not.
      * @return true if the player is attempting to use a held item; false otherwise

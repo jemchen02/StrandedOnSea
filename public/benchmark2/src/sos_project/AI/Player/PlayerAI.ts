@@ -13,6 +13,9 @@ import { ShipStateType } from "../ShipStates/ShipState";
 import { Invincible,  Dead } from "./PlayerStates/PlayerState";
 import ShipAI from "../ShipAI";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Graphic from "../../../Wolfie2D/Nodes/Graphic";
+import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import CannonBallAI from "../CannonBall";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -35,7 +38,7 @@ export default class PlayerAI extends ShipAI {
         this.addState(ShipStateType.INVINCIBLE, new Invincible(this, this.owner as PlayerActor));
         this.addState(ShipStateType.DEAD, new Dead(this, this.owner as AnimatedSprite));
         
-        
+
         this.receiver.subscribe("ramCollision");
     }
 
@@ -53,6 +56,15 @@ export default class PlayerAI extends ShipAI {
         this.turnDirection = this.controller.rotation
         super.update(deltaT);
 		if(this.controller.fireTorpedo){
+            console.log("TORPEDO")
+			// SOS_TODO Add torpedo event
+		}
+        if(this.controller.firePort){
+            this.fire_cannon(true);
+			// SOS_TODO Add torpedo event
+		}
+        if(this.controller.fireStarBoard){
+            this.fire_cannon(false);
 			// SOS_TODO Add torpedo event
 		}
     }
@@ -79,4 +91,19 @@ export default class PlayerAI extends ShipAI {
         }
     }
 
+    public fire_cannon(left : boolean) : void{
+        let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+        cannonBall.visible = true;
+        cannonBall.addAI(CannonBallAI);
+
+        //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
+        //cannonBall.setAIActive(true, {direction: dir});
+
+        cannonBall.setAIActive(true, {left: left, startingVelocity : this.owner.getLastVelocity()});
+
+        cannonBall.rotation = this.owner.rotation;
+        cannonBall.position = new Vec2(0, 0).add(this.owner.position);
+
+        cannonBall.isCollidable = false;
+    }
 }
