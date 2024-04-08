@@ -30,6 +30,7 @@ import EnemyActor from "../Actors/EnemyActor";
 import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
 import RamAI from "../AI/NPC/RamAI";
 import { GameStateManager } from "../GameStateManager";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
 
 export default class BattleScene extends SosScene {
@@ -100,6 +101,7 @@ export default class BattleScene extends SosScene {
         
         // Create the player
         this.initializePlayer();
+        this.initializeHUD();
         this.initializeNPCs();
         this.initializeNavmesh();
     }
@@ -151,6 +153,19 @@ export default class BattleScene extends SosScene {
         this.player.health = 10;
         this.player.maxHealth = 10;
 
+        // Give the player physics
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 8)));
+
+        // Give the player PlayerAI
+        this.player.addAI(PlayerAI);
+
+        // Start the player in the "IDLE" animation
+        this.player.animation.play("IDLE");
+
+        this.viewport.follow(this.player);
+    }
+
+    protected initializeHUD(): void {
         this.inventoryHud = new InventoryHUD(this, "inventorySlot", {
             start: new Vec2(36, 175),
             slotLayer: "slots",
@@ -165,17 +180,8 @@ export default class BattleScene extends SosScene {
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);
         this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 1, 1);
         this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
-
-        // Give the player physics
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 8)));
-
-        // Give the player PlayerAI
-        this.player.addAI(PlayerAI);
-
-        // Start the player in the "IDLE" animation
-        this.player.animation.play("IDLE");
-
-        this.viewport.follow(this.player);
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 25), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Defeat Enemies", fontSize: 30, textColor: Color.WHITE});
     }
 
     protected initializeNPCs(): void {
