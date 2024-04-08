@@ -45,6 +45,15 @@ export default class PlayerHealthHUD implements Updateable {
 
     public update(deltaT: number): void {
         const fraction = GameStateManager.get().health / GameStateManager.get().maxHealth;
+        if(fraction > .75) {
+            this.healthBar.setBackgroundColor(Color.GREEN);
+        } else if(fraction > .5) {
+            this.healthBar.setBackgroundColor(Color.YELLOW);
+        } else if(fraction > 0.25) {
+            this.healthBar.setBackgroundColor(Color.ORANGE);
+        } else {
+            this.healthBar.setBackgroundColor(Color.RED);
+        }
         this.healthBar.size.set(fraction * 350, 35);
         this.healthBar.position.set(255 * this.scaleX - ((1-fraction) * 350 / 4), 493.5*this.scaleY)
         this.healthLabel.setText(`${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`);

@@ -154,7 +154,7 @@ export default class MapScene extends Scene {
         this.mapSubscriptions.push(clickEvent);
     }
     public createLabels(layer: string, item: string, position: Vec2, owned: string, cost: number, use: string, vertical: boolean) {
-        const ownedLabel = <Label>this.add.uiElement(UIElementType.LABEL, layer, {position, text: owned, fontSize: 18, textColor: Color.WHITE});
+        const ownedLabel = <Label>this.add.uiElement(UIElementType.LABEL, layer, {position, text: owned, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
         this.hudLabels.set(item, ownedLabel);
         let costPos = new Vec2(position.x + 100, position.y);
         let usePos = new Vec2(position.x + 260, position.y);
@@ -162,8 +162,8 @@ export default class MapScene extends Scene {
             costPos = new Vec2(position.x, position.y + 45);
             usePos = new Vec2(position.x, position.y + 90);
         }
-        this.add.uiElement(UIElementType.LABEL, layer, {position: costPos, text: `Cost: ${cost || 'Free'}`, fontSize: 18, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, layer, {position: usePos, text: use, fontSize: 18, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, layer, {position: costPos, text: `Cost: ${cost || 'Free'}`, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
+        this.add.uiElement(UIElementType.LABEL, layer, {position: usePos, text: use, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
     }
     private createMapIcon(x: number, y: number, iconType: number) {
         switch(iconType) {
