@@ -11,6 +11,10 @@ import CoinHUD from "../GameSystems/HUD/CoinHUD";
 import { GameStateManager } from "../GameStateManager";
 import { OverlayStatus, SOSLevel } from "../SOSLevel";
 import { Costs } from "../GameConstants";
+import HostileScene from "./HostileScene";
+import WhirlpoolScene from "./WhirlpoolScene";
+import ShipwreckScene from "./ShipwreckScene";
+import ObstacleScene from "./ObstacleScene";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -215,8 +219,19 @@ export default class MapScene extends Scene {
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
             case "playBattle": {
-                this.sceneManager.changeToScene(BattleScene);
-                //this.mapLayer.disable();
+                this.sceneManager.changeToScene(ShipwreckScene);
+                break;
+            }
+            case "playShipwreck": {
+                this.sceneManager.changeToScene(ShipwreckScene);
+                break;
+            }
+            case "playWhirlpool": {
+                this.sceneManager.changeToScene(WhirlpoolScene);
+                break;
+            }
+            case "playObstacle": {
+                this.sceneManager.changeToScene(ObstacleScene);
                 break;
             }
             case "ready": {

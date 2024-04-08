@@ -58,17 +58,13 @@ export default class BattleScene extends SosScene {
      * @see Scene.update()
      */
     public override loadScene() {
+        const playerLocation = GameStateManager.get().playerLocation;
+        const gameLevel = GameStateManager.get().gameMap[playerLocation.x][playerLocation.y];
         // Load the player and enemy spritesheets
         this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
         // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
-
-        this.load.object("enemies", "hw4_assets/data/enemies/battle1/enemies.json");
-        
-
-        // Load the tilemap
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
@@ -180,8 +176,6 @@ export default class BattleScene extends SosScene {
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);
         this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 1, 1);
         this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 25), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Defeat Enemies", fontSize: 30, textColor: Color.WHITE});
     }
 
     protected initializeNPCs(): void {
