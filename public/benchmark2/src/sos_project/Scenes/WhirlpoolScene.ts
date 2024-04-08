@@ -19,6 +19,6 @@ export default class WhirlpoolScene extends BattleScene {
         super.initializeHUD();
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 25), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Don't get sucked in by whirlpool!", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 65), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
     }
 }

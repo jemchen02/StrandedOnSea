@@ -5,23 +5,35 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import MapScene from "./MapScene";
+import HostileScene from "./HostileScene";
+import HostileScene2 from "./HostileScene2";
+import ObstacleScene from "./ObstacleScene";
+import ObstacleScene2 from "./ObstacleScene2";
+import ShipwreckScene from "./ShipwreckScene";
+import ShipwreckScene2 from "./ShipwreckScene2";
+import WhirlpoolScene from "./WhirlpoolScene";
+import WhirlpoolScene2 from "./WhirlpoolScene2";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
     private mainMenu: Layer;
     private controlLayer: Layer;
     private helpLayer: Layer;
+    private selectLayer: Layer;
     private background: Layer;
+    private menuSubscriptions: string[];
 
     public loadScene(){
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
         this.load.image("gameTitle", "hw4_assets/sprites/gameTitle.png");
         this.load.image("controlsImage", "hw4_assets/sprites/controls.png");
         this.load.image("helpImage", "hw4_assets/sprites/help.png");
+        this.load.image("menuBackground", "hw4_assets/sprites/menuBackground.png");
     }
 
     public startScene(){
         const center = this.viewport.getCenter();
+        this.menuSubscriptions = [];
 
         this.background = this.addUILayer("background");
 
@@ -36,34 +48,13 @@ export default class MainMenu extends Scene {
         gameTitle.position.set(center.x, center.y - 200);
         gameTitle.scale.set(0.8, 0.8);
 
+        this.createButton("mainMenu", new Vec2(center.x, center.y - 100), "Start Game", "play", new Vec2(300, 75));
 
-        const play = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
-        play.size.set(300, 75);
-        play.borderWidth = 2;
-        play.borderColor = Color.WHITE;
-        play.backgroundColor = Color.TRANSPARENT;
-        play.onClickEventId = "play";
+        this.createButton("mainMenu", new Vec2(center.x, center.y), "Controls", "controls", new Vec2(300, 75));
 
-        const controls = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y), text: "Controls"});
-        controls.size.set(300, 75);
-        controls.borderWidth = 2;
-        controls.borderColor = Color.WHITE;
-        controls.backgroundColor = Color.TRANSPARENT;
-        controls.onClickEventId = "controls";
+        this.createButton("mainMenu", new Vec2(center.x, center.y + 100), "Help", "help", new Vec2(300, 75));
 
-        const help = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y + 100), text: "Help"});
-        help.size.set(300, 75);
-        help.borderWidth = 2;
-        help.borderColor = Color.WHITE;
-        help.backgroundColor = Color.TRANSPARENT;
-        help.onClickEventId = "help";
-
-        const enter_code = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y + 200), text: "Enter Code"});
-        enter_code.size.set(300, 75);
-        enter_code.borderWidth = 2;
-        enter_code.borderColor = Color.WHITE;
-        enter_code.backgroundColor = Color.TRANSPARENT;
-        enter_code.onClickEventId = "help";
+        this.createButton("mainMenu", new Vec2(center.x, center.y + 200), "Select Level", "select", new Vec2(300, 75));
 
         this.controlLayer = this.addUILayer("controls");
 
@@ -71,12 +62,7 @@ export default class MainMenu extends Scene {
         controlImage.position.set(center.x, center.y);
         controlImage.scale.set(1.2, 1.2);
 
-        const exitControls = this.add.uiElement(UIElementType.BUTTON, "controls", {position: new Vec2(center.x + 400, center.y - 270), text: "X"});
-        exitControls.size.set(50, 50);
-        exitControls.borderWidth = 2;
-        exitControls.borderColor = Color.WHITE;
-        exitControls.backgroundColor = Color.TRANSPARENT;
-        exitControls.onClickEventId = "exitControls";
+        this.createButton("controls", new Vec2(center.x + 400, center.y - 270), "X", "exitControls", new Vec2(50, 50));
 
         this.controlLayer.disable();
 
@@ -86,21 +72,42 @@ export default class MainMenu extends Scene {
         helpImage.position.set(center.x, center.y);
         helpImage.scale.set(1, 1);
 
-        const exitHelp = this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(center.x + 400, center.y - 290), text: "X"});
-        exitHelp.size.set(50, 50);
-        exitHelp.borderWidth = 2;
-        exitHelp.borderColor = Color.WHITE;
-        exitHelp.backgroundColor = Color.TRANSPARENT;
-        exitHelp.onClickEventId = "exitHelp";
+        this.createButton("help", new Vec2(center.x + 400, center.y - 290), "X", "exitHelp", new Vec2(50, 50));
 
         this.helpLayer.disable();
 
+        this.selectLayer = this.addUILayer("select");
+        const selectBackground = this.add.sprite("menuBackground", "select");
+        selectBackground.position.set(center.x, center.y - 20);
+        selectBackground.scale.set(.8, 1.2);
+        this.add.uiElement(UIElementType.LABEL, "select", {position: new Vec2(center.x, center.y - 400), text: 'Select Level', fontSize: 40, textColor: Color.WHITE});
+        this.createButton("select", new Vec2(center.x - 150, center.y - 300), "Hostile 1", "hostile1", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x + 150, center.y - 300), "Hostile 2", "hostile2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x - 150, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x + 150, center.y - 150), "Obstacle 2", "obstacle2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x - 150, center.y), "Shipwreck 1", "shipwreck1", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x + 150, center.y), "Shipwreck 2", "shipwreck2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x - 150, center.y + 150), "Whirlpool 1", "whirlpool1", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x + 150, center.y + 150), "Whirlpool 2", "whirlpool2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x, center.y + 300), "Back", "exitSelect", new Vec2(200, 75));
+        
+        
+        this.selectLayer.disable();
+
         // Subscribe to the button events
-        this.receiver.subscribe("play");
-        this.receiver.subscribe("controls");
-        this.receiver.subscribe("exitControls");
-        this.receiver.subscribe("help");
-        this.receiver.subscribe("exitHelp");
+        for(let menuEvent of this.menuSubscriptions) {
+            this.receiver.subscribe(menuEvent);
+        }
+    }
+    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, size: Vec2) {
+        const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
+        newButton.size.set(size.x, size.y);
+        newButton.borderWidth = 2;
+        newButton.borderColor = Color.WHITE;
+        newButton.backgroundColor = Color.TRANSPARENT;
+
+        newButton.onClickEventId = clickEvent;
+        this.menuSubscriptions.push(clickEvent);
     }
 
     public updateScene(){
@@ -133,6 +140,48 @@ export default class MainMenu extends Scene {
             case "exitHelp": {
                 this.mainMenu.enable();
                 this.helpLayer.disable();
+                break;
+            }
+            case "select": {
+                this.mainMenu.disable();
+                this.selectLayer.enable();
+                break;
+            }
+            case "exitSelect": {
+                this.mainMenu.enable();
+                this.selectLayer.disable();
+                break;
+            }
+            case "hostile1": {
+                this.sceneManager.changeToScene(HostileScene);
+                break;
+            }
+            case "hostile2": {
+                this.sceneManager.changeToScene(HostileScene2);
+                break;
+            }
+            case "obstacle1": {
+                this.sceneManager.changeToScene(ObstacleScene);
+                break;
+            }
+            case "obstacle2": {
+                this.sceneManager.changeToScene(ObstacleScene2);
+                break;
+            }
+            case "shipwreck1": {
+                this.sceneManager.changeToScene(ShipwreckScene);
+                break;
+            }
+            case "shipwreck2": {
+                this.sceneManager.changeToScene(ShipwreckScene2);
+                break;
+            }
+            case "whirlpool1": {
+                this.sceneManager.changeToScene(WhirlpoolScene);
+                break;
+            }
+            case "whirlpool2": {
+                this.sceneManager.changeToScene(WhirlpoolScene2);
                 break;
             }
         }
