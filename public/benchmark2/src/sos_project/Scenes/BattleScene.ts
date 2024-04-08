@@ -160,7 +160,7 @@ export default class BattleScene extends SosScene {
         player.addAI(PlayerAI);
 
         // Start the player in the "IDLE" animation
-        player.animation.play("IDLE");
+        // player.animation.play("MOVE");
 
         this.viewport.follow(player);
     }

@@ -6,6 +6,7 @@ import PlayerState from "./PlayerState";
 export default class Idle extends PlayerState {
 
     public override onEnter(options: Record<string, any>): void {
+        
     }
 
     public override handleInput(event: GameEvent): void {
@@ -18,8 +19,9 @@ export default class Idle extends PlayerState {
     }
 
     public override update(deltaT: number): void {
+        this.owner.animation.playIfNotAlready(this.parent.checkSail+PlayerAnimationType.IDLE);
         super.update(deltaT);
-        if (false) {
+        if (this.parent.getSpeed != 0) {
             this.finished(PlayerStateType.MOVING);
         }
     }

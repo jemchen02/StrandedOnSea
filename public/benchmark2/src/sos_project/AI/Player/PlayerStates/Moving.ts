@@ -1,12 +1,12 @@
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import { PlayerStateType } from "./PlayerState";
+import { PlayerAnimationType, PlayerStateType } from "./PlayerState";
 import PlayerState from "./PlayerState";
 
 export default class Moving extends PlayerState {
     
     public override onEnter(options: Record<string, any>): void {
-    
+        
     }
 
     public override handleInput(event: GameEvent): void { 
@@ -18,8 +18,9 @@ export default class Moving extends PlayerState {
     }
 
     public override update(deltaT: number): void {
+        this.owner.animation.play(this.parent.checkSail + PlayerAnimationType.MOVE);
         super.update(deltaT);
-        if (false) {
+        if (this.parent.getSpeed == 0) {
             this.finished(PlayerStateType.IDLE);
         }
     }

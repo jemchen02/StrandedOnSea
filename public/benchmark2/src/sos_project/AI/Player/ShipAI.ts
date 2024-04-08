@@ -17,17 +17,26 @@ export default class ShipAI extends StateMachineAI implements AI {
     protected turnDirection: number = 0;
     protected frictionConstant: number = 0.02;
     protected collision: boolean = false;
+	private speed: number;
+	private hasSail: boolean = false;
 
     // Parameters that may change based on the ship state
-	private MIN_SPEED: number = -25;
+	private MIN_SPEED: number = 0; // Change back to a negative value when a backwards animation is added
 	private MAX_SPEED: number = 100;
-	private speed: number;
 	private ACCELERATION: number = 1;
 	private rotationSpeed: number;
 
     
 
 	private isDead: boolean = false;
+
+	public get getSpeed() {
+		return this.speed;
+	}
+
+	public get checkSail() {
+		return this.hasSail ? "SAIL_" : "";
+	}
 
 	/**
 	 * This method initializes all variables inside of this AI class, and sets
