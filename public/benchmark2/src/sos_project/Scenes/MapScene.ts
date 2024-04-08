@@ -10,6 +10,7 @@ import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
 import CoinHUD from "../GameSystems/HUD/CoinHUD";
 import { GameStateManager } from "../GameStateManager";
 import { OverlayStatus, SOSLevel } from "../SOSLevel";
+import { Costs } from "../GameConstants";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -22,6 +23,9 @@ export default class MapScene extends Scene {
     
     private healthHUD: PlayerHealthHUD;
     private coinHUD: CoinHUD;
+
+    private hudLabels: Map<String, Label>;
+    private mapSubscriptions: string[];
     public loadScene(){
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
@@ -39,16 +43,15 @@ export default class MapScene extends Scene {
     }
 
     public startScene(){
+        this.mapSubscriptions = [];
         this.initBackground();
         this.initMap();
         this.initHUD();
         this.initShip();
         // Subscribe to the button events
-        this.receiver.subscribe("playBattle");
-        this.receiver.subscribe("playShipwreck");
-        this.receiver.subscribe("playWhirlpool");
-        this.receiver.subscribe("playLand");
-        this.receiver.subscribe("ready");
+        for (let subevent of this.mapSubscriptions) {
+            this.receiver.subscribe(subevent);
+        }
     }
     private initBackground() {
         const center = this.viewport.getCenter();
@@ -89,7 +92,7 @@ export default class MapScene extends Scene {
     private initHUD() {
         this.staticHUD = this.addUILayer("staticHUD");
         this.updateHUD = this.addUILayer("updateHUD");
-
+        this.hudLabels = new Map<String, Label>;
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 2, 2);
         this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 2, 2);
     }
@@ -105,32 +108,32 @@ export default class MapScene extends Scene {
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design");
 
         this.createButton("ship", new Vec2(center.x + 50, center.y - 300), "Wood", "buyWood", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 50, center.y - 240), "Owned: Yes", "Cost: Free", "weak, fast", true);
+        this.createLabels("ship", "Wood", new Vec2(center.x + 50, center.y - 240), "Owned: Yes", Costs.WOOD_COST, "weak, fast", true);
         this.createButton("ship", new Vec2(center.x + 220, center.y - 300), "Fiberglass", "buyFiber", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 220, center.y - 240), "Owned: No", "Cost: 500", "medium", true);
+        this.createLabels("ship", "Fiberglass", new Vec2(center.x + 220, center.y - 240), "Owned: No", Costs.FIBER_COST, "medium", true);
         this.createButton("ship", new Vec2(center.x + 390, center.y - 300), "Metal", "buyMetal", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 390, center.y - 240), "Owned: No", "Cost: 1000", "hardened, slow", true);
+        this.createLabels("ship", "Metal", new Vec2(center.x + 390, center.y - 240), "Owned: No", Costs.METAL_COST, "hardened, slow", true);
 
         this.createButton("ship", new Vec2(center.x + 135, center.y - 50), "Cannon", "buyCannon", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 135, center.y + 10), "Owned: 0", "Cost: 5", "Low damage", true);
+        this.createLabels("ship", "Cannon", new Vec2(center.x + 135, center.y + 10), "Owned: 0", Costs.CANNON_COST, "Low damage", true);
         this.createButton("ship", new Vec2(center.x + 305, center.y - 50), "Torpedo", "buyTorpedo", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 305, center.y + 10), "Owned: 0", "Cost: 50", "High damage", true);
+        this.createLabels("ship", "Torpedo", new Vec2(center.x + 305, center.y + 10), "Owned: 0", Costs.TORPEDO_COST, "High damage", true);
 
         this.createButton("ship", new Vec2(center.x + 50, center.y + 200), "Oars", "buyOars", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 50, center.y + 260), "Owned: Yes", "Cost: Free", "Slow", true);
+        this.createLabels("ship", "Oars", new Vec2(center.x + 50, center.y + 260), "Owned: Yes", Costs.OAR_COST, "Slow", true);
         this.createButton("ship", new Vec2(center.x + 220, center.y + 200), "Sail", "buySail", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 220, center.y + 260), "Owned: No", "Cost: 300", "Medium", true);
+        this.createLabels("ship", "Sail", new Vec2(center.x + 220, center.y + 260), "Owned: No", Costs.SAIL_COST, "Medium", true);
         this.createButton("ship", new Vec2(center.x + 390, center.y + 200), "Motor", "buyMotor", 150, "design");
-        this.createLabels("ship", new Vec2(center.x + 390, center.y + 260), "Owned: No", "Cost: 600", "Fast", true);
+        this.createLabels("ship", "Motor", new Vec2(center.x + 390, center.y + 260), "Owned: No", Costs.MOTOR_COST, "Fast", true);
 
         this.createButton("ship", new Vec2(center.x - 400, center.y), "Repair", "buyRepair", 200, "design");
-        this.createLabels("ship", new Vec2(center.x - 450, center.y + 50), "Owned: 0", "Cost: 50", "Heals ship", false);
+        this.createLabels("ship", "Repair", new Vec2(center.x - 450, center.y + 50), "Owned: 0", Costs.REPAIR_COST, "Heals ship", false);
         this.createButton("ship", new Vec2(center.x - 400, center.y + 100), "Pump", "buyPump", 200, "design");
-        this.createLabels("ship", new Vec2(center.x - 450, center.y + 150), "Owned: No", "Cost: 1000", "Reduces DPS taken", false);
+        this.createLabels("ship", "Pump", new Vec2(center.x - 450, center.y + 150), "Owned: No", Costs.PUMP_COST, "Reduces DPS taken", false);
         this.createButton("ship", new Vec2(center.x - 400, center.y + 200), "Crow's Nest", "buyCrow", 200, "design");
-        this.createLabels("ship", new Vec2(center.x - 450, center.y + 250), "Owned: No", "Cost: 800", "See further", false);
+        this.createLabels("ship", "Crow's Nest", new Vec2(center.x - 450, center.y + 250), "Owned: No", Costs.CROW_COST, "See further", false);
         this.createButton("ship", new Vec2(center.x - 400, center.y + 300), "Radar", "buyRadar", 200, "design");
-        this.createLabels("ship", new Vec2(center.x - 450, center.y + 350), "Owned: No", "Cost: 2000", "Reveals map", false);
+        this.createLabels("ship", "Radar", new Vec2(center.x - 450, center.y + 350), "Owned: No", Costs.RADAR_COST, "Reveals map", false);
     }
     private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string) {
         const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
@@ -148,17 +151,19 @@ export default class MapScene extends Scene {
             newButton.onClickEventId = clickEvent;
         }
         newButton.onClickEventId = clickEvent;
+        this.mapSubscriptions.push(clickEvent);
     }
-    public createLabels(layer: string, position: Vec2, owned: string, cost: string, use: string, vertical: boolean) {
-        this.add.uiElement(UIElementType.LABEL, layer, {position, text: owned, fontSize: 18, textColor: Color.WHITE});
+    public createLabels(layer: string, item: string, position: Vec2, owned: string, cost: number, use: string, vertical: boolean) {
+        const ownedLabel = <Label>this.add.uiElement(UIElementType.LABEL, layer, {position, text: owned, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
+        this.hudLabels.set(item, ownedLabel);
         let costPos = new Vec2(position.x + 100, position.y);
         let usePos = new Vec2(position.x + 260, position.y);
         if (vertical) {
             costPos = new Vec2(position.x, position.y + 45);
             usePos = new Vec2(position.x, position.y + 90);
         }
-        this.add.uiElement(UIElementType.LABEL, layer, {position: costPos, text: cost, fontSize: 18, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, layer, {position: usePos, text: use, fontSize: 18, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, layer, {position: costPos, text: `Cost: ${cost || 'Free'}`, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
+        this.add.uiElement(UIElementType.LABEL, layer, {position: usePos, text: use, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
     }
     private createMapIcon(x: number, y: number, iconType: number) {
         switch(iconType) {
@@ -200,10 +205,11 @@ export default class MapScene extends Scene {
             hidden.position.set(x, y);
         }
     }
-    public updateScene(){
+    public updateScene(deltaT: number){
         while(this.receiver.hasNextEvent()){
             this.handleEvent(this.receiver.getNextEvent());
         }
+        this.coinHUD.update(deltaT);
     }
 
     public handleEvent(event: GameEvent): void {
@@ -217,6 +223,78 @@ export default class MapScene extends Scene {
                 this.shipLayer.disable();
                 this.mapLayer.enable();
                 this.mapOverlay.enable();
+                break;
+            }
+            case "buyWood": {
+                if(GameStateManager.get().buyWood()) {
+                    this.hudLabels.get("Wood").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyFiber": {
+                if(GameStateManager.get().buyFiber()) {
+                    this.hudLabels.get("Fiberglass").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyMetal": {
+                if(GameStateManager.get().buyMetal()) {
+                    this.hudLabels.get("Metal").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyCannon": {
+                if(GameStateManager.get().buyCannon()) {
+                    this.hudLabels.get("Cannon").setText(`Owned: ${GameStateManager.get().numCannon}`);
+                }
+                break;
+            }
+            case "buyTorpedo": {
+                if(GameStateManager.get().buyTorpedo()) {
+                    this.hudLabels.get("Torpedo").setText(`Owned: ${GameStateManager.get().numTorpedo}`);
+                }
+                break;
+            }
+            case "buyRepair": {
+                if(GameStateManager.get().buyRepair()) {
+                    this.hudLabels.get("Repair").setText(`Owned: ${GameStateManager.get().numRepairs}`);
+                }
+                break;
+            }
+            case "buyOars": {
+                if(GameStateManager.get().buyOar()) {
+                    this.hudLabels.get("Oars").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buySail": {
+                if(GameStateManager.get().buySail()) {
+                    this.hudLabels.get("Sail").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyMotor": {
+                if(GameStateManager.get().buyMotor()) {
+                    this.hudLabels.get("Motor").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyPump": {
+                if(GameStateManager.get().buyPump()) {
+                    this.hudLabels.get("Pump").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyCrow": {
+                if(GameStateManager.get().buyCrow()) {
+                    this.hudLabels.get("Crow's Nest").setText("Owned: Yes");
+                }
+                break;
+            }
+            case "buyRadar": {
+                if(GameStateManager.get().buyRadar()) {
+                    this.hudLabels.get("Radar").setText("Owned: Yes");
+                }
                 break;
             }
         }

@@ -18,23 +18,42 @@ export default class CoinHUD implements Updateable {
 
     private staticLayer: string;
 
-    private coinCount: Label;
+    private countLabel: Label;
+
+    private coinCount: number;
 
 
     public constructor(scene: Scene, coinTabSprite: string, staticLayer: string, updatingHUDLayer: string, scaleX: number, scaleY: number) {
 
         this.scene = scene;
         this.staticLayer = staticLayer;
+        this.coinCount = GameStateManager.get().money;
         const coinTab = this.scene.add.sprite(coinTabSprite, staticLayer);
         const x = 460*scaleX;
         const y = 40*scaleY;
         coinTab.position.set(x, y);
         coinTab.scale.set(.4*scaleX, .3*scaleY);
-        this.coinCount = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5*scaleX, y - 5*scaleY), text: `${GameStateManager.get().money}`, fontSize: 30, textColor: Color.BLACK});
+        this.countLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, updatingHUDLayer, {position: new Vec2(x + 5*scaleX, y - 5*scaleY), text: `${this.coinCount}`, fontSize: 30, textColor: Color.BLACK});
     }
 
     public update(deltaT: number): void {
-        this.coinCount.setText(`${GameStateManager.get().money}`);
+        const actualCount = GameStateManager.get().money;
+        const countDifference = this.coinCount - actualCount;
+        if (countDifference > 500) {
+            this.coinCount -= 100;
+        } else if(countDifference > 30) {
+            this.coinCount -= 20;
+        } else if(countDifference > 0) {
+            this.coinCount -= 1;
+        } else if(countDifference < -500) {
+            this.coinCount += 100;
+        } else if (countDifference < -30) {
+            this.coinCount += 20;
+        }
+        else if (countDifference < 0) {
+            this.coinCount += 1;
+        }
+        this.countLabel.setText(`${this.coinCount}`);
     }
 
 }

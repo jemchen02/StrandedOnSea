@@ -1,5 +1,6 @@
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
 import { OverlayStatus, SOSLevel } from "./SOSLevel";
+import { Costs } from "./GameConstants";
 
 export class GameStateManager {
     private static instance: GameStateManager;
@@ -19,15 +20,17 @@ export class GameStateManager {
     public maxHealth : number;
 
     public numRepairs : number;
-    public numPumps : number;
 
     public numCannon : number;
     public numTorpedo : number;
 
     public hasCrowsNest : boolean;
     public hasRadar : boolean;
+    public hasPump : boolean;
 
+    public ownedShips: ShipType[];
     public shipType : ShipType;
+    public ownedMovements: MovementType[];
     public movementType : MovementType;
 
     public playerLocation : Vec2;
@@ -41,12 +44,14 @@ export class GameStateManager {
         this.health = 100;
         this.maxHealth = 100;
         this.numRepairs = 0;
-        this.numPumps = 0;
         this.numCannon = 0;
         this.numTorpedo = 0;
         this.hasCrowsNest = false;
         this.hasRadar = false;
+        this.hasPump = false;
+        this.ownedShips = [ShipType.WOOD];
         this.shipType = ShipType.WOOD;
+        this.ownedMovements = [MovementType.OAR];
         this.movementType = MovementType.OAR;
 
         this.playerLocation = new Vec2(4, 0);
@@ -125,6 +130,135 @@ export class GameStateManager {
         this.playerLocation = location;
 
         return true;
+    }
+    public buyCannon() : boolean {
+        if(this.money >= Costs.CANNON_COST) {
+            this.money -= Costs.CANNON_COST;
+            this.numCannon++;
+            return true;
+        }
+        return false;
+    }
+    public buyTorpedo() : boolean {
+        if(this.money >= Costs.TORPEDO_COST) {
+            this.money -= Costs.TORPEDO_COST;
+            this.numTorpedo++;
+            return true;
+        }
+        return false;
+    }
+    public buyRepair() : boolean {
+        if(this.money >= Costs.REPAIR_COST) {
+            this.money -= Costs.REPAIR_COST;
+            this.numRepairs++;
+            return true;
+        }
+        return false;
+    }
+    public buyWood() : boolean {
+        if(this.ownedShips.includes(ShipType.WOOD)) {
+            return true;
+        }
+        if(this.money >= Costs.WOOD_COST) {
+            this.money -= Costs.WOOD_COST;
+            this.shipType = ShipType.WOOD;
+            this.ownedShips.push(ShipType.WOOD);
+            return true;
+        }
+        return false;
+    }
+    public buyFiber() : boolean {
+        if(this.ownedShips.includes(ShipType.FIBERGLASS)) {
+            return true;
+        }
+        if(this.money >= Costs.FIBER_COST) {
+            this.money -= Costs.FIBER_COST;
+            this.shipType = ShipType.FIBERGLASS;
+            this.ownedShips.push(ShipType.FIBERGLASS);
+            return true;
+        }
+        return false;
+    }
+    public buyMetal() : boolean {
+        if(this.ownedShips.includes(ShipType.METAL)) {
+            return true;
+        }
+        if(this.money >= Costs.METAL_COST) {
+            this.money -= Costs.METAL_COST;
+            this.shipType = ShipType.METAL;
+            this.ownedShips.push(ShipType.METAL);
+            return true;
+        }
+        return false;
+    }
+    public buyOar() : boolean {
+        if(this.ownedMovements.includes(MovementType.OAR)) {
+            return true;
+        }
+        if(this.money >= Costs.OAR_COST) {
+            this.money -= Costs.OAR_COST;
+            this.movementType = MovementType.OAR;
+            this.ownedMovements.push(MovementType.OAR);
+            return true;
+        }
+        return false;
+    }
+    public buySail() : boolean {
+        if(this.ownedMovements.includes(MovementType.SAIL)) {
+            return true;
+        }
+        if(this.money >= Costs.SAIL_COST) {
+            this.money -= Costs.SAIL_COST;
+            this.movementType = MovementType.SAIL;
+            this.ownedMovements.push(MovementType.SAIL);
+            return true;
+        }
+        return false;
+    }
+    public buyMotor() : boolean {
+        if(this.ownedMovements.includes(MovementType.MOTOR)) {
+            return true;
+        }
+        if(this.money >= Costs.MOTOR_COST) {
+            this.money -= Costs.MOTOR_COST;
+            this.movementType = MovementType.MOTOR;
+            this.ownedMovements.push(MovementType.MOTOR);
+            return true;
+        }
+        return false;
+    }
+    public buyPump() : boolean {
+        if(this.hasPump) {
+            return true;
+        }
+        if(this.money >= Costs.PUMP_COST) {
+            this.money -= Costs.PUMP_COST;
+            this.hasPump = true;
+            return true;
+        }
+        return false;
+    }
+    public buyCrow() : boolean {
+        if(this.hasCrowsNest) {
+            return true;
+        }
+        if(this.money >= Costs.CROW_COST) {
+            this.money -= Costs.CROW_COST;
+            this.hasCrowsNest = true;
+            return true;
+        }
+        return false;
+    }
+    public buyRadar() : boolean {
+        if(this.hasRadar) {
+            return true;
+        }
+        if(this.money >= Costs.RADAR_COST) {
+            this.money -= Costs.RADAR_COST;
+            this.hasRadar = true;
+            return true;
+        }
+        return false;
     }
 }
 
