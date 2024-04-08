@@ -45,12 +45,6 @@ export default class PlayerActor extends AnimatedSprite implements Battler {
     public override setScene(scene: HW4Scene): void { this.scene = scene; }
     public override getScene(): HW4Scene { return this.scene; }
 
-    get battleGroup(): number {
-        return this.battler.battleGroup;
-    }
-    set battleGroup(value: number) {
-        this.battler.battleGroup = value;
-    }
     get maxHealth(): number {
         return this.battler.maxHealth;
     }
@@ -71,8 +65,5 @@ export default class PlayerActor extends AnimatedSprite implements Battler {
     }
     set speed(value: number) {
         this.battler.speed = value;
-    }
-    get inventory(): Inventory {
-        return this.battler.inventory;
     }
 }

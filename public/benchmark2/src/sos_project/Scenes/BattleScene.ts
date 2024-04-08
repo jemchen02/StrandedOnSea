@@ -26,6 +26,10 @@ import InventoryHUD from "../GameSystems/HUD/InventoryHUD";
 import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
 import CoinHUD from "../GameSystems/HUD/CoinHUD";
 import PauseHUD from "../GameSystems/HUD/PauseHUD";
+import EnemyActor from "../Actors/EnemyActor";
+import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
+import RamAI from "../AI/NPC/RamAI";
+import { GameStateManager } from "../GameStateManager";
 
 
 export default class BattleScene extends SosScene {
@@ -35,14 +39,18 @@ export default class BattleScene extends SosScene {
     private coinHUD: CoinHUD;
     private pauseHUD: PauseHUD;
 
+    private healthbars: Map<number, HealthbarHUD>;
+
     // The wall layer of the tilemap
     private walls: OrthogonalTilemap;
 
     // The position graph for the navmesh
     private graph: PositionGraph;
+    private player: PlayerActor;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
+        this.healthbars = new Map<number, HealthbarHUD>();
     }
 
     /**
@@ -53,6 +61,9 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
         // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
         // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
+
+        this.load.object("enemies", "hw4_assets/data/enemies/battle1/enemies.json");
+        this.load.image("enemyBoat", "sos_assets/spritesheets/hostile.png");
 
         // Load the tilemap
         this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
@@ -88,7 +99,7 @@ export default class BattleScene extends SosScene {
         
         // Create the player
         this.initializePlayer();
-
+        this.initializeNPCs();
         this.initializeNavmesh();
     }
     /**
@@ -101,6 +112,7 @@ export default class BattleScene extends SosScene {
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);
         this.healthHUD.update(deltaT);
+        this.healthbars.forEach(healthbar => healthbar.update(deltaT));
     }
 
     /**
@@ -132,11 +144,11 @@ export default class BattleScene extends SosScene {
      * Initializes the player in the scene
      */
     protected initializePlayer(): void {
-        let player = this.add.animatedSprite(PlayerActor, "player1", "primary");
-        player.position.set(18, 18);
+        this.player = this.add.animatedSprite(PlayerActor, "player1", "primary");
+        this.player.position.set(18, 18);
 
-        player.health = 10;
-        player.maxHealth = 10;
+        this.player.health = 10;
+        this.player.maxHealth = 10;
 
         this.inventoryHud = new InventoryHUD(this, "inventorySlot", {
             start: new Vec2(36, 175),
@@ -154,15 +166,33 @@ export default class BattleScene extends SosScene {
         this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
 
         // Give the player physics
-        player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 8)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 8)));
 
         // Give the player PlayerAI
-        player.addAI(PlayerAI);
+        this.player.addAI(PlayerAI);
 
         // Start the player in the "IDLE" animation
-        // player.animation.play("MOVE");
+        this.player.animation.play("IDLE");
 
-        this.viewport.follow(player);
+        this.viewport.follow(this.player);
+    }
+
+    protected initializeNPCs(): void {
+        let enemies = this.load.getObject("enemies");
+        for (let i = 0; i < enemies.boats.length; i++) {
+            let npc = this.add.animatedSprite(EnemyActor, "player1", "primary");
+            npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
+            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+            npc.speed = 10;
+            npc.health = 10;
+            npc.maxHealth = 10;
+            npc.navkey = "navmesh";
+            npc.addAI(RamAI, {player: this.player});
+
+
+            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+            this.healthbars.set(npc.id, healthbar);
+        }
     }
 
     protected initializeNavmesh(): void {
