@@ -16,6 +16,7 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import CannonBallAI from "../CannonBall";
+import TorpedoAI from "../TorpedoAI";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -57,15 +58,13 @@ export default class PlayerAI extends ShipAI {
         super.update(deltaT);
 		if(this.controller.fireTorpedo){
             console.log("TORPEDO")
-			// SOS_TODO Add torpedo event
+            this.fire_torpedo();
 		}
         if(this.controller.firePort){
             this.fire_cannon(true);
-			// SOS_TODO Add torpedo event
 		}
         if(this.controller.fireStarBoard){
             this.fire_cannon(false);
-			// SOS_TODO Add torpedo event
 		}
     }
 
@@ -105,5 +104,21 @@ export default class PlayerAI extends ShipAI {
         cannonBall.position = new Vec2(0, 0).add(this.owner.position);
 
         cannonBall.isCollidable = false;
+    }
+
+    public fire_torpedo() : void{
+        let topedo : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+        topedo.visible = true;
+        topedo.addAI(TorpedoAI);
+
+        //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
+        //cannonBall.setAIActive(true, {direction: dir});
+
+        topedo.setAIActive(true, {startingVelocity : this.owner.getLastVelocity()});
+
+        topedo.rotation = this.owner.rotation;
+        topedo.position = new Vec2(0, 0).add(this.owner.position);
+
+        topedo.isCollidable = false;
     }
 }
