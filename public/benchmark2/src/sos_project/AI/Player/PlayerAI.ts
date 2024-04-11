@@ -57,7 +57,6 @@ export default class PlayerAI extends ShipAI {
         this.turnDirection = this.controller.rotation
         super.update(deltaT);
 		if(this.controller.fireTorpedo){
-            console.log("TORPEDO")
             this.fire_torpedo();
 		}
         if(this.controller.firePort){
@@ -91,6 +90,9 @@ export default class PlayerAI extends ShipAI {
     }
 
     public fire_cannon(left : boolean) : void{
+        if(GameStateManager.get().numCannon <= 0) return;
+        GameStateManager.get().numCannon --;
+
         let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         cannonBall.visible = true;
         cannonBall.addAI(CannonBallAI);
@@ -107,6 +109,9 @@ export default class PlayerAI extends ShipAI {
     }
 
     public fire_torpedo() : void{
+        if(GameStateManager.get().numTorpedo <= 0) return;
+        GameStateManager.get().numTorpedo --;
+
         let topedo : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         topedo.visible = true;
         topedo.addAI(TorpedoAI);

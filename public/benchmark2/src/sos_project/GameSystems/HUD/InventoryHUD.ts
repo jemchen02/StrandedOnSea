@@ -96,6 +96,9 @@ export default class InventoryHUD implements Updateable {
     }
 
     public update(deltaT: number): void {
+        (<Label>this.itemSlotNums[0]).text = `${GameStateManager.get().numCannon}`;
+        (<Label>this.itemSlotNums[1]).text = `${GameStateManager.get().numTorpedo}`;
+        (<Label>this.itemSlotNums[2]).text = `${GameStateManager.get().numRepairs}`;
     }
 
 }
