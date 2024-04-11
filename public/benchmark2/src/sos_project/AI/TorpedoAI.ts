@@ -12,6 +12,8 @@ export default class TorpedoAI implements AI {
 
     public static SPEED: number = 250;
 
+    timeLeft : number = 5;
+
     public startingVelocity : Vec2;
 
     initializeAI(owner: Graphic, options: Record<string, any>): void {
@@ -28,6 +30,17 @@ export default class TorpedoAI implements AI {
 
     update(deltaT: number): void {
         if(!this.owner.visible) return;
+
+        this.timeLeft -= deltaT;
+        if(this.timeLeft < 0){
+            this.owner.visible = false;
+        }
+
+        //SOS TODO holme better
+        if(Input.getGlobalMousePosition().distanceTo(this.owner.position) < 5){
+            this.timeLeft -= (deltaT * 10);
+            return;
+        }
 
         let mouseX = Input.getGlobalMousePosition().x;
         let mouseY = Input.getGlobalMousePosition().y;
