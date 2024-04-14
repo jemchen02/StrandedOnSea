@@ -1,0 +1,19 @@
+export enum Costs {
+    WOOD_COST = 0,
+    FIBER_COST = 500,
+    METAL_COST = 1000,
+    CANNON_COST = 5,
+    TORPEDO_COST = 50,
+    REPAIR_COST = 100,
+    PUMP_COST = 1000,
+    CROW_COST = 600,
+    RADAR_COST = 1200,
+    OAR_COST = 0,
+    SAIL_COST = 400,
+    MOTOR_COST = 600
+}
+export enum DamageAmounts {
+    CANNON_DAMAGE = 10,
+    TORPEDO_DAMAGE = 25,
+    RAM_DAMAGE = 5
+}
