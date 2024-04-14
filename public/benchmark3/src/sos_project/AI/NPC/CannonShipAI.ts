@@ -50,6 +50,8 @@ export default class CannonShipAI extends ShipAI {
             } else {
                 this.maneuver(true);
             }
+        } else {
+            this.turnDirection = 0;
         }
         this.fireCooldown -= deltaT;
         super.update(deltaT);
