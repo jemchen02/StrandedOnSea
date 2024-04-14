@@ -1,0 +1,116 @@
+import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
+import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import Graphic from "../../../Wolfie2D/Nodes/Graphic";
+import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import EnemyActor from "../../Actors/EnemyActor";
+import PlayerActor from "../../Actors/PlayerActor";
+import { ItemEvent } from "../../Events";
+import { GameStateManager } from "../../GameStateManager";
+import Item from "../../GameSystems/ItemSystem/Item";
+import CannonBallAI from "../CannonBall";
+import ShipAI from "../ShipAI";
+
+/**
+ * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
+ * with 4 states; Idle, Moving, Invincible, and Dead.
+ */
+enum CANNON_SHIP_ENUMS {
+    SIGHT_RANGE = 50000,
+    FIRE_RANGE = 30000,
+    LEASH_RANGE = 45000,
+    ACCEPTABLE_ANGLE_MOVE = 0.1 * Math.PI,
+    ACCEPTABLE_ANGLE_FIRE = 0.02 * Math.PI
+}
+export default class CannonShipAI extends ShipAI {
+
+    private player: PlayerActor;
+    private fireCooldown: number;
+    private inFireMode: boolean;
+    public initializeAI(owner: EnemyActor, opts: Record<string, any>): void {
+        super.initializeAI(owner, opts);
+        this.player = opts.player;
+        this.fireCooldown = 0;
+    }
+
+    public activate(options: Record<string, any>): void { }
+
+    public update(deltaT: number): void {
+        this.collision = this.owner.isColliding;
+        const playerPos = this.player.position;
+
+        if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.SIGHT_RANGE){
+            if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.LEASH_RANGE) {
+                this.inFireMode = false;
+            }
+            if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.FIRE_RANGE || this.inFireMode) {
+                this.inFireMode = true;
+                this.maneuver(false);
+            } else {
+                this.maneuver(true);
+            }
+        }
+        this.fireCooldown -= deltaT;
+        super.update(deltaT);
+    }
+    public maneuver(chasePlayer: boolean) : void {
+        const playerPos = this.player.position;
+        const angleCCWToPlayer = this.owner.rotation - this.owner.position.angleToCCW(playerPos);
+        const vecTo = this.owner.position.vecTo(playerPos);
+        const angleTo = Math.atan2(vecTo.y,vecTo.x) + Math.PI/2;
+        let angleDiff: number;
+        let acceptable_angle: number;
+        if(chasePlayer) {
+            angleDiff = angleTo + this.owner.rotation;
+            acceptable_angle = CANNON_SHIP_ENUMS.ACCEPTABLE_ANGLE_MOVE;
+        } else {
+            angleDiff = angleTo + this.owner.rotation - Math.PI/2
+            acceptable_angle = CANNON_SHIP_ENUMS.ACCEPTABLE_ANGLE_FIRE;
+        }
+        if (angleDiff > Math.PI) {
+            angleDiff -= 2 * Math.PI;
+        }
+        if (angleDiff < -Math.PI) {
+            angleDiff += 2 * Math.PI;
+        }
+        if(angleDiff > 0) {
+            this.turnDirection = 1;
+        } else {
+            this.turnDirection = -1;
+        }
+        if(angleDiff > acceptable_angle || angleDiff < -acceptable_angle) {
+            this.forwardAxis = 0;
+        } else {
+            this.turnDirection = 0;
+            if(chasePlayer) {
+                this.forwardAxis = 1;
+            } else if(this.fireCooldown <= 0) {
+                this.fire_cannon();
+            }
+        }
+    }
+    public fire_cannon() : void{
+        this.fireCooldown = 3;
+        let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+        cannonBall.visible = true;
+        cannonBall.addAI(CannonBallAI);
+
+        cannonBall.setAIActive(true, {left: false, startingVelocity : this.owner.getLastVelocity()});
+
+        cannonBall.rotation = this.owner.rotation;
+        cannonBall.position = new Vec2(0, 0).add(this.owner.position);
+
+        cannonBall.isCollidable = false;
+    }
+    public handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            // Add events here
+            default: {
+                super.handleEvent(event);
+                break;
+            }
+        }
+    }
+
+}

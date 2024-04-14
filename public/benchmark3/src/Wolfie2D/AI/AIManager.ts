@@ -3,6 +3,7 @@ import Updateable from "../DataTypes/Interfaces/Updateable";
 import AI from "../DataTypes/Interfaces/AI";
 import GoapAI from "../DataTypes/Goap/GoapAI"
 import Map from "../DataTypes/Collections/Map";
+import { GameStateManager } from "../../sos_project/GameStateManager";
 
 /**
  * A manager class for all of the AI in a scene.
@@ -59,7 +60,10 @@ export default class AIManager implements Updateable {
 
 	update(deltaT: number): void {
 		// Run the ai for every active actor
-		this.actors.forEach(actor => { if(actor.aiActive) actor.ai.update(deltaT) });
+		if(!GameStateManager.get().isPaused) {
+			this.actors.forEach(actor => { if(actor.aiActive) actor.ai.update(deltaT) });
+		}
+		
 	}
 }
 

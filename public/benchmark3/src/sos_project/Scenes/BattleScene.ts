@@ -31,6 +31,8 @@ import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
 import RamAI from "../AI/NPC/RamAI";
 import { GameStateManager } from "../GameStateManager";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import TowerAI from "../AI/NPC/TowerAI";
+import CannonShipAI from "../AI/NPC/CannonShipAI";
 
 
 export default class BattleScene extends SosScene {
@@ -63,6 +65,7 @@ export default class BattleScene extends SosScene {
         // Load the player and enemy spritesheets
         this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
+        this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
         // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
 
@@ -76,6 +79,7 @@ export default class BattleScene extends SosScene {
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
 
         this.load.image("pause", "hw4_assets/sprites/pause.png");
+        this.receiver.subscribe("pause");
     }
     /**
      * @see Scene.startScene
@@ -120,6 +124,9 @@ export default class BattleScene extends SosScene {
      */
     public handleEvent(event: GameEvent): void {
         switch (event.type) {
+            case "pause":
+                GameStateManager.get().togglePause();
+                break;
             default: {
                 throw new Error(`Unhandled event type "${event.type}" caught in HW4Scene event handler`);
             }
@@ -190,6 +197,30 @@ export default class BattleScene extends SosScene {
             npc.navkey = "navmesh";
             npc.addAI(RamAI, {player: this.player});
 
+
+            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+            this.healthbars.set(npc.id, healthbar);
+        }
+        for (let i = 0; i < enemies.cannonships.length; i++) {
+            let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
+            npc.position.set(enemies.cannonships[i][0], enemies.cannonships[i][1]);
+            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+            npc.speed = 10;
+            npc.health = 10;
+            npc.maxHealth = 10;
+            npc.navkey = "navmesh";
+            npc.addAI(CannonShipAI, {player: this.player});
+
+
+            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+            this.healthbars.set(npc.id, healthbar);
+        }
+        for (let i = 0; i < enemies.towers.length; i++) {
+            let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
+            npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
+            npc.health = 30;
+            npc.maxHealth = 30;
+            npc.addAI(TowerAI, {player: this.player});
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
             this.healthbars.set(npc.id, healthbar);

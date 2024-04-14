@@ -22,5 +22,10 @@ export default class PauseHUD {
         const pauseIcon = this.scene.add.sprite(pauseSprite, staticLayer);
         pauseIcon.position.set(30, 30);
         pauseIcon.scale.set(.3, .3);
+        const button = this.scene.add.uiElement(UIElementType.BUTTON, staticLayer, {position: new Vec2(30,30), text: ""});
+        button.size.set(60, 60);
+        button.borderRadius = 30;
+        button.backgroundColor = Color.TRANSPARENT;
+        button.onClickEventId = "pause";
     }
 }

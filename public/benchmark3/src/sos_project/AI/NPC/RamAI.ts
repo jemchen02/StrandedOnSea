@@ -13,6 +13,11 @@ import ShipAI from "../ShipAI";
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
  * with 4 states; Idle, Moving, Invincible, and Dead.
  */
+enum RAM_ENUMS {
+    SIGHT_RANGE = 40000,
+    ACCEPTABLE_ANGLE = 0.1 * Math.PI,
+    COLLISION_RANGE = 400
+}
 export default class RamAI extends ShipAI {
 
     private player: PlayerActor;
@@ -37,15 +42,15 @@ export default class RamAI extends ShipAI {
         if (angleDiff < -Math.PI) {
             angleDiff += 2 * Math.PI;
         }
-        if(playerPos.distanceSqTo(this.owner.position) < 30000){
+        if(playerPos.distanceSqTo(this.owner.position) < RAM_ENUMS.SIGHT_RANGE){
             if(angleDiff > 0) {
                 this.turnDirection = 1;
             } else {
                 this.turnDirection = -1;
             }
-            if(angleDiff > 0.1 * Math.PI) {
+            if(angleDiff > RAM_ENUMS.ACCEPTABLE_ANGLE) {
                 this.forwardAxis = 0;
-            } else if(angleDiff < -0.1 * Math.PI){
+            } else if(angleDiff < -RAM_ENUMS.ACCEPTABLE_ANGLE){
                 this.forwardAxis = 0;
             } else {
                 this.turnDirection = 0;
@@ -56,7 +61,7 @@ export default class RamAI extends ShipAI {
             this.turnDirection = 0;
         }
         super.update(deltaT);
-        if(this.owner.position.distanceSqTo(playerPos) < 400) {
+        if(this.owner.position.distanceSqTo(playerPos) < RAM_ENUMS.COLLISION_RANGE) {
             this.emitter.fireEvent("ramCollision");
         }
 

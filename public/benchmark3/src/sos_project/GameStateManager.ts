@@ -38,6 +38,8 @@ export class GameStateManager {
     public gameMap: SOSLevel[][]; 
     public mapOverlays: OverlayStatus[][];
 
+    public isPaused: boolean;
+
     // We define starting amounts here.
     constructor(){
         this.money = 800;
@@ -53,6 +55,7 @@ export class GameStateManager {
         this.shipType = ShipType.WOOD;
         this.ownedMovements = [MovementType.OAR];
         this.movementType = MovementType.OAR;
+        this.isPaused = false;
 
         this.playerLocation = new Vec2(4, 0);
         
@@ -68,7 +71,9 @@ export class GameStateManager {
         this.movePlayer(this.playerLocation);
     }
     
-
+    public togglePause() {
+        this.isPaused = !this.isPaused;
+    }
     //TODO REALLY BAD HACK THIS SHOULD BE CHANGED
     private buildMap() : void{
         const mapInit = [[4, 2, 3, 2, 1], [1, 3, 2, 1, 0], [1, 1, 2, 3, 2], [4, 1, 2, 2, 2], [0, 3, 1, 1, 4]];
