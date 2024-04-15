@@ -15,6 +15,7 @@ import HostileScene from "./HostileScene";
 import WhirlpoolScene from "./WhirlpoolScene";
 import ShipwreckScene from "./ShipwreckScene";
 import ObstacleScene from "./ObstacleScene";
+import PurchaseButton from "../GameSystems/HUD/PurchaseButton";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -29,6 +30,7 @@ export default class MapScene extends Scene {
     private coinHUD: CoinHUD;
 
     private hudLabels: Map<String, Label>;
+    private shopButtons: PurchaseButton[];
     private mapSubscriptions: string[];
     public loadScene(){
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
@@ -48,6 +50,7 @@ export default class MapScene extends Scene {
 
     public startScene(){
         this.mapSubscriptions = [];
+        this.shopButtons = [];
         this.initBackground();
         this.initMap();
         this.initHUD();
@@ -109,52 +112,49 @@ export default class MapScene extends Scene {
         shipImage.position.set(center.x - 280, center.y - 260);
         shipImage.scale.set(.7, .7);
 
-        this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design");
+        this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design", -1);
 
-        this.createButton("ship", new Vec2(center.x + 50, center.y - 300), "Wood", "buyWood", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 50, center.y - 300), "Wood", "buyWood", 150, "design", Costs.WOOD_COST);
         this.createLabels("ship", "Wood", new Vec2(center.x + 50, center.y - 240), "Owned: Yes", Costs.WOOD_COST, "weak, fast", true);
-        this.createButton("ship", new Vec2(center.x + 220, center.y - 300), "Fiberglass", "buyFiber", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 220, center.y - 300), "Fiberglass", "buyFiber", 150, "design", Costs.FIBER_COST);
         this.createLabels("ship", "Fiberglass", new Vec2(center.x + 220, center.y - 240), "Owned: No", Costs.FIBER_COST, "medium", true);
-        this.createButton("ship", new Vec2(center.x + 390, center.y - 300), "Metal", "buyMetal", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 390, center.y - 300), "Metal", "buyMetal", 150, "design", Costs.METAL_COST);
         this.createLabels("ship", "Metal", new Vec2(center.x + 390, center.y - 240), "Owned: No", Costs.METAL_COST, "hardened, slow", true);
 
-        this.createButton("ship", new Vec2(center.x + 135, center.y - 50), "Cannon", "buyCannon", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 135, center.y - 50), "Cannon", "buyCannon", 150, "design", Costs.CANNON_COST);
         this.createLabels("ship", "Cannon", new Vec2(center.x + 135, center.y + 10), "Owned: 0", Costs.CANNON_COST, "Low damage", true);
-        this.createButton("ship", new Vec2(center.x + 305, center.y - 50), "Torpedo", "buyTorpedo", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 305, center.y - 50), "Torpedo", "buyTorpedo", 150, "design", Costs.TORPEDO_COST);
         this.createLabels("ship", "Torpedo", new Vec2(center.x + 305, center.y + 10), "Owned: 0", Costs.TORPEDO_COST, "High damage", true);
 
-        this.createButton("ship", new Vec2(center.x + 50, center.y + 200), "Oars", "buyOars", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 50, center.y + 200), "Oars", "buyOars", 150, "design", Costs.OAR_COST);
         this.createLabels("ship", "Oars", new Vec2(center.x + 50, center.y + 260), "Owned: Yes", Costs.OAR_COST, "Slow", true);
-        this.createButton("ship", new Vec2(center.x + 220, center.y + 200), "Sail", "buySail", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 220, center.y + 200), "Sail", "buySail", 150, "design", Costs.SAIL_COST);
         this.createLabels("ship", "Sail", new Vec2(center.x + 220, center.y + 260), "Owned: No", Costs.SAIL_COST, "Medium", true);
-        this.createButton("ship", new Vec2(center.x + 390, center.y + 200), "Motor", "buyMotor", 150, "design");
+        this.createButton("ship", new Vec2(center.x + 390, center.y + 200), "Motor", "buyMotor", 150, "design", Costs.MOTOR_COST);
         this.createLabels("ship", "Motor", new Vec2(center.x + 390, center.y + 260), "Owned: No", Costs.MOTOR_COST, "Fast", true);
 
-        this.createButton("ship", new Vec2(center.x - 400, center.y), "Repair", "buyRepair", 200, "design");
+        this.createButton("ship", new Vec2(center.x - 400, center.y), "Repair", "buyRepair", 200, "design", Costs.REPAIR_COST);
         this.createLabels("ship", "Repair", new Vec2(center.x - 450, center.y + 50), "Owned: 0", Costs.REPAIR_COST, "Heals ship", false);
-        this.createButton("ship", new Vec2(center.x - 400, center.y + 100), "Pump", "buyPump", 200, "design");
+        this.createButton("ship", new Vec2(center.x - 400, center.y + 100), "Pump", "buyPump", 200, "design", Costs.PUMP_COST);
         this.createLabels("ship", "Pump", new Vec2(center.x - 450, center.y + 150), "Owned: No", Costs.PUMP_COST, "Reduces DPS taken", false);
-        this.createButton("ship", new Vec2(center.x - 400, center.y + 200), "Crow's Nest", "buyCrow", 200, "design");
+        this.createButton("ship", new Vec2(center.x - 400, center.y + 200), "Crow's Nest", "buyCrow", 200, "design", Costs.CROW_COST);
         this.createLabels("ship", "Crow's Nest", new Vec2(center.x - 450, center.y + 250), "Owned: No", Costs.CROW_COST, "See further", false);
-        this.createButton("ship", new Vec2(center.x - 400, center.y + 300), "Radar", "buyRadar", 200, "design");
+        this.createButton("ship", new Vec2(center.x - 400, center.y + 300), "Radar", "buyRadar", 200, "design", Costs.RADAR_COST);
         this.createLabels("ship", "Radar", new Vec2(center.x - 450, center.y + 350), "Owned: No", Costs.RADAR_COST, "Reveals map", false);
     }
-    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string) {
-        const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
+    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number) {
         if (bType == "design") {
-            newButton.size.set(length, 50);
-            newButton.borderWidth = 3;
-            newButton.borderColor = Color.YELLOW;
-            newButton.backgroundColor = Color.fromStringHex("#005491");
+            const newButton = new PurchaseButton(this, {layer, position, text, clickEvent, length, cost});
+            this.shopButtons.push(newButton);
         } else {
+            const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
             newButton.size.set(length, 100);
             newButton.borderColor = Color.WHITE;
             newButton.backgroundColor = Color.TRANSPARENT;
+            if(clickEvent) {
+                newButton.onClickEventId = clickEvent;
+            }
         }
-        if(clickEvent) {
-            newButton.onClickEventId = clickEvent;
-        }
-        newButton.onClickEventId = clickEvent;
         this.mapSubscriptions.push(clickEvent);
     }
     public createLabels(layer: string, item: string, position: Vec2, owned: string, cost: number, use: string, vertical: boolean) {
@@ -174,22 +174,22 @@ export default class MapScene extends Scene {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", "playBattle", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playBattle", 100, "mapButton", 0);
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", "playShipwreck", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playShipwreck", 100, "mapButton", 0);
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", "playWhirlpool", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playWhirlpool", 100, "mapButton", 0);
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
             case 4:
-                this.createButton("map", new Vec2(x, y), "", "playLand", 100, "mapButton");
+                this.createButton("map", new Vec2(x, y), "", "playLand", 100, "mapButton", 0);
                 const land = this.add.sprite("land", "map");
                 land.position.set(x, y);
                 break;
@@ -214,6 +214,9 @@ export default class MapScene extends Scene {
             this.handleEvent(this.receiver.getNextEvent());
         }
         this.coinHUD.update(deltaT);
+        for(let button of this.shopButtons) {
+            button.update(deltaT);
+        }
     }
 
     public handleEvent(event: GameEvent): void {
