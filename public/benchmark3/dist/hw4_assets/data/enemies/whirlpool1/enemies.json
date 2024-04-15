@@ -1,4 +1,11 @@
 {
     "boats": [
+    ],
+    "towers":[
+    ],
+    "cannonships":[
+    ],
+    "whirlpools":[
+        [350, 100]
     ]
 }

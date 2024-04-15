@@ -33,6 +33,7 @@ import { GameStateManager } from "../GameStateManager";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
+import WhirlpoolAI from "../AI/NPC/WhirlpoolAI";
 
 
 export default class BattleScene extends SosScene {
@@ -66,6 +67,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
+        this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
         // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
         // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
 
@@ -224,6 +226,13 @@ export default class BattleScene extends SosScene {
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
             this.healthbars.set(npc.id, healthbar);
+        }
+        for (let i = 0; i < enemies.whirlpools.length; i++) {
+            let npc = this.add.sprite("whirlpool_enemy", "primary");
+            npc.scale.set(2, 2);
+            npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
+            npc.addAI(WhirlpoolAI, {player: this.player});
+
         }
     }
 
