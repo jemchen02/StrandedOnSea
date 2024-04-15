@@ -65,10 +65,11 @@ export default class TowerAI extends StateMachineAI {
 		if(this.isDead) return;
 
         const playerPos = this.player.position;
-
-        if(playerPos.distanceSqTo(this.owner.position) < TOWER_ENUMS.SIGHT_RANGE && this.fireCooldown <= 0){
+        if(playerPos.distanceSqTo(this.owner.position) < TOWER_ENUMS.SIGHT_RANGE) {
             this.facePlayer();
-            this.fire_cannon();
+            if(this.fireCooldown <= 0) {
+                this.fire_cannon();
+            }
         }
         this.fireCooldown -= deltaT;
 		while(this.receiver.hasNextEvent()){
