@@ -4,6 +4,8 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
+import { LevelRewards } from "../GameConstants";
+import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
 
 export default class ShipwreckScene extends BattleScene {
@@ -19,5 +21,9 @@ export default class ShipwreckScene extends BattleScene {
         super.initializeHUD();
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 25), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Collect loot before time runs out!", fontSize: 30, textColor: Color.WHITE});
+    }
+    protected override endLevel(): void {
+        GameStateManager.get().money += LevelRewards.SHIPWRECK1;
+        super.endLevel();
     }
 }

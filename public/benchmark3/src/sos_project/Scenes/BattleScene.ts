@@ -121,7 +121,7 @@ export default class BattleScene extends SosScene {
             this.handleEvent(this.receiver.getNextEvent());
         }
         if(Input.isPressed(PlayerInput.PASS_LEVEL)) {
-            this.sceneManager.changeToScene(MapScene);
+            this.endLevel();
         }
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);
@@ -356,5 +356,8 @@ export default class BattleScene extends SosScene {
         }
         return true;
 
+    }
+    protected endLevel(): void {
+        this.sceneManager.changeToScene(MapScene);
     }
 }

@@ -17,3 +17,13 @@ export enum DamageAmounts {
     TORPEDO_DAMAGE = 25,
     RAM_DAMAGE = 5
 }
+export enum LevelRewards {
+    HOSTILE1 = 300,
+    HOSTILE2 = 500,
+    OBSTACLE1 = 300,
+    OBSTACLE2 = 500,
+    SHIPWRECK1 = 200,
+    SHIPWRECK2 = 300,
+    WHIRLPOOL1 = 300,
+    WHIRLPOOL2 = 500
+}

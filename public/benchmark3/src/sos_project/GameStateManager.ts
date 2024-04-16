@@ -39,6 +39,7 @@ export class GameStateManager {
     public mapOverlays: OverlayStatus[][];
 
     public isPaused: boolean;
+    private stormCanMove: boolean;
 
     // We define starting amounts here.
     constructor(){
@@ -56,6 +57,7 @@ export class GameStateManager {
         this.ownedMovements = [MovementType.OAR];
         this.movementType = MovementType.OAR;
         this.isPaused = false;
+        this.stormCanMove = false;
 
         this.playerLocation = new Vec2(-1, 0); //Has to be 1 away for movePlayer to work right.
         
@@ -112,6 +114,9 @@ export class GameStateManager {
             }
         }
     }
+    public onLand(): boolean {
+        return this.gameMap[this.playerLocation.x][this.playerLocation.y].iconType == 4;
+    }
 
     public movePlayer(location : Vec2) : boolean {
         let self = this; //bit of a hack but works to get around scoping
@@ -139,7 +144,27 @@ export class GameStateManager {
                 this.mapOverlays[location.x + checkDirections[i].x][location.y + checkDirections[i].y].isFog = false;
             }
         }
-
+        const n = this.gameMap.length;
+        if(this.stormCanMove) {
+            let p1 = 0;
+            let p2 = 0;
+            let psum = 0;
+            while(p2 < n) {
+                psum = p1 + p2;
+                if(!this.mapOverlays[p1][p2].isStorm) break;
+                p1 > p2 ? p2++ : p1++;
+            }
+            for(let i = 0; i < n; i++) {
+                for(let j = 0; j < n; j++) {
+                    if(i + j == psum) {
+                        this.mapOverlays[i][j].isStorm = true;
+                    }
+                }
+            }
+            this.stormCanMove = false;
+        } else {
+            this.stormCanMove = true;
+        }
         this.playerLocation = location;
 
         return true;

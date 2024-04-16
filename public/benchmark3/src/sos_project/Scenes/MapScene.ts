@@ -57,6 +57,11 @@ export default class MapScene extends Scene {
         this.initMap();
         this.initHUD();
         this.initShip();
+        if(!GameStateManager.get().onLand()) {
+            this.shipLayer.disable();
+            this.mapLayer.enable();
+            this.mapOverlay.enable();
+        }
         // Subscribe to the button events
         for (let subevent of this.mapSubscriptions) {
             this.receiver.subscribe(subevent);
@@ -259,6 +264,10 @@ export default class MapScene extends Scene {
             }
             case "playObstacle": {
                 this.sceneManager.changeToScene(ObstacleScene);
+                break;
+            }
+            case "playLand": {
+                this.sceneManager.changeToScene(MapScene);
                 break;
             }
             case "ready": {
