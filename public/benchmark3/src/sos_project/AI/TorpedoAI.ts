@@ -5,6 +5,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import { CollisionManager } from "../CollisionManager";
 
 export default class TorpedoAI implements AI {
     // The owner of this AI
@@ -15,6 +16,8 @@ export default class TorpedoAI implements AI {
     timeLeft : number = 5;
 
     public startingVelocity : Vec2;
+
+    public shooter : GameNode;
 
     initializeAI(owner: Graphic, options: Record<string, any>): void {
         this.owner = owner;
@@ -52,6 +55,11 @@ export default class TorpedoAI implements AI {
         this.owner.rotation = angleToMouse;
 
         this.owner.position.add((new Vec2(1, 0).rotateCCW(this.owner.rotation)).scaled(TorpedoAI.SPEED * deltaT).add(this.startingVelocity));
+
+        let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
+        if(otherCollider && otherCollider != this.shooter){
+            console.log("Hit " + otherCollider);
+        }
     }
 
     destroy(): void {

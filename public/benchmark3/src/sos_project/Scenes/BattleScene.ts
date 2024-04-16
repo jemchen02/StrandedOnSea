@@ -34,6 +34,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
 import WhirlpoolAI from "../AI/NPC/WhirlpoolAI";
+import { CollisionManager } from "../CollisionManager";
 
 
 export default class BattleScene extends SosScene {
@@ -82,6 +83,8 @@ export default class BattleScene extends SosScene {
 
         this.load.image("pause", "hw4_assets/sprites/pause.png");
         this.receiver.subscribe("pause");
+
+        CollisionManager.get().ResetColliders();
     }
     /**
      * @see Scene.startScene
@@ -167,6 +170,8 @@ export default class BattleScene extends SosScene {
         // Start the player in the "IDLE" animation
         this.player.animation.play("IDLE");
 
+        CollisionManager.get().RegisterCollider(this.player);
+
         this.viewport.follow(this.player);
     }
 
@@ -198,6 +203,7 @@ export default class BattleScene extends SosScene {
             npc.maxHealth = 10;
             npc.navkey = "navmesh";
             npc.addAI(RamAI, {player: this.player});
+            CollisionManager.get().RegisterCollider(npc);
 
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
@@ -212,6 +218,7 @@ export default class BattleScene extends SosScene {
             npc.maxHealth = 10;
             npc.navkey = "navmesh";
             npc.addAI(CannonShipAI, {player: this.player});
+            CollisionManager.get().RegisterCollider(npc);
 
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
@@ -220,9 +227,11 @@ export default class BattleScene extends SosScene {
         for (let i = 0; i < enemies.towers.length; i++) {
             let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
             npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
+            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
             npc.health = 30;
             npc.maxHealth = 30;
             npc.addAI(TowerAI, {player: this.player});
+            CollisionManager.get().RegisterCollider(npc);
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
             this.healthbars.set(npc.id, healthbar);

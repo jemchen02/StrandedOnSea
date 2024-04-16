@@ -17,6 +17,7 @@ import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import CannonBallAI from "../CannonBall";
 import TorpedoAI from "../TorpedoAI";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -96,6 +97,8 @@ export default class PlayerAI extends ShipAI {
         let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         cannonBall.visible = true;
         cannonBall.addAI(CannonBallAI);
+        cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+        (<CannonBallAI>cannonBall._ai).shooter = this.owner;
 
         //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
         //cannonBall.setAIActive(true, {direction: dir});
@@ -115,6 +118,8 @@ export default class PlayerAI extends ShipAI {
         let topedo : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         topedo.visible = true;
         topedo.addAI(TorpedoAI);
+        topedo.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+        (<TorpedoAI>topedo._ai).shooter = this.owner;
 
         //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
         //cannonBall.setAIActive(true, {direction: dir});

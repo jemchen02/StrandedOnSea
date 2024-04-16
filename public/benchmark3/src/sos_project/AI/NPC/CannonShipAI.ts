@@ -1,5 +1,6 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
@@ -97,6 +98,8 @@ export default class CannonShipAI extends ShipAI {
         let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         cannonBall.visible = true;
         cannonBall.addAI(CannonBallAI);
+        cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+        (<CannonBallAI>cannonBall._ai).shooter = this.owner;
 
         cannonBall.setAIActive(true, {left: false, startingVelocity : this.owner.getLastVelocity()});
 
