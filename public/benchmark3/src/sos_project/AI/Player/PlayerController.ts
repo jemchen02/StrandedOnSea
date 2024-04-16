@@ -12,7 +12,8 @@ export enum PlayerInput {
     TURN_RIGHT = "MOVE_RIGHT",
     ATTACKING = "ATTACKING",
     FIRE_STARBOARD = "PICKUP_ITEM",
-    FIRE_PORT = "DROP_ITEM"
+    FIRE_PORT = "DROP_ITEM",
+    PASS_LEVEL = "SKIP_LEVEL"
 }
 
 /**

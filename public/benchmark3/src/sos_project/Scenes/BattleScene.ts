@@ -35,6 +35,9 @@ import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
 import WhirlpoolAI from "../AI/NPC/WhirlpoolAI";
 import { CollisionManager } from "../CollisionManager";
+import Input from "../../Wolfie2D/Input/Input";
+import { PlayerInput } from "../AI/Player/PlayerController";
+import MapScene from "./MapScene";
 
 
 export default class BattleScene extends SosScene {
@@ -116,6 +119,9 @@ export default class BattleScene extends SosScene {
     public override updateScene(deltaT: number): void {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
+        }
+        if(Input.isPressed(PlayerInput.PASS_LEVEL)) {
+            this.sceneManager.changeToScene(MapScene);
         }
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);

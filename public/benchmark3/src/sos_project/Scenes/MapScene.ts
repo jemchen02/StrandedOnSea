@@ -49,6 +49,8 @@ export default class MapScene extends Scene {
     }
 
     public startScene(){
+        this.viewport.setZoomLevel(1);
+        this.viewport.setCenter(new Vec2(512, 512));
         this.mapSubscriptions = [];
         this.shopButtons = [];
         this.initBackground();
