@@ -6,7 +6,10 @@ import ShipAI from "../ShipAI";
 
 export enum ShipAnimationType {
     IDLE = "IDLE",
-    MOVE = "MOVE",
+    MOVE_FORWARD = "MOVE_FORWARD",
+    MOVE_BACKWARD = "MOVE_BACKWARD",
+    TURN_LEFT = "TURN_LEFT",
+    TURN_RIGHT = "TURN_RIGHT",
     FIRE_STARBOARD = "FIRE_STARBOARD",
     FIRE_PORT = "FIRE_PORT",
     TAKE_DAMAGE = "TAKE_DAMAGE",

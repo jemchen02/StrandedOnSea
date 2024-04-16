@@ -17,7 +17,13 @@ export default class Idle extends ShipState {
     }
 
     public override update(deltaT: number): void {
-        this.owner.animation.playIfNotAlready(this.parent.checkSail+ShipAnimationType.IDLE);
+        if (this.parent.isTurningLeft) {
+            this.owner.animation.playIfNotAlready(this.parent.checkSail+ShipAnimationType.TURN_LEFT)
+        } else if (this.parent.isTurningRight) {
+            this.owner.animation.playIfNotAlready(this.parent.checkSail+ShipAnimationType.TURN_RIGHT)
+        } else {
+            this.owner.animation.playIfNotAlready(this.parent.checkSail+ShipAnimationType.IDLE);
+        }
         super.update(deltaT);
         if (this.parent.isMoving) {
             this.finished(ShipStateType.MOVING);

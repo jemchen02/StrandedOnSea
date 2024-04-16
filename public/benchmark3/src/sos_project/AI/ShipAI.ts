@@ -23,7 +23,7 @@ export default class ShipAI extends StateMachineAI {
 	private hasSail: boolean = false;
 
     // Parameters that may change based on the ship state
-	private MIN_SPEED: number = 0; // Change back to a negative value when a backwards animation is added
+	private MIN_SPEED: number = -25;
 	private MAX_SPEED: number = 100;
 	private ACCELERATION: number = 1;
 	private rotationSpeed: number;
@@ -34,6 +34,22 @@ export default class ShipAI extends StateMachineAI {
 
 	public get isMoving() {
 		return this.forwardAxis != 0
+	}
+	
+	public get isMovingForward() {
+		return this.forwardAxis > 0
+	}
+
+	public get isMovingBackward() {
+		return this.forwardAxis < 0
+	}
+
+	public get isTurningLeft() {
+		return this.turnDirection < 0
+	}
+
+	public get isTurningRight() {
+		return this.turnDirection > 0
 	}
 
 	public get checkSail() {

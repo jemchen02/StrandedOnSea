@@ -176,6 +176,7 @@ export default class AnimationManager {
 
         // If loop arg was provided, use that
         if(loop !== undefined){
+            
             this.loop = loop;
         } else {
             // Otherwise, use what the json file specified

@@ -17,8 +17,12 @@ export default class Moving extends ShipState {
     }
 
     public override update(deltaT: number): void {
-        this.owner.animation.playIfNotAlready(this.parent.checkSail + ShipAnimationType.MOVE, true);
-        super.update(deltaT);
+        if (this.parent.isMovingForward) {
+            this.owner.animation.playIfNotAlready(this.parent.checkSail + ShipAnimationType.MOVE_FORWARD, true);
+        } else if (this.parent.isMovingBackward) {
+            this.owner.animation.playIfNotAlready(this.parent.checkSail + ShipAnimationType.MOVE_BACKWARD, true)
+        }
+            super.update(deltaT);
         if (!this.parent.isMoving) {
             this.finished(ShipStateType.IDLE);
         }
