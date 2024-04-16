@@ -89,7 +89,7 @@ export default class MapScene extends Scene {
                 let x = center.x - 120 * (m - 1) / 2 + 120 * j;
 
                 let iconType : number = GameStateManager.get().gameMap[i][j].iconType;
-                this.createMapIcon(x, y, iconType);
+                this.createMapIcon(x, y, iconType, i, j);
 
                 let overlay : OverlayStatus = GameStateManager.get().mapOverlays[i][j];
                 this.createOverlayIcon(x, y, overlay, i, j);
@@ -169,33 +169,36 @@ export default class MapScene extends Scene {
         this.add.uiElement(UIElementType.LABEL, layer, {position: costPos, text: `Cost: ${cost || 'Free'}`, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
         this.add.uiElement(UIElementType.LABEL, layer, {position: usePos, text: use, fontSize: 18, textColor: Color.fromStringHex("FFFCBC")});
     }
-    private createMapIcon(x: number, y: number, iconType: number) {
+    private createMapIcon(x: number, y: number, iconType: number, i: number, j: number) {
+
+        let coordString = "{" + i + "," + j + "}";
+
         switch(iconType) {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", "playBattle", 100, "mapButton", 0);
+                this.createButton("map", new Vec2(x, y), "", coordString + "playBattle", 100, "mapButton", 0);
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", "playShipwreck", 100, "mapButton", 0);
+                this.createButton("map", new Vec2(x, y), "", coordString + "playShipwreck", 100, "mapButton", 0);
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", "playWhirlpool", 100, "mapButton", 0);
+                this.createButton("map", new Vec2(x, y), "", coordString + "playWhirlpool", 100, "mapButton", 0);
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
             case 4:
-                this.createButton("map", new Vec2(x, y), "", "playLand", 100, "mapButton", 0);
+                this.createButton("map", new Vec2(x, y), "", coordString + "playLand", 100, "mapButton", 0);
                 const land = this.add.sprite("land", "map");
                 land.position.set(x, y);
                 break;
         }
     }
-    private createOverlayIcon(x: number, y: number, overlay : OverlayStatus, i, j) {
+    private createOverlayIcon(x: number, y: number, overlay : OverlayStatus, i : number, j : number) {
         if(GameStateManager.get().playerLocation.x == i && GameStateManager.get().playerLocation.y == j){
             const playerIcon = this.add.sprite("playerIcon", "map");
             playerIcon.position.set(x, y);
@@ -220,7 +223,26 @@ export default class MapScene extends Scene {
     }
 
     public handleEvent(event: GameEvent): void {
-        switch(event.type) {
+
+        let encodedEvent : string = event.type;
+        let eventName : string = event.type;
+
+        let openingIndex : number= encodedEvent.indexOf('{');
+        let closingIndex : number= encodedEvent.indexOf('}');
+
+        if(openingIndex != -1 && closingIndex != -1){
+            eventName = encodedEvent.slice(closingIndex + 1);
+            let coords : string = encodedEvent.slice(openingIndex, closingIndex + 1);
+
+            const regex = /{(\d+),(\d+)}/;
+            const match = coords.match(regex);
+            let mapX : number = parseInt(match[1]);
+            let mapY : number = parseInt(match[2]);
+
+            if(!GameStateManager.get().movePlayer(new Vec2(mapX, mapY))) return; //invalid move
+        }
+
+        switch(eventName) {
             case "playBattle": {
                 this.sceneManager.changeToScene(HostileScene);
                 break;

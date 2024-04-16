@@ -57,7 +57,7 @@ export class GameStateManager {
         this.movementType = MovementType.OAR;
         this.isPaused = false;
 
-        this.playerLocation = new Vec2(4, 0);
+        this.playerLocation = new Vec2(-1, 0); //Has to be 1 away for movePlayer to work right.
         
         this.gameMap = Array.from({ length: 5 }, () =>
             Array.from({ length: 5 }, () => new SOSLevel())
@@ -68,7 +68,7 @@ export class GameStateManager {
         );
 
         this.buildMap();
-        this.movePlayer(this.playerLocation);
+        this.movePlayer(new Vec2(0, 0));
     }
     
     public togglePause() {
@@ -76,25 +76,24 @@ export class GameStateManager {
     }
     //TODO REALLY BAD HACK THIS SHOULD BE CHANGED
     private buildMap() : void{
-        const mapInit = [[4, 2, 3, 2, 1], [1, 3, 2, 1, 0], [1, 1, 2, 3, 2], [4, 1, 2, 2, 2], [0, 3, 1, 1, 4]];
+        //THIS IS THE MAP
+        const mapInit = [
+            [4, 2, 3, 2, 1],
+            [1, 3, 2, 1, 0],
+            [1, 1, 2, 3, 2],
+            [4, 1, 2, 2, 2],
+            [0, 3, 1, 1, 4]
+        ];
         const n = mapInit.length;
         const m = mapInit[0].length;
 
-        const overlayInit = [];
-        for(let i = 0; i < n; i++) {
-            overlayInit[i] = [];
-            for(let j = 0; j < m; j++) {
-                if(i == 0 && j == 0) {
-                    overlayInit[i][j] = 1;
-                } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
-                    overlayInit[i][j] = 0;
-                } else if (mapInit[i][j] == 0) {
-                    overlayInit[i][j] = 0;
-                } else {
-                    overlayInit[i][j] = 3;
-                }
-            }
-        }
+        const overlayInit = [
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3]
+        ];
 
         for(let i = 0; i < this.mapOverlays.length; i++){
             for(let j = 0; j < this.mapOverlays.length; j++){
@@ -115,20 +114,29 @@ export class GameStateManager {
     }
 
     public movePlayer(location : Vec2) : boolean {
+        let self = this; //bit of a hack but works to get around scoping
         function isInBounds(location : Vec2): boolean {
-            return location.x >= 0 && location.x < this.mapOverlays.length && location.y >= 0 && location.y < this.mapOverlays[location.x].length;
+            return location.x >= 0 && location.x < self.mapOverlays.length && location.y >= 0 && location.y < self.mapOverlays[location.x].length;
         }
 
-        let checkDirections : Vec2[] = [new Vec2(1, 0), new Vec2(1, 0), new Vec2(1, 0), new Vec2(1, 0)]
+        let checkDirections : Vec2[] = [new Vec2(1, 0), new Vec2(-1, 0), new Vec2(0, 1), new Vec2(0, -1)]
 
-        if(!checkDirections.includes(location.sub(this.playerLocation))) return false;
+        let includes : boolean = false;
+        for(let i = 0; i < checkDirections.length; i++){
+            if(checkDirections[i].equals(location.clone().sub(this.playerLocation))){
+                includes = true;
+                break
+            }
+        }
+
+        if(!includes) return false;
         if(!isInBounds(location)) return false;
 
         //Removes fog in adjacent tiles
         //TODO account for crows nest and radar...
         for(let i = 0; i < checkDirections.length; i++){
             if(isInBounds(location.clone().add(checkDirections[i]))){
-                this.mapOverlays[this.playerLocation.x + checkDirections[i].x][this.playerLocation.y + checkDirections[i].y].isFog = false;
+                this.mapOverlays[location.x + checkDirections[i].x][location.y + checkDirections[i].y].isFog = false;
             }
         }
 
