@@ -274,6 +274,7 @@ export default class MapScene extends Scene {
             this.handleEvent(this.receiver.getNextEvent());
         }
         this.coinHUD.update(deltaT);
+        this.healthHUD.update(deltaT);
         for(let [name, button] of this.shopButtons) {
             button.update(deltaT);
         }

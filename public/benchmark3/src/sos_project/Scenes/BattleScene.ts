@@ -38,6 +38,7 @@ import { CollisionManager } from "../CollisionManager";
 import Input from "../../Wolfie2D/Input/Input";
 import { PlayerInput } from "../AI/Player/PlayerController";
 import MapScene from "./MapScene";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 
 
 export default class BattleScene extends SosScene {
@@ -257,6 +258,7 @@ export default class BattleScene extends SosScene {
         }
         for (let i = 0; i < enemies.whirlpools.length; i++) {
             let npc = this.add.sprite("whirlpool_enemy", "primary");
+            npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
             npc.scale.set(2, 2);
             npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
             npc.addAI(WhirlpoolAI, {player: this.player});

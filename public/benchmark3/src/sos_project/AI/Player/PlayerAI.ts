@@ -42,6 +42,7 @@ export default class PlayerAI extends ShipAI {
         
 
         this.receiver.subscribe("ramCollision");
+        this.receiver.subscribe("whirlpoolKO");
     }
 
     public activate(options: Record<string, any>): void { }
@@ -73,6 +74,10 @@ export default class PlayerAI extends ShipAI {
             // Add events here
             case "ramCollision":
                 this.onRamCollision();
+                break;
+            case "whirlpoolKO":
+                this.onWhirlpoolKO();
+                break;
             default: {
                 super.handleEvent(event);
                 break;
@@ -88,6 +93,9 @@ export default class PlayerAI extends ShipAI {
             this.InvincibleTimer = new Timer(2000);
             this.InvincibleTimer.start();
         }
+    }
+    public onWhirlpoolKO(): void {
+        GameStateManager.get().health = 0;
     }
 
     public fire_cannon(left : boolean) : void{

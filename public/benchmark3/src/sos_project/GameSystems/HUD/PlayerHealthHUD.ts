@@ -55,7 +55,7 @@ export default class PlayerHealthHUD implements Updateable {
             this.healthBar.setBackgroundColor(Color.RED);
         }
         this.healthBar.size.set(fraction * 350, 35);
-        this.healthBar.position.set(255 * this.scaleX - ((1-fraction) * 350 / 4), 493.5*this.scaleY)
+        this.healthBar.position.set(this.scaleX * (255 - ((1-fraction) * 350 / 4)), 493.5*this.scaleY)
         this.healthLabel.setText(`${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`);
     }
 
