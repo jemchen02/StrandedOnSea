@@ -157,7 +157,8 @@ export default class BattleScene extends SosScene {
     }
     /** Initializes the layers in the scene */
     protected initLayers(): void {
-        this.addLayer("primary", 10);
+        this.addLayer("player", 5)
+        this.addLayer("primary", 4);
         this.addUILayer("staticHUD");
         this.addUILayer("slots");
         this.addUILayer("updateHUD");
@@ -173,7 +174,7 @@ export default class BattleScene extends SosScene {
      * Initializes the player in the scene
      */
     protected initializePlayer(): void {
-        this.player = this.add.animatedSprite(PlayerActor, "player1", "primary");
+        this.player = this.add.animatedSprite(PlayerActor, "player1", "player");
         this.player.position.set(18, 18);
 
         this.player.health = 10;
