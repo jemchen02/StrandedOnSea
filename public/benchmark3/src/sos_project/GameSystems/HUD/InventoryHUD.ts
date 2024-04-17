@@ -18,7 +18,9 @@ interface HUDOptions {
     staticLayer: string,
     cannonSprite: string,
     torpedoSprite: string,
-    repairSprite: string
+    repairSprite: string,
+    scaleX: number,
+    scaleY: number
 }
 
 /**
@@ -65,7 +67,8 @@ export default class InventoryHUD implements Updateable {
         this.staticLayer = options.staticLayer;
 
         // Set up the scales for scaling to the viewport
-        
+        const scaleX = options.scaleX;
+        const scaleY = options.scaleY;
         // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
@@ -73,26 +76,26 @@ export default class InventoryHUD implements Updateable {
             //this.itemSlots[i].scale.set(0.4, 0.4);
         }
         this.itemSlots[0] = this.scene.add.sprite(options.cannonSprite, this.slotLayer);
-        this.itemSlots[0].scale.set(0.4, 0.4);
+        this.itemSlots[0].scale.set(0.4 * scaleX, 0.4 * scaleY);
         this.itemSlots[1] = this.scene.add.sprite(options.torpedoSprite, this.slotLayer);
-        this.itemSlots[1].scale.set(0.4, 0.4);
+        this.itemSlots[1].scale.set(0.4 * scaleX, 0.4 * scaleY);
         this.itemSlots[2] = this.scene.add.sprite(options.repairSprite, this.slotLayer);
-        this.itemSlots[2].scale.set(0.4, 0.4);
+        this.itemSlots[2].scale.set(0.4 * scaleX, 0.4 * scaleY);
         // Set the positions of the item slot sprites
-        let width = this.itemSlots[0].size.x;
-        let height = this.itemSlots[0].size.y;
+        let width = this.itemSlots[0].size.x * scaleX;
+        let height = this.itemSlots[0].size.y * scaleY;
         for (let i = 0; i < this.size; i += 1) {
-            this.itemSlots[i].position.set(this.start.x, this.start.y + i*(40 + this.padding));
+            this.itemSlots[i].position.set(this.start.x * scaleX, (this.start.y + i*(40 + this.padding)) * scaleY);
         }
         // Set the slot numbers in the user interface
         this.itemSlotNums = new Array<Label>();
-        this.itemSlotNums[0] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y), text: `${GameStateManager.get().numCannon}`, fontSize: 24, textColor:Color.BLACK});
-        this.itemSlotNums[1] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + 1*(40 + this.padding) + 10), text: `${GameStateManager.get().numTorpedo}`, fontSize: 24, textColor:Color.BLACK});
-        this.itemSlotNums[2] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + 25, this.start.y + 2*(40 + this.padding) + 10), text: `${GameStateManager.get().numRepairs}`, fontSize: 24, textColor:Color.BLACK});
+        this.itemSlotNums[0] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2((this.start.x + 25) * scaleX, (this.start.y + 10 )* scaleY), text: `${GameStateManager.get().numCannon}`, fontSize: 24, textColor:Color.BLACK});
+        this.itemSlotNums[1] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2((this.start.x + 25) * scaleX, (this.start.y + 1*(40 + this.padding) + 10) * scaleY), text: `${GameStateManager.get().numTorpedo}`, fontSize: 24, textColor:Color.BLACK});
+        this.itemSlotNums[2] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2((this.start.x + 25) * scaleX, (this.start.y + 2*(40 + this.padding) + 10) * scaleY), text: `${GameStateManager.get().numRepairs}`, fontSize: 24, textColor:Color.BLACK});
 
         const inventoryTab = this.scene.add.sprite("inventoryTab", this.staticLayer);
-        inventoryTab.position.set(50, 250);
-        inventoryTab.scale.set(.3, .3);
+        inventoryTab.position.set(50 * scaleX, 250 * scaleY);
+        inventoryTab.scale.set(.3 * scaleX, .3 * scaleY);
     }
 
     public update(deltaT: number): void {

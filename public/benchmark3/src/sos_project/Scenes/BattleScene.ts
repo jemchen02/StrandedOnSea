@@ -46,7 +46,7 @@ export default class BattleScene extends SosScene {
     private healthHUD: PlayerHealthHUD;
     private coinHUD: CoinHUD;
     private pauseHUD: PauseHUD;
-
+    protected scaleFactor: number;
     private healthbars: Map<number, HealthbarHUD>;
 
     // The wall layer of the tilemap
@@ -114,7 +114,7 @@ export default class BattleScene extends SosScene {
         let tilemapSize: Vec2 = this.walls.size;
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
-        this.viewport.setZoomLevel(2);
+        this.viewport.setZoomLevel(3);
 
         this.initLayers();
         
@@ -193,6 +193,7 @@ export default class BattleScene extends SosScene {
     }
 
     protected initializeHUD(): void {
+        this.scaleFactor = 2/3;
         this.inventoryHud = new InventoryHUD(this, "inventorySlot", {
             start: new Vec2(36, 175),
             slotLayer: "slots",
@@ -201,12 +202,13 @@ export default class BattleScene extends SosScene {
             staticLayer: "staticHUD",
             cannonSprite: "cannon",
             torpedoSprite: "torpedo",
-            repairSprite: "repair"
+            repairSprite: "repair",
+            scaleX: this.scaleFactor,
+            scaleY: this.scaleFactor
         });
-
-        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);
-        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 1, 1);
-        this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
+        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
+        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
+        this.pauseHUD = new PauseHUD(this, "pause", "staticHUD", this.scaleFactor, this.scaleFactor);
     }
 
     protected initializeNPCs(): void {

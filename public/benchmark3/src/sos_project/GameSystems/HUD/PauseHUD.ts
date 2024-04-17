@@ -14,15 +14,15 @@ export default class PauseHUD {
 
     private staticLayer: string;
 
-    public constructor(scene: Scene, pauseSprite: string, staticLayer: string) {
+    public constructor(scene: Scene, pauseSprite: string, staticLayer: string, scaleX: number, scaleY: number) {
 
         this.scene = scene;
         this.staticLayer = staticLayer;
 
         const pauseIcon = this.scene.add.sprite(pauseSprite, staticLayer);
-        pauseIcon.position.set(30, 30);
-        pauseIcon.scale.set(.3, .3);
-        const button = this.scene.add.uiElement(UIElementType.BUTTON, staticLayer, {position: new Vec2(30,30), text: ""});
+        pauseIcon.position.set(30 * scaleX, 30 * scaleY);
+        pauseIcon.scale.set(.3 * scaleX, .3 * scaleY);
+        const button = this.scene.add.uiElement(UIElementType.BUTTON, staticLayer, {position: new Vec2(30 * scaleX,30 * scaleY), text: ""});
         button.size.set(60, 60);
         button.borderRadius = 30;
         button.backgroundColor = Color.TRANSPARENT;
