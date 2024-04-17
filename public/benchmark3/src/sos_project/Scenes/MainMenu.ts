@@ -4,7 +4,6 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import MapScene from "./MapScene";
 import HostileScene from "./HostileScene";
 import HostileScene2 from "./HostileScene2";
 import ObstacleScene from "./ObstacleScene";
@@ -13,6 +12,7 @@ import ShipwreckScene from "./ShipwreckScene";
 import ShipwreckScene2 from "./ShipwreckScene2";
 import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
+import ShipDesigner from "./ShipDesigner";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -119,7 +119,7 @@ export default class MainMenu extends Scene {
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
             case "play": {
-                this.sceneManager.changeToScene(MapScene);
+                this.sceneManager.changeToScene(ShipDesigner);
                 break;
             }
             case "controls": {

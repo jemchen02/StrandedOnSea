@@ -6,6 +6,7 @@ import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
 import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
+import { LevelRewards } from "../GameConstants";
 
 export default class HostileScene2 extends BattleScene {
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
@@ -22,7 +23,7 @@ export default class HostileScene2 extends BattleScene {
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Defeat Enemies", fontSize: 30, textColor: Color.WHITE});
     }
     protected override endLevel(): void {
-        GameStateManager.get().money += 500;
+        GameStateManager.get().money += LevelRewards.HOSTILE2;
         super.endLevel();
     }
 }

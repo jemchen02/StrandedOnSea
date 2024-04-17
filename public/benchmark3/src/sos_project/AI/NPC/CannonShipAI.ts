@@ -9,7 +9,6 @@ import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { ItemEvent } from "../../Events";
 import { GameStateManager } from "../../GameStateManager";
-import Item from "../../GameSystems/ItemSystem/Item";
 import CannonBallAI from "../CannonBall";
 import ShipAI from "../ShipAI";
 

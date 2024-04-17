@@ -1,27 +1,17 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
-import Actor from "../../Wolfie2D/DataTypes/Interfaces/Actor";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import DirectStrategy from "../../Wolfie2D/Pathfinding/Strategies/DirectStrategy";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import Timer from "../../Wolfie2D/Timing/Timer";
-import Color from "../../Wolfie2D/Utils/Color";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import PlayerActor from "../Actors/PlayerActor";
 import PlayerAI from "../AI/Player/PlayerAI";
-import { ClosestPositioned } from "../GameSystems/Searching/HW4Reducers";
-import BasicTargetable from "../GameSystems/Targeting/BasicTargetable";
-import Position from "../GameSystems/Targeting/Position";
 import AstarStrategy from "../Pathfinding/AstarStrategy";
-import SosScene from "./SosScene";
 import InventoryHUD from "../GameSystems/HUD/InventoryHUD";
 import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
 import CoinHUD from "../GameSystems/HUD/CoinHUD";
@@ -30,17 +20,17 @@ import EnemyActor from "../Actors/EnemyActor";
 import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
 import RamAI from "../AI/NPC/RamAI";
 import { GameStateManager } from "../GameStateManager";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
 import WhirlpoolAI from "../AI/NPC/WhirlpoolAI";
 import { CollisionManager } from "../CollisionManager";
 import Input from "../../Wolfie2D/Input/Input";
 import { PlayerInput } from "../AI/Player/PlayerController";
+import Scene from "../../Wolfie2D/Scene/Scene";
 import MapScene from "./MapScene";
 
 
-export default class BattleScene extends SosScene {
+export default class BattleScene extends Scene {
 
     private inventoryHud: InventoryHUD;
     private healthHUD: PlayerHealthHUD;

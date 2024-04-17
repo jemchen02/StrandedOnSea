@@ -1,26 +1,23 @@
 import Spritesheet from "../../Wolfie2D/DataTypes/Spritesheet";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Scene from "../../Wolfie2D/Scene/Scene";
 import { BattlerEvent, ItemEvent } from "../Events";
 import BasicBattler from "../GameSystems/BattleSystem/BasicBattler";
 import Battler from "../GameSystems/BattleSystem/Battler";
-import Inventory from "../GameSystems/ItemSystem/Inventory";
-import HW4Item from "../GameSystems/ItemSystem/Item";
 import BasicTargetable from "../GameSystems/Targeting/BasicTargetable";
 import { TargetableEntity } from "../GameSystems/Targeting/TargetableEntity";
 import { TargetingEntity } from "../GameSystems/Targeting/TargetingEntity";
-import HW4Scene from "../Scenes/SosScene";
 
 
 export default class PlayerActor extends AnimatedSprite implements Battler {
 
     /** Override the type of the scene to be the HW4 scene */
-    protected scene: HW4Scene
+    protected scene: Scene
 
     /** Give the player a battler compoonent */
     protected battler: Battler;
     protected targetable: TargetableEntity;
 
-    protected heldItem: HW4Item;
 
     constructor(sheet: Spritesheet) {
         super(sheet);
@@ -42,8 +39,8 @@ export default class PlayerActor extends AnimatedSprite implements Battler {
     public addTargeting(targeting: TargetingEntity): void { this.targetable.addTargeting(targeting); }
     public removeTargeting(targeting: TargetingEntity): void { this.targetable.removeTargeting(targeting); }
 
-    public override setScene(scene: HW4Scene): void { this.scene = scene; }
-    public override getScene(): HW4Scene { return this.scene; }
+    public override setScene(scene: Scene): void { this.scene = scene; }
+    public override getScene(): Scene { return this.scene; }
 
     get maxHealth(): number {
         return this.battler.maxHealth;
