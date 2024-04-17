@@ -29,7 +29,7 @@ import PauseHUD from "../GameSystems/HUD/PauseHUD";
 import EnemyActor from "../Actors/EnemyActor";
 import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
 import RamAI from "../AI/NPC/RamAI";
-import { GameStateManager } from "../GameStateManager";
+import { GameStateManager, ShipType } from "../GameStateManager";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
@@ -68,7 +68,18 @@ export default class BattleScene extends SosScene {
         const playerLocation = GameStateManager.get().playerLocation;
         const gameLevel = GameStateManager.get().gameMap[playerLocation.x][playerLocation.y];
         // Load the player and enemy spritesheets
-        this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+        const playerShipType = GameStateManager.get().shipType;
+        switch(playerShipType) {
+            case ShipType.WOOD:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+                break;
+            case ShipType.FIBERGLASS:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_fiberglass.json");
+                break;
+            case ShipType.METAL:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_metal.json");
+                break;
+        }
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
