@@ -161,9 +161,11 @@ export default class MapScene extends Scene {
         this.player_ships.push(this.player_metal);
 
         for(let ship of this.player_ships) {
+            ship.visible = false;
             ship.position.set(220, 220);
             ship.scale.set(6,6);
         }
+        this.setShip(GameStateManager.get().shipType);
         this.setAnimation(GameStateManager.get().movementType);
         
 
