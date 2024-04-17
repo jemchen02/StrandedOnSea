@@ -308,6 +308,11 @@ export class GameStateManager {
         if(this.money >= Costs.RADAR_COST) {
             this.money -= Costs.RADAR_COST;
             this.hasRadar = true;
+            for(let i = 0 ; i < this.mapOverlays.length; i++) {
+                for(let j = 0; j < this.mapOverlays[0].length; j++) {
+                    this.mapOverlays[i][j].isFog = false;
+                }
+            }
             return true;
         }
         return false;
