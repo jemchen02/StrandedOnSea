@@ -117,33 +117,42 @@ export class GameStateManager {
     public onLand(): boolean {
         return this.gameMap[this.playerLocation.x][this.playerLocation.y].iconType == 4;
     }
-
+    private isInBounds(location : Vec2): boolean {
+        return location.x >= 0 && location.x < this.mapOverlays.length && location.y >= 0 && location.y < this.mapOverlays[location.x].length;
+    }
     public movePlayer(location : Vec2) : boolean {
         let self = this; //bit of a hack but works to get around scoping
-        function isInBounds(location : Vec2): boolean {
-            return location.x >= 0 && location.x < self.mapOverlays.length && location.y >= 0 && location.y < self.mapOverlays[location.x].length;
-        }
 
-        let checkDirections : Vec2[] = [new Vec2(1, 0), new Vec2(-1, 0), new Vec2(0, 1), new Vec2(0, -1)]
+        let normalDirections : Vec2[] = [new Vec2(1, 0), new Vec2(-1, 0), new Vec2(0, 1), new Vec2(0, -1)];
+        
 
         let includes : boolean = false;
-        for(let i = 0; i < checkDirections.length; i++){
-            if(checkDirections[i].equals(location.clone().sub(this.playerLocation))){
+        for(let i = 0; i < normalDirections.length; i++){
+            if(normalDirections[i].equals(location.clone().sub(this.playerLocation))){
                 includes = true;
                 break
             }
         }
 
         if(!includes) return false;
-        if(!isInBounds(location)) return false;
+        if(!this.isInBounds(location)) return false;
 
         //Removes fog in adjacent tiles
         //TODO account for crows nest and radar...
-        for(let i = 0; i < checkDirections.length; i++){
-            if(isInBounds(location.clone().add(checkDirections[i]))){
-                this.mapOverlays[location.x + checkDirections[i].x][location.y + checkDirections[i].y].isFog = false;
+        if(this.hasCrowsNest) {
+            for(let i = 0; i < crowDirections.length; i++){
+                if(this.isInBounds(location.clone().add(crowDirections[i]))){
+                    this.mapOverlays[location.x + crowDirections[i].x][location.y + crowDirections[i].y].isFog = false;
+                }
+            }
+        } else {
+            for(let i = 0; i < normalDirections.length; i++){
+                if(this.isInBounds(location.clone().add(normalDirections[i]))){
+                    this.mapOverlays[location.x + normalDirections[i].x][location.y + normalDirections[i].y].isFog = false;
+                }
             }
         }
+        
         const n = this.gameMap.length;
         if(this.stormCanMove) {
             let p1 = 0;
@@ -283,6 +292,11 @@ export class GameStateManager {
         if(this.money >= Costs.CROW_COST) {
             this.money -= Costs.CROW_COST;
             this.hasCrowsNest = true;
+            for(let i = 0; i < crowDirections.length; i++){
+                if(this.isInBounds(new Vec2(this.playerLocation.x + crowDirections[i].x, this.playerLocation.y + crowDirections[i].y))){
+                    this.mapOverlays[this.playerLocation.x + crowDirections[i].x][this.playerLocation.y + crowDirections[i].y].isFog = false;
+                }
+            }
             return true;
         }
         return false;
@@ -311,3 +325,4 @@ export enum MovementType {
     SAIL,
     MOTOR
 }
+const crowDirections = [new Vec2(1, 0), new Vec2(-1, 0), new Vec2(0, 1), new Vec2(0, -1), new Vec2(2, 0), new Vec2(-2, 0), new Vec2(0, 2), new Vec2(0, -2), new Vec2(1, 1), new Vec2(-1, 1), new Vec2(1, -1), new Vec2(-1, -1)];
