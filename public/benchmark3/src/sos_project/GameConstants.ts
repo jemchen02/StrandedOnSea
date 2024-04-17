@@ -6,8 +6,8 @@ export enum Costs {
     TORPEDO_COST = 50,
     REPAIR_COST = 100,
     PUMP_COST = 1000,
-    CROW_COST = 600,
-    RADAR_COST = 1200,
+    CROW_COST = 250,
+    RADAR_COST = 500,
     OAR_COST = 0,
     SAIL_COST = 400,
     MOTOR_COST = 600

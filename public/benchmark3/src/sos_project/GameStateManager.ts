@@ -300,13 +300,13 @@ export class GameStateManager {
     }
 }
 
-enum ShipType {
+export enum ShipType {
     WOOD,
     METAL,
     FIBERGLASS
 }
 
-enum MovementType {
+export enum MovementType {
     OAR,
     SAIL,
     MOTOR

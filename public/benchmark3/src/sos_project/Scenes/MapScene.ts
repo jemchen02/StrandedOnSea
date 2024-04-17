@@ -8,7 +8,7 @@ import BattleScene from "./BattleScene";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import PlayerHealthHUD from "../GameSystems/HUD/PlayerHealthHUD";
 import CoinHUD from "../GameSystems/HUD/CoinHUD";
-import { GameStateManager } from "../GameStateManager";
+import { GameStateManager, MovementType, ShipType } from "../GameStateManager";
 import { OverlayStatus, SOSLevel } from "../SOSLevel";
 import { Costs } from "../GameConstants";
 import HostileScene from "./HostileScene";
@@ -16,9 +16,15 @@ import WhirlpoolScene from "./WhirlpoolScene";
 import ShipwreckScene from "./ShipwreckScene";
 import ObstacleScene from "./ObstacleScene";
 import PurchaseButton from "../GameSystems/HUD/PurchaseButton";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import { ShipAnimationType } from "../AI/ShipStates/ShipState";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
+    private player_wood: AnimatedSprite;
+    private player_fiber: AnimatedSprite;
+    private player_metal: AnimatedSprite;
+    private player_ships: AnimatedSprite[];
     private backgroundLayer: Layer;
     private staticHUD: Layer;
     private updateHUD: Layer;
@@ -33,9 +39,13 @@ export default class MapScene extends Scene {
     private shopButtons: PurchaseButton[];
     private mapSubscriptions: string[];
     public loadScene(){
+        this.load.spritesheet("player_wood", "sos_assets/spritesheets/player_wood.json");
+        this.load.spritesheet("player_fiber", "sos_assets/spritesheets/player_fiberglass.json");
+        this.load.spritesheet("player_metal", "sos_assets/spritesheets/player_metal.json");
+
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
-        this.load.image("gameLogo", "hw4_assets/sprites/gameLogo.png");
+        this.load.image("water", "hw4_assets/sprites/water.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
 
@@ -110,14 +120,52 @@ export default class MapScene extends Scene {
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 2, 2);
         this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 2, 2);
     }
-    private initShip() {
+    private setShip(shipType: ShipType) : void{
+        for(let ship of this.player_ships) {
+            ship.visible = false;
+        }
+        switch(shipType) {
+            case ShipType.WOOD:
+                this.player_wood.visible = true;
+                break;
+            case ShipType.FIBERGLASS:
+                this.player_fiber.visible = true;
+                break;
+            case ShipType.METAL:
+                this.player_metal.visible = true;
+                break;
+        }
+    }
+    private setAnimation(movement: MovementType) {
+        const movementType = movement == MovementType.OAR? "" : "SAIL_";
+        for(let ship of this.player_ships) {
+            ship.animation.play(movementType + ShipAnimationType.MOVE_FORWARD);
+        }
+    }
+    private initShip() : void{
         const center = this.viewport.getCenter();
 
         this.shipLayer = this.addUILayer("ship");
 
-        const shipImage = this.add.sprite("gameLogo", "ship");
-        shipImage.position.set(center.x - 280, center.y - 260);
-        shipImage.scale.set(.7, .7);
+        const shipImage = this.add.sprite("water", "ship");
+        shipImage.position.set(220, 220);
+        shipImage.scale.set(4.5, 4.5);
+
+        this.player_ships = [];
+
+        this.player_wood = this.add.animatedSprite(AnimatedSprite, "player_wood", "ship");
+        this.player_ships.push(this.player_wood);
+        this.player_fiber = this.add.animatedSprite(AnimatedSprite, "player_fiber", "ship");
+        this.player_ships.push(this.player_fiber);
+        this.player_metal = this.add.animatedSprite(AnimatedSprite, "player_metal", "ship");
+        this.player_ships.push(this.player_metal);
+
+        for(let ship of this.player_ships) {
+            ship.position.set(220, 220);
+            ship.scale.set(6,6);
+        }
+        this.setAnimation(GameStateManager.get().movementType);
+        
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design", -1);
 
@@ -279,18 +327,21 @@ export default class MapScene extends Scene {
             case "buyWood": {
                 if(GameStateManager.get().buyWood()) {
                     this.hudLabels.get("Wood").setText("Owned: Yes");
+                    this.setShip(ShipType.WOOD);
                 }
                 break;
             }
             case "buyFiber": {
                 if(GameStateManager.get().buyFiber()) {
                     this.hudLabels.get("Fiberglass").setText("Owned: Yes");
+                    this.setShip(ShipType.FIBERGLASS);
                 }
                 break;
             }
             case "buyMetal": {
                 if(GameStateManager.get().buyMetal()) {
                     this.hudLabels.get("Metal").setText("Owned: Yes");
+                    this.setShip(ShipType.METAL);
                 }
                 break;
             }
@@ -315,18 +366,21 @@ export default class MapScene extends Scene {
             case "buyOars": {
                 if(GameStateManager.get().buyOar()) {
                     this.hudLabels.get("Oars").setText("Owned: Yes");
+                    this.setAnimation(MovementType.OAR);
                 }
                 break;
             }
             case "buySail": {
                 if(GameStateManager.get().buySail()) {
                     this.hudLabels.get("Sail").setText("Owned: Yes");
+                    this.setAnimation(MovementType.SAIL);
                 }
                 break;
             }
             case "buyMotor": {
                 if(GameStateManager.get().buyMotor()) {
                     this.hudLabels.get("Motor").setText("Owned: Yes");
+                    this.setAnimation(MovementType.MOTOR);
                 }
                 break;
             }
