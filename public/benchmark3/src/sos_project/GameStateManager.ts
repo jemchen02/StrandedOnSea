@@ -181,7 +181,7 @@ export class GameStateManager {
     public buyCannon() : boolean {
         if(this.money >= Costs.CANNON_COST) {
             this.money -= Costs.CANNON_COST;
-            this.numCannon++;
+            this.numCannon += 5;
             return true;
         }
         return false;

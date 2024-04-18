@@ -30,7 +30,7 @@ export default class ShipAI extends StateMachineAI {
 
     
 
-	private isDead: boolean = false;
+	protected isDead: boolean = false;
 
 	public get isMoving() {
 		return this.forwardAxis != 0

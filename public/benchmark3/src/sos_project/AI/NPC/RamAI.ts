@@ -5,6 +5,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { ItemEvent } from "../../Events";
+import { DamageAmounts } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
 import ShipAI from "../ShipAI";
@@ -69,7 +70,14 @@ export default class RamAI extends ShipAI {
 
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
-            // Add events here
+            case "cannonHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
+                    if((<EnemyActor>this.owner).health <= 0) {
+                        this.isDead = true;
+                    }
+                }
+                break;
             default: {
                 super.handleEvent(event);
                 break;

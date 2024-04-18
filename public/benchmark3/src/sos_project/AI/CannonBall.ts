@@ -1,6 +1,7 @@
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
+import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
@@ -16,9 +17,11 @@ export default class CannonBallAI implements AI {
     public startingVelocity : Vec2;
 
     public shooter : GameNode;
+    private emitter: Emitter;
 
     initializeAI(owner: Graphic, options: Record<string, any>): void {
         this.owner = owner;
+        this.emitter = new Emitter();
     }
 
     activate(options: Record<string, any>): void {
@@ -38,7 +41,8 @@ export default class CannonBallAI implements AI {
 
         let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
         if(otherCollider && otherCollider != this.shooter){
-            console.log("Hit " + otherCollider);
+            this.emitter.fireEvent("cannonHit", {"node": otherCollider});
+            this.owner.destroy();
         }
     }
 

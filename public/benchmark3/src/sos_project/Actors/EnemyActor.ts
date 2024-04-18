@@ -29,6 +29,7 @@ export default class EnemyActor extends AnimatedSprite{
         this._navkey = "navkey";
         this._battler = new BasicBattler(this);
         this.attackCooldown = new Timer(1000);
+        this.receiver.subscribe("cannonHit");
     }
 
     public get battlerActive(): boolean { return this.battler.battlerActive; }

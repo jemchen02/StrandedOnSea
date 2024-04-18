@@ -10,7 +10,10 @@ import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import EnemyActor from "../../Actors/EnemyActor";
+import NPCActor from "../../Actors/NPCActor";
 import PlayerActor from "../../Actors/PlayerActor";
+import { DamageAmounts } from "../../GameConstants";
 import CannonBallAI from "../CannonBall";
 
 enum TOWER_ENUMS {
@@ -36,13 +39,21 @@ export default class TowerAI extends StateMachineAI {
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
         this.fireCooldown = 0;
-
 	}
 
 	activate(options: Record<string, any>){};
 
 	handleEvent(event: GameEvent): void {
-		// Need to handle animations when damage is taken
+        switch(event.type) {
+            case "cannonHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
+                    if((<EnemyActor>this.owner).health <= 0) {
+                        this.isDead = true;
+                    }
+                }
+                break;
+        }
 	}
     public fire_cannon() : void{
         this.fireCooldown = 3;

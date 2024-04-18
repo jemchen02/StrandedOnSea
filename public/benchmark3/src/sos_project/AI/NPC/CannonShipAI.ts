@@ -8,6 +8,7 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { ItemEvent } from "../../Events";
+import { DamageAmounts } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
 import CannonBallAI from "../CannonBall";
@@ -38,24 +39,27 @@ export default class CannonShipAI extends ShipAI {
     public activate(options: Record<string, any>): void { }
 
     public update(deltaT: number): void {
-        this.collision = this.owner.isColliding;
-        const playerPos = this.player.position;
+        if(!this.isDead) {
+            this.collision = this.owner.isColliding;
+            const playerPos = this.player.position;
 
-        if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.SIGHT_RANGE){
-            if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.LEASH_RANGE) {
-                this.inFireMode = false;
-            }
-            if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.FIRE_RANGE || this.inFireMode) {
-                this.inFireMode = true;
-                this.maneuver(false);
+            if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.SIGHT_RANGE){
+                if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.LEASH_RANGE) {
+                    this.inFireMode = false;
+                }
+                if(playerPos.distanceSqTo(this.owner.position) < CANNON_SHIP_ENUMS.FIRE_RANGE || this.inFireMode) {
+                    this.inFireMode = true;
+                    this.maneuver(false);
+                } else {
+                    this.maneuver(true);
+                }
             } else {
-                this.maneuver(true);
+                this.turnDirection = 0;
             }
-        } else {
-            this.turnDirection = 0;
+            this.fireCooldown -= deltaT;
+            super.update(deltaT);
         }
-        this.fireCooldown -= deltaT;
-        super.update(deltaT);
+        
     }
     public maneuver(chasePlayer: boolean) : void {
         const playerPos = this.player.position;
@@ -110,7 +114,14 @@ export default class CannonShipAI extends ShipAI {
     }
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
-            // Add events here
+            case "cannonHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
+                    if((<EnemyActor>this.owner).health <= 0) {
+                        this.isDead = true;
+                    }
+                }
+                break;
             default: {
                 super.handleEvent(event);
                 break;
