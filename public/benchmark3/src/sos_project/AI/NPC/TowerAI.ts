@@ -39,6 +39,8 @@ export default class TowerAI extends StateMachineAI {
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
         this.fireCooldown = 0;
+        this.receiver.subscribe("cannonHit");
+        this.receiver.subscribe("torpedoHit");
 	}
 
 	activate(options: Record<string, any>){};
@@ -48,6 +50,14 @@ export default class TowerAI extends StateMachineAI {
             case "cannonHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
+                    if((<EnemyActor>this.owner).health <= 0) {
+                        this.isDead = true;
+                    }
+                }
+                break;
+            case "torpedoHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.TORPEDO_DAMAGE;
                     if((<EnemyActor>this.owner).health <= 0) {
                         this.isDead = true;
                     }

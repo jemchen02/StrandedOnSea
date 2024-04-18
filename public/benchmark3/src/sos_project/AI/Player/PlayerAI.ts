@@ -45,6 +45,7 @@ export default class PlayerAI extends ShipAI {
         this.receiver.subscribe("ramCollision");
         this.receiver.subscribe("whirlpoolKO");
         this.receiver.subscribe("cannonHit");
+        this.receiver.subscribe("torpedoHit");
     }
 
     public activate(options: Record<string, any>): void { }

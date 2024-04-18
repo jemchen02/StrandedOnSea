@@ -25,6 +25,8 @@ export default class RamAI extends ShipAI {
     public initializeAI(owner: EnemyActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
         this.player = opts.player;
+        this.receiver.subscribe("cannonHit");
+        this.receiver.subscribe("torpedoHit");
 
     }
 
@@ -73,6 +75,14 @@ export default class RamAI extends ShipAI {
             case "cannonHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
+                    if((<EnemyActor>this.owner).health <= 0) {
+                        this.isDead = true;
+                    }
+                }
+                break;
+            case "torpedoHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.TORPEDO_DAMAGE;
                     if((<EnemyActor>this.owner).health <= 0) {
                         this.isDead = true;
                     }
