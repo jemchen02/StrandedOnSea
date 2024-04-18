@@ -118,7 +118,6 @@ export default class PlayerAI extends ShipAI {
         }
     }
     public onWhirlpoolKO(): void {
-        GameStateManager.get().health = 0;
         this.emitter.fireEvent("gameLoss");
     }
 

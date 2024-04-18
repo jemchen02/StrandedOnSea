@@ -29,11 +29,11 @@ export default class HostileScene extends BattleScene {
         super.update(deltaT);
         this.enemiesLeftLabel.setText(`Enemies left: ${this.battlerCount}`);
         if(this.battlerCount == 0) {
-            this.endLevel();
+            this.winLevel();
         }
     }
-    protected override endLevel(): void {
+    protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.HOSTILE1;
-        super.endLevel();
+        super.winLevel(LevelRewards.HOSTILE1);
     }
 }

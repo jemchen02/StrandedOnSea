@@ -41,6 +41,9 @@ import MapScene from "./MapScene";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Battler from "../GameSystems/BattleSystem/Battler";
 import { BattlerEvent } from "../Events";
+import LevelEndHUD from "../GameSystems/HUD/LevelEndHUD";
+import Layer from "../../Wolfie2D/Scene/Layer";
+import { LevelRewards } from "../GameConstants";
 
 
 export default class BattleScene extends SosScene {
@@ -61,9 +64,14 @@ export default class BattleScene extends SosScene {
     private graph: PositionGraph;
     private player: PlayerActor;
 
+    private levelEnded: boolean;
+    private lostLevel: boolean;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
         this.healthbars = new Map<number, HealthbarHUD>();
+        this.levelEnded = false;
+        this.lostLevel = false;
     }
 
     /**
@@ -102,9 +110,12 @@ export default class BattleScene extends SosScene {
 
         this.load.image("pause", "hw4_assets/sprites/pause.png");
 
+        this.load.image("modal", "hw4_assets/sprites/modal.png");
+
         this.receiver.subscribe("pause");
         this.receiver.subscribe(BattlerEvent.BATTLER_KILLED);
         this.receiver.subscribe("gameLoss");
+        this.receiver.subscribe("back");
 
         CollisionManager.get().ResetColliders();
     }
@@ -139,8 +150,8 @@ export default class BattleScene extends SosScene {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
-        if(Input.isPressed(PlayerInput.PASS_LEVEL)) {
-            this.endLevel();
+        if(Input.isPressed(PlayerInput.PASS_LEVEL) && !this.levelEnded) {
+            this.winLevel();
         }
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);
@@ -163,6 +174,13 @@ export default class BattleScene extends SosScene {
             case "gameLoss":
                 this.loseLevel();
                 break;
+            case "back":
+                GameStateManager.get().togglePause();
+                if(this.lostLevel) {
+                    GameStateManager.get().restoreSaved();
+                }
+                this.sceneManager.changeToScene(MapScene);
+                break;
             default: {
                 throw new Error(`Unhandled event type "${event.type}" caught in HW4Scene event handler`);
             }
@@ -170,6 +188,8 @@ export default class BattleScene extends SosScene {
     }
     /** Initializes the layers in the scene */
     protected initLayers(): void {
+        this.addLayer("endfront", 7);
+        this.addLayer("endback", 6);
         this.addLayer("player", 5)
         this.addLayer("primary", 4);
         this.addUILayer("staticHUD");
@@ -406,10 +426,18 @@ export default class BattleScene extends SosScene {
         
     }
     protected endLevel(): void {
-        this.sceneManager.changeToScene(MapScene);
+        if(!GameStateManager.get().isPaused) {
+            GameStateManager.get().togglePause();
+        }
+        this.levelEnded = true;
+    }
+    protected winLevel(rewards: number = 0): void {
+        this.endLevel();
+        new LevelEndHUD(this, "modal", "staticHUD", true, rewards, this.scaleFactor, this.scaleFactor);
     }
     protected loseLevel(): void {
-        GameStateManager.get().restoreSaved();
-        this.sceneManager.changeToScene(MapScene);
+        this.endLevel();
+        this.lostLevel = true;
+        new LevelEndHUD(this, "modal", "staticHUD", false, 0, this.scaleFactor, this.scaleFactor);
     }
 }

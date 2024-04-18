@@ -23,8 +23,8 @@ export default class ObstacleScene extends BattleScene {
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Avoid obstacles", fontSize: 30, textColor: Color.WHITE});
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
     }
-    protected override endLevel(): void {
+    protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.OBSTACLE1;
-        super.endLevel();
+        super.winLevel(LevelRewards.OBSTACLE1);
     }
 }
