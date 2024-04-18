@@ -39,6 +39,8 @@ import Input from "../../Wolfie2D/Input/Input";
 import { PlayerInput } from "../AI/Player/PlayerController";
 import MapScene from "./MapScene";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
+import Battler from "../GameSystems/BattleSystem/Battler";
+import { BattlerEvent } from "../Events";
 
 
 export default class BattleScene extends SosScene {
@@ -49,6 +51,8 @@ export default class BattleScene extends SosScene {
     private pauseHUD: PauseHUD;
     protected scaleFactor: number;
     private healthbars: Map<number, HealthbarHUD>;
+    private enemyBattlers: Battler[];
+    protected battlerCount: number;
 
     // The wall layer of the tilemap
     private walls: OrthogonalTilemap;
@@ -97,7 +101,10 @@ export default class BattleScene extends SosScene {
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
 
         this.load.image("pause", "hw4_assets/sprites/pause.png");
+
         this.receiver.subscribe("pause");
+        this.receiver.subscribe(BattlerEvent.BATTLER_KILLED);
+        this.receiver.subscribe("gameLoss");
 
         CollisionManager.get().ResetColliders();
     }
@@ -149,6 +156,12 @@ export default class BattleScene extends SosScene {
         switch (event.type) {
             case "pause":
                 GameStateManager.get().togglePause();
+                break;
+            case BattlerEvent.BATTLER_KILLED:
+                this.handleBattlerKilled(event);
+                break;
+            case "gameLoss":
+                this.loseLevel();
                 break;
             default: {
                 throw new Error(`Unhandled event type "${event.type}" caught in HW4Scene event handler`);
@@ -214,6 +227,8 @@ export default class BattleScene extends SosScene {
     }
 
     protected initializeNPCs(): void {
+        this.enemyBattlers = [];
+        this.battlerCount = 0;
         let enemies = this.load.getObject("enemies");
         for (let i = 0; i < enemies.boats.length; i++) {
             let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
@@ -225,6 +240,8 @@ export default class BattleScene extends SosScene {
             npc.navkey = "navmesh";
             npc.addAI(RamAI, {player: this.player});
             CollisionManager.get().RegisterCollider(npc);
+            this.enemyBattlers.push(npc);
+            this.battlerCount++;
 
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
@@ -240,6 +257,8 @@ export default class BattleScene extends SosScene {
             npc.navkey = "navmesh";
             npc.addAI(CannonShipAI, {player: this.player});
             CollisionManager.get().RegisterCollider(npc);
+            this.enemyBattlers.push(npc);
+            this.battlerCount++;
 
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
@@ -253,6 +272,8 @@ export default class BattleScene extends SosScene {
             npc.maxHealth = 30;
             npc.addAI(TowerAI, {player: this.player});
             CollisionManager.get().RegisterCollider(npc);
+            this.enemyBattlers.push(npc);
+            this.battlerCount++;
 
             let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
             this.healthbars.set(npc.id, healthbar);
@@ -373,7 +394,22 @@ export default class BattleScene extends SosScene {
         return true;
 
     }
+    protected handleBattlerKilled(event: GameEvent): void {
+        let id: number = event.data.get("id");
+        let battler = this.enemyBattlers.find(b => b.id === id);
+
+        if (battler) {
+            battler.battlerActive = false;
+            this.healthbars.get(id).visible = false;
+            this.battlerCount--;
+        }
+        
+    }
     protected endLevel(): void {
+        this.sceneManager.changeToScene(MapScene);
+    }
+    protected loseLevel(): void {
+        GameStateManager.get().restoreSaved();
         this.sceneManager.changeToScene(MapScene);
     }
 }

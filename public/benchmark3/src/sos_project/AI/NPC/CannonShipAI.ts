@@ -7,6 +7,7 @@ import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
+import { CollisionManager } from "../../CollisionManager";
 import { ItemEvent } from "../../Events";
 import { DamageAmounts } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
@@ -119,23 +120,25 @@ export default class CannonShipAI extends ShipAI {
             case "cannonHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
-                    if((<EnemyActor>this.owner).health <= 0) {
-                        this.isDead = true;
-                    }
+                    this.checkDeath();
                 }
                 break;
             case "torpedoHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.TORPEDO_DAMAGE;
-                    if((<EnemyActor>this.owner).health <= 0) {
-                        this.isDead = true;
-                    }
+                    this.checkDeath();
                 }
                 break;
             default: {
                 super.handleEvent(event);
                 break;
             }
+        }
+    }
+    public checkDeath(): void {
+        if((<EnemyActor>this.owner).health <= 0) {
+            this.isDead = true;
+            CollisionManager.get().remove(this.owner);
         }
     }
 

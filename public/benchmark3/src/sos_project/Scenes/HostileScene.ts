@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
@@ -9,6 +10,7 @@ import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
 
 export default class HostileScene extends BattleScene {
+    private enemiesLeftLabel: Label;
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
     }
@@ -20,7 +22,15 @@ export default class HostileScene extends BattleScene {
     protected override initializeHUD(): void {
         super.initializeHUD();
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Defeat Enemies", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Defeat All Enemies", fontSize: 30, textColor: Color.WHITE});
+        this.enemiesLeftLabel = <Label>this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: `Enemies left: ${this.battlerCount}`, fontSize: 30, textColor: Color.WHITE});
+    }
+    public override update(deltaT: number): void {
+        super.update(deltaT);
+        this.enemiesLeftLabel.setText(`Enemies left: ${this.battlerCount}`);
+        if(this.battlerCount == 0) {
+            this.endLevel();
+        }
     }
     protected override endLevel(): void {
         GameStateManager.get().money += LevelRewards.HOSTILE1;

@@ -13,6 +13,7 @@ import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import EnemyActor from "../../Actors/EnemyActor";
 import NPCActor from "../../Actors/NPCActor";
 import PlayerActor from "../../Actors/PlayerActor";
+import { CollisionManager } from "../../CollisionManager";
 import { DamageAmounts } from "../../GameConstants";
 import CannonBallAI from "../CannonBall";
 
@@ -50,17 +51,13 @@ export default class TowerAI extends StateMachineAI {
             case "cannonHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
-                    if((<EnemyActor>this.owner).health <= 0) {
-                        this.isDead = true;
-                    }
+                    this.checkDeath();
                 }
                 break;
             case "torpedoHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.TORPEDO_DAMAGE;
-                    if((<EnemyActor>this.owner).health <= 0) {
-                        this.isDead = true;
-                    }
+                    this.checkDeath();
                 }
                 break;
         }
@@ -104,4 +101,10 @@ export default class TowerAI extends StateMachineAI {
 
 		// Animations
 	}
+    public checkDeath(): void {
+        if((<EnemyActor>this.owner).health <= 0) {
+            this.isDead = true;
+            CollisionManager.get().remove(this.owner);
+        }
+    }
 } 

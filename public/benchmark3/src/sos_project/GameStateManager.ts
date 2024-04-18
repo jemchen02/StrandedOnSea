@@ -1,5 +1,5 @@
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
-import { OverlayStatus, SOSLevel } from "./SOSLevel";
+import { OverlayStatus, SOSLevel, SavedStats } from "./SOSLevel";
 import { Costs } from "./GameConstants";
 
 export class GameStateManager {
@@ -41,6 +41,8 @@ export class GameStateManager {
     public isPaused: boolean;
     private stormCanMove: boolean;
 
+    private saved: SavedStats;
+
     // We define starting amounts here.
     constructor(){
         this.money = 800;
@@ -60,6 +62,7 @@ export class GameStateManager {
         this.stormCanMove = false;
 
         this.playerLocation = new Vec2(-1, 0); //Has to be 1 away for movePlayer to work right.
+
         
         this.gameMap = Array.from({ length: 5 }, () =>
             Array.from({ length: 5 }, () => new SOSLevel())
@@ -68,9 +71,9 @@ export class GameStateManager {
         this.mapOverlays = Array.from({ length: 5 }, () =>
             Array.from({ length: 5 }, () => new OverlayStatus())
         );
-
         this.buildMap();
         this.movePlayer(new Vec2(0, 0));
+        this.saved = new SavedStats(0, 0,0,0,0, this.playerLocation, this.mapOverlays);
     }
     
     public togglePause() {
@@ -136,6 +139,7 @@ export class GameStateManager {
 
         if(!includes) return false;
         if(!this.isInBounds(location)) return false;
+        this.saved = new SavedStats(this.money, this.health, this.numCannon, this.numTorpedo, this.numRepairs, this.playerLocation, this.mapOverlays.map(innerMap => innerMap.slice().map(tile => new OverlayStatus(tile.isStorm, tile.isFog, tile.isLand))));
 
         //Removes fog in adjacent tiles
         //TODO account for crows nest and radar...
@@ -316,6 +320,15 @@ export class GameStateManager {
             return true;
         }
         return false;
+    }
+    public restoreSaved(): void{
+        this.money = this.saved.money;
+        this.health = this.saved.health;
+        this.numCannon = this.saved.cannons;
+        this.numTorpedo = this.saved.torpedos;
+        this.numRepairs = this.saved.repairs;
+        this.playerLocation = this.saved.location;
+        this.mapOverlays = this.saved.mapOverlays;
     }
 }
 

@@ -34,4 +34,7 @@ export class CollisionManager {
     public ResetColliders() : void{
       this.colliders = []
     }
+    public remove(node: GameNode): void {
+      this.colliders = this.colliders.filter(collider => collider != node);
+    }
 }

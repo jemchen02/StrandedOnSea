@@ -45,7 +45,6 @@ export default class PlayerAI extends ShipAI {
         this.receiver.subscribe("ramCollision");
         this.receiver.subscribe("whirlpoolKO");
         this.receiver.subscribe("cannonHit");
-        this.receiver.subscribe("torpedoHit");
     }
 
     public activate(options: Record<string, any>): void { }
@@ -98,6 +97,9 @@ export default class PlayerAI extends ShipAI {
         } else {
             this.isInvincible = true;
             GameStateManager.get().health -= DamageAmounts.RAM_DAMAGE;
+            if(GameStateManager.get().health <= 0) {
+                this.emitter.fireEvent("gameLoss");
+            }
             this.InvincibleTimer = new Timer(2000);
             this.InvincibleTimer.start();
         }
@@ -108,12 +110,16 @@ export default class PlayerAI extends ShipAI {
         } else {
             this.isInvincible = true;
             GameStateManager.get().health -= DamageAmounts.CANNON_DAMAGE;
+            if(GameStateManager.get().health <= 0) {
+                this.emitter.fireEvent("gameLoss");
+            }
             this.InvincibleTimer = new Timer(2000);
             this.InvincibleTimer.start();
         }
     }
     public onWhirlpoolKO(): void {
         GameStateManager.get().health = 0;
+        this.emitter.fireEvent("gameLoss");
     }
 
     public fire_cannon(left : boolean) : void{
