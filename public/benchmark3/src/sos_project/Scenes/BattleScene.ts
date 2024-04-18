@@ -29,7 +29,7 @@ import PauseHUD from "../GameSystems/HUD/PauseHUD";
 import EnemyActor from "../Actors/EnemyActor";
 import HealthbarHUD from "../GameSystems/HUD/HealthbarHUD";
 import RamAI from "../AI/NPC/RamAI";
-import { GameStateManager } from "../GameStateManager";
+import { GameStateManager, ShipType } from "../GameStateManager";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import TowerAI from "../AI/NPC/TowerAI";
 import CannonShipAI from "../AI/NPC/CannonShipAI";
@@ -38,6 +38,7 @@ import { CollisionManager } from "../CollisionManager";
 import Input from "../../Wolfie2D/Input/Input";
 import { PlayerInput } from "../AI/Player/PlayerController";
 import MapScene from "./MapScene";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 
 
 export default class BattleScene extends SosScene {
@@ -46,7 +47,7 @@ export default class BattleScene extends SosScene {
     private healthHUD: PlayerHealthHUD;
     private coinHUD: CoinHUD;
     private pauseHUD: PauseHUD;
-
+    protected scaleFactor: number;
     private healthbars: Map<number, HealthbarHUD>;
 
     // The wall layer of the tilemap
@@ -68,7 +69,18 @@ export default class BattleScene extends SosScene {
         const playerLocation = GameStateManager.get().playerLocation;
         const gameLevel = GameStateManager.get().gameMap[playerLocation.x][playerLocation.y];
         // Load the player and enemy spritesheets
-        this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+        const playerShipType = GameStateManager.get().shipType;
+        switch(playerShipType) {
+            case ShipType.WOOD:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_wood.json");
+                break;
+            case ShipType.FIBERGLASS:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_fiberglass.json");
+                break;
+            case ShipType.METAL:
+                this.load.spritesheet("player1", "sos_assets/spritesheets/player_metal.json");
+                break;
+        }
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
@@ -103,7 +115,7 @@ export default class BattleScene extends SosScene {
         let tilemapSize: Vec2 = this.walls.size;
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
-        this.viewport.setZoomLevel(2);
+        this.viewport.setZoomLevel(3);
 
         this.initLayers();
         
@@ -121,7 +133,7 @@ export default class BattleScene extends SosScene {
             this.handleEvent(this.receiver.getNextEvent());
         }
         if(Input.isPressed(PlayerInput.PASS_LEVEL)) {
-            this.sceneManager.changeToScene(MapScene);
+            this.endLevel();
         }
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);
@@ -145,7 +157,8 @@ export default class BattleScene extends SosScene {
     }
     /** Initializes the layers in the scene */
     protected initLayers(): void {
-        this.addLayer("primary", 10);
+        this.addLayer("player", 5)
+        this.addLayer("primary", 4);
         this.addUILayer("staticHUD");
         this.addUILayer("slots");
         this.addUILayer("updateHUD");
@@ -161,7 +174,7 @@ export default class BattleScene extends SosScene {
      * Initializes the player in the scene
      */
     protected initializePlayer(): void {
-        this.player = this.add.animatedSprite(PlayerActor, "player1", "primary");
+        this.player = this.add.animatedSprite(PlayerActor, "player1", "player");
         this.player.position.set(18, 18);
 
         this.player.health = 10;
@@ -182,6 +195,7 @@ export default class BattleScene extends SosScene {
     }
 
     protected initializeHUD(): void {
+        this.scaleFactor = 2/3;
         this.inventoryHud = new InventoryHUD(this, "inventorySlot", {
             start: new Vec2(36, 175),
             slotLayer: "slots",
@@ -190,12 +204,13 @@ export default class BattleScene extends SosScene {
             staticLayer: "staticHUD",
             cannonSprite: "cannon",
             torpedoSprite: "torpedo",
-            repairSprite: "repair"
+            repairSprite: "repair",
+            scaleX: this.scaleFactor,
+            scaleY: this.scaleFactor
         });
-
-        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", 1, 1);
-        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", 1, 1);
-        this.pauseHUD = new PauseHUD(this, "pause", "staticHUD");
+        this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
+        this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
+        this.pauseHUD = new PauseHUD(this, "pause", "staticHUD", this.scaleFactor, this.scaleFactor);
     }
 
     protected initializeNPCs(): void {
@@ -244,6 +259,7 @@ export default class BattleScene extends SosScene {
         }
         for (let i = 0; i < enemies.whirlpools.length; i++) {
             let npc = this.add.sprite("whirlpool_enemy", "primary");
+            npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
             npc.scale.set(2, 2);
             npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
             npc.addAI(WhirlpoolAI, {player: this.player});
@@ -356,5 +372,8 @@ export default class BattleScene extends SosScene {
         }
         return true;
 
+    }
+    protected endLevel(): void {
+        this.sceneManager.changeToScene(MapScene);
     }
 }

@@ -14,7 +14,8 @@ interface PurchaseOptions {
     text: string, 
     clickEvent: string,
     length: number,
-    cost: number
+    cost: number,
+    owned: boolean
 }
 export default class PurchaseButton implements Updateable{
 
@@ -22,11 +23,12 @@ export default class PurchaseButton implements Updateable{
     private scene: Scene;
     private button: Button;
     private cost: number;
+    private owned: boolean;
 
     public constructor(scene: Scene, options: PurchaseOptions) {
-
         this.scene = scene;
         this.cost = options.cost;
+        this.owned = options.owned;
         this.button = <Button>this.scene.add.uiElement(UIElementType.BUTTON, options.layer, {position: options.position, text: options.text});
         this.button.size.set(options.length, 50);
         this.button.borderRadius = 10;
@@ -40,8 +42,13 @@ export default class PurchaseButton implements Updateable{
         }
         this.button.onClickEventId = options.clickEvent;
     }
+    public purchase(): void {
+        this.owned = true;
+    }
     update(deltaT: number): void {
-        if(this.cost >= 0) {
+        if(this.owned) {
+            this.button.backgroundColor = Color.fromStringHex("#A5F900");
+        } else if(this.cost >= 0 && !this.owned) {
             if(GameStateManager.get().money >= this.cost) {
                 this.button.backgroundColor = Color.GREEN;
             } else {

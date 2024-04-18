@@ -4,6 +4,8 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
+import { LevelRewards } from "../GameConstants";
+import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
 
 export default class WhirlpoolScene extends BattleScene {
@@ -17,8 +19,12 @@ export default class WhirlpoolScene extends BattleScene {
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 25), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 45), text: "Don't get sucked in by whirlpool!", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260, 65), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Don't get sucked in by whirlpool!", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
+    }
+    protected override endLevel(): void {
+        GameStateManager.get().money += LevelRewards.WHIRLPOOL1;
+        super.endLevel();
     }
 }

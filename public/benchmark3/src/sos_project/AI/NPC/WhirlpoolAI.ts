@@ -1,5 +1,7 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
@@ -40,8 +42,15 @@ export default class WhirlpoolAI extends StateMachineAI {
 	update(deltaT: number): void {
 		if(this.isDead) return;
 
-        const playerPos = this.player.position;
         this.owner.rotation += deltaT;
+		const distanceToPlayer = this.player.position.distanceTo(this.owner.position);
+		if(this.checkAABBtoCircleCollision(<AABB>this.player.collisionShape, <Circle>this.owner.collisionShape)) {
+			//this.player.position = this.owner.position;
+			this.player.position.add(this.player.position.vecTo(this.owner.position).scaled(deltaT * 20 / distanceToPlayer));
+		}
+		if(distanceToPlayer < 5) {
+			this.emitter.fireEvent("whirlpoolKO");
+		}
 
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
@@ -50,5 +59,18 @@ export default class WhirlpoolAI extends StateMachineAI {
         // SOS_TODO Add events for firing cannons on port side and starboard side
 
 		// Animations
+	}
+	checkAABBtoCircleCollision(aabb: AABB, circle: Circle): boolean {
+		// Your code goes here:
+		const c_x = circle.center.x;
+		const c_y = circle.center.y;
+		const aabb_x_low = aabb.topLeft.x;
+		const aabb_x_high = aabb.bottomRight.x;
+		const aabb_y_low = aabb.topLeft.y;
+		const aabb_y_high = aabb.bottomRight.y;
+		const closest_x = Math.min(Math.max(c_x, aabb_x_low), aabb_x_high);
+		const closest_y = Math.min(Math.max(c_y, aabb_y_low), aabb_y_high);
+		const vec_closest = new Vec2(closest_x, closest_y);
+		return circle.containsPoint(vec_closest);
 	}
 } 
