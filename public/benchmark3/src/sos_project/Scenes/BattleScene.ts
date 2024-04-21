@@ -101,7 +101,7 @@ export default class BattleScene extends SosScene {
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
-        this.load.image("cannon", "hw4_assets/sprites/cannon.png");
+        this.load.image("mine", "hw4_assets/sprites/mine.png");
         this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
         this.load.image("repair", "hw4_assets/sprites/repair.png");
 
@@ -235,7 +235,7 @@ export default class BattleScene extends SosScene {
             padding: 8,
             itemLayer: "updateHUD",
             staticLayer: "staticHUD",
-            cannonSprite: "cannon",
+            mineSprite: "mine",
             torpedoSprite: "torpedo",
             repairSprite: "repair",
             scaleX: this.scaleFactor,

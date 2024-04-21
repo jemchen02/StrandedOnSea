@@ -122,8 +122,6 @@ export default class PlayerAI extends ShipAI {
     }
 
     public fire_cannon(left : boolean) : void{
-        if(GameStateManager.get().numCannon <= 0) return;
-        GameStateManager.get().numCannon --;
 
         let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         cannonBall.visible = true;
