@@ -1,7 +1,7 @@
 {
     "name": "SOSTorpedo",
     "spriteSheetImage": "torpedo.png",
-    "spriteWidth": 32,
+    "spriteWidth": 8,
     "spriteHeight": 32,
     "leftBuffer": 0,
     "rightBuffer": 0,
