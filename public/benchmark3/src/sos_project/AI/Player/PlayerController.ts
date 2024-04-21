@@ -14,7 +14,9 @@ export enum PlayerInput {
     FIRE_STARBOARD = "FIRE_STARBOARD",
     FIRE_PORT = "FIRE_PORT",
     PLACE_MINE = "PLACE_MINE",
-    PASS_LEVEL = "SKIP_LEVEL"
+    REPAIR = "REPAIR",
+    PASS_LEVEL = "SKIP_LEVEL",
+    INVINCIBLE = "INVINCIBLE"
 }
 
 /**
@@ -60,6 +62,12 @@ export default class PlayerController {
     }
     public get placeMine(): boolean {
         return Input.isJustPressed(PlayerInput.PLACE_MINE);
+    }
+    public get repair(): boolean {
+        return Input.isJustPressed(PlayerInput.REPAIR);
+    }
+    public get invincible(): boolean {
+        return Input.isJustPressed(PlayerInput.INVINCIBLE);
     }
 
     /** 

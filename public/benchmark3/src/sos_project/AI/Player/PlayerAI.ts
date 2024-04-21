@@ -32,7 +32,7 @@ export default class PlayerAI extends ShipAI {
     public controller: PlayerController;
     /** The inventory object associated with the player */
     public inventory: Inventory;
-    public InvincibleTimer: Timer;
+    public InvincibleTimer: number;
     public isInvincible: boolean;
     
     public initializeAI(owner: PlayerActor, opts: Record<string, any>): void {
@@ -53,11 +53,11 @@ export default class PlayerAI extends ShipAI {
     public activate(options: Record<string, any>): void { }
 
     public update(deltaT: number): void {
-        if(this.InvincibleTimer) {
-            this.InvincibleTimer.update(deltaT);
-            if(this.InvincibleTimer.isStopped()) {
-                this.isInvincible = false;
-            }
+        if(this.InvincibleTimer >= 0) {
+            this.InvincibleTimer -= deltaT;
+        }
+        else {
+            this.isInvincible = false;
         }
         this.collision = this.controller.isColliding
         this.forwardAxis = this.controller.acceleration
@@ -74,6 +74,12 @@ export default class PlayerAI extends ShipAI {
 		}
         if(this.controller.placeMine) {
             this.place_mine();
+        }
+        if(this.controller.invincible) {
+            this.make_invincible();
+        }
+        if(this.controller.repair) {
+            this.repair();
         }
     }
 
@@ -106,8 +112,7 @@ export default class PlayerAI extends ShipAI {
             if(GameStateManager.get().health <= 0) {
                 this.emitter.fireEvent("gameLoss");
             }
-            this.InvincibleTimer = new Timer(2000);
-            this.InvincibleTimer.start();
+            this.InvincibleTimer = Math.max(2, this.InvincibleTimer);
         }
     }
     public onCannonHit(): void {
@@ -119,8 +124,7 @@ export default class PlayerAI extends ShipAI {
             if(GameStateManager.get().health <= 0) {
                 this.emitter.fireEvent("gameLoss");
             }
-            this.InvincibleTimer = new Timer(2000);
-            this.InvincibleTimer.start();
+            this.InvincibleTimer = Math.max(2, this.InvincibleTimer);
         }
     }
     public onWhirlpoolKO(): void {
@@ -184,5 +188,15 @@ export default class PlayerAI extends ShipAI {
         mine.rotation = this.owner.rotation;
         mine.position = new Vec2(0, 0).add(this.owner.position);
         mine.isCollidable = false;
+    }
+    public repair(): void {
+        if(GameStateManager.get().numRepairs <= 0) return;
+        GameStateManager.get().numRepairs --;
+        GameStateManager.get().health = Math.min(GameStateManager.get().maxHealth, GameStateManager.get().health + DamageAmounts.REPAIR_DAMAGE);
+    }
+    public make_invincible(): void {
+        console.log("invincible");
+        this.InvincibleTimer = Math.max(10, this.InvincibleTimer);
+        this.isInvincible = true;
     }
 }
