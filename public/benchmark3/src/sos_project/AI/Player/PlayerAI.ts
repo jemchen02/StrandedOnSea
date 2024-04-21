@@ -34,12 +34,12 @@ export default class PlayerAI extends ShipAI {
     /** The inventory object associated with the player */
     public inventory: Inventory;
     public invincibleTimer: number;
-    public isInvincible: boolean;
+    public cannonCooldown: number;
     
     public initializeAI(owner: PlayerActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
-        this.isInvincible = false;
         this.invincibleTimer = 0;
+        this.cannonCooldown = 0;
         this.controller = new PlayerController(owner);
 
         // Add the players states to it's StateMachine
@@ -55,12 +55,9 @@ export default class PlayerAI extends ShipAI {
     public activate(options: Record<string, any>): void { }
 
     public update(deltaT: number): void {
-        if(this.invincibleTimer >= 0) {
-            this.invincibleTimer -= deltaT;
-        }
-        else {
-            this.isInvincible = false;
-        }
+        this.invincibleTimer -= deltaT;
+        this.cannonCooldown -= deltaT;
+
         this.collision = this.controller.isColliding
         this.forwardAxis = this.controller.acceleration
         this.turnDirection = this.controller.rotation
@@ -108,24 +105,19 @@ export default class PlayerAI extends ShipAI {
         }
     }
     public onRamCollision(): void {
-        if (this.isInvincible) {
+        if (this.invincibleTimer > 0) {
             return
         } else {
-            this.isInvincible = true;
             ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
-            //this.InvincibleTimer.start();
         }
     }
     public onCannonHit(): void {
-        if (this.isInvincible) {
+        if (this.invincibleTimer > 0) {
             return
         } else {
-            this.isInvincible = true;
-
             ShipDamageManager.get().registerHit(DamageAmounts.CANNON_DAMAGE, DamageTimes.CANNON_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
-            //this.InvincibleTimer.start();
         }
     }
     public onWhirlpoolKO(): void {
@@ -133,22 +125,25 @@ export default class PlayerAI extends ShipAI {
     }
 
     public fire_cannon(left : boolean) : void{
-
-        let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
-        cannonBall.visible = true;
-        cannonBall.addAI(CannonBallAI);
-        cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
-        (<CannonBallAI>cannonBall._ai).shooter = this.owner;
-
-        //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
-        //cannonBall.setAIActive(true, {direction: dir});
-
-        cannonBall.setAIActive(true, {left: left, startingVelocity : this.owner.getLastVelocity()});
-
-        cannonBall.rotation = this.owner.rotation;
-        cannonBall.position = new Vec2(0, 0).add(this.owner.position);
-
-        cannonBall.isCollidable = false;
+        if(this.cannonCooldown <= 0) {
+            this.cannonCooldown = 0.5
+            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+            cannonBall.visible = true;
+            cannonBall.addAI(CannonBallAI);
+            cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+            (<CannonBallAI>cannonBall._ai).shooter = this.owner;
+    
+            //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
+            //cannonBall.setAIActive(true, {direction: dir});
+    
+            cannonBall.setAIActive(true, {left: left, startingVelocity : this.owner.getLastVelocity()});
+    
+            cannonBall.rotation = this.owner.rotation;
+            cannonBall.position = new Vec2(0, 0).add(this.owner.position);
+    
+            cannonBall.isCollidable = false;
+        }
+       
     }
 
     public fire_torpedo() : void{
@@ -197,6 +192,5 @@ export default class PlayerAI extends ShipAI {
     }
     public make_invincible(): void {
         this.invincibleTimer = Math.max(10, this.invincibleTimer);
-        this.isInvincible = true;
     }
 }

@@ -45,6 +45,7 @@ import LevelEndHUD from "../GameSystems/HUD/LevelEndHUD";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import { LevelRewards } from "../GameConstants";
 import EnemyMineAI from "../AI/EnemyMineAI";
+import BlockadeAI from "../AI/NPC/BlockadeAI";
 
 
 export default class BattleScene extends SosScene {
@@ -97,8 +98,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
-        // this.load.spritesheet("player_fiber", "sos_assets/sprites/player_fiberglass.png")
-        // this.load.spritesheet("player_metal", "sos_asssets/sprites/player_metal.png")
+        this.load.image("blockade", "sos_assets/sprites/blockade.png")
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
@@ -314,6 +314,17 @@ export default class BattleScene extends SosScene {
                 npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
                 npc.addAI(WhirlpoolAI, {player: this.player});
     
+            }
+        }
+        if("blockades" in enemies) {
+            for (let i = 0; i < enemies.blockades.length; i++) {
+                let npc = this.add.sprite("blockade", "primary");
+                npc.scale.set(enemies.blockades[i][2], enemies.blockades[i][3]);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(npc.size.x * npc.scale.x / 2, npc.size.y * npc.scale.y/2)), null, true, true);
+                npc.position.set(enemies.blockades[i][0], enemies.blockades[i][1]);
+                npc.addAI(BlockadeAI);
+                (<BlockadeAI>npc.ai).health = 30;
+                CollisionManager.get().RegisterCollider(npc);
             }
         }
 
