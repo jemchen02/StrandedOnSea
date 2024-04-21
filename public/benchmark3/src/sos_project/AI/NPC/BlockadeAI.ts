@@ -33,13 +33,13 @@ export default class BlockadeAI extends StateMachineAI {
         switch(event.type) {
             case "cannonHit":
                 if(event.data.get("node") == this.owner) {
-                    this.health -= DamageAmounts.CANNON_DAMAGE;
+                    (<EnemyActor>this.owner).health -= DamageAmounts.CANNON_DAMAGE;
                     this.checkDeath();
                 }
                 break;
             case "torpedoHit":
                 if(event.data.get("node") == this.owner) {
-                    this.health -= DamageAmounts.TORPEDO_DAMAGE;
+                    (<EnemyActor>this.owner).health -= DamageAmounts.TORPEDO_DAMAGE;
                     this.checkDeath();
                 }
                 break;
@@ -54,9 +54,8 @@ export default class BlockadeAI extends StateMachineAI {
 
 	}
     public checkDeath(): void {
-        if(this.health <= 0) {
+        if((<EnemyActor>this.owner).health <= 0) {
             this.isDead = true;
-            this.owner.alpha = 0;
             this.owner.isCollidable = false;
             CollisionManager.get().remove(this.owner);
         }

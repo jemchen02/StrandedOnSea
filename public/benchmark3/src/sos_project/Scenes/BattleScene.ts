@@ -98,7 +98,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
-        this.load.image("blockade", "sos_assets/sprites/blockade.png")
+        this.load.spritesheet("blockade", "sos_assets/sprites/blockade.json")
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
@@ -190,10 +190,11 @@ export default class BattleScene extends SosScene {
     }
     /** Initializes the layers in the scene */
     protected initLayers(): void {
-        this.addLayer("endfront", 7);
-        this.addLayer("endback", 6);
-        this.addLayer("player", 5)
-        this.addLayer("primary", 4);
+        this.addLayer("endfront", 8);
+        this.addLayer("endback", 7);
+        this.addLayer("player", 6)
+        this.addLayer("primary", 5);
+        this.addLayer("whirlpool", 4)
         this.addUILayer("staticHUD");
         this.addUILayer("slots");
         this.addUILayer("updateHUD");
@@ -308,7 +309,7 @@ export default class BattleScene extends SosScene {
         }
         if("whirlpools" in enemies) {
             for (let i = 0; i < enemies.whirlpools.length; i++) {
-                let npc = this.add.sprite("whirlpool_enemy", "primary");
+                let npc = this.add.sprite("whirlpool_enemy", "whirlpool");
                 npc.addPhysics(new Circle(Vec2.ZERO, 50 * enemies.whirlpools[i][2]), null, false, true);
                 npc.scale.set(enemies.whirlpools[i][2], enemies.whirlpools[i][2]);
                 npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
@@ -318,13 +319,19 @@ export default class BattleScene extends SosScene {
         }
         if("blockades" in enemies) {
             for (let i = 0; i < enemies.blockades.length; i++) {
-                let npc = this.add.sprite("blockade", "primary");
+                let npc = this.add.animatedSprite(EnemyActor, "blockade", "primary");
+                npc.health = 50;
+                npc.maxHealth = 50;
                 npc.scale.set(enemies.blockades[i][2], enemies.blockades[i][3]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(npc.size.x * npc.scale.x / 2, npc.size.y * npc.scale.y/2)), null, true, true);
                 npc.position.set(enemies.blockades[i][0], enemies.blockades[i][1]);
                 npc.addAI(BlockadeAI);
-                (<BlockadeAI>npc.ai).health = 30;
                 CollisionManager.get().RegisterCollider(npc);
+                this.enemyBattlers.push(npc);
+                this.battlerCount++;
+
+                let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/4), offset: npc.size.clone().scaled(0, -1/8)});
+                this.healthbars.set(npc.id, healthbar);
             }
         }
 

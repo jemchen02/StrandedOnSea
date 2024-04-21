@@ -15,13 +15,19 @@ export default class WhirlpoolScene2 extends BattleScene {
     public override loadScene(): void {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/whirlpool2/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/WhirlpoolMap2.json");
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Don't get sucked in by whirlpool!", fontSize: 30, textColor: Color.WHITE});
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
+    }
+    public override update(deltaT: number): void {
+        super.update(deltaT);
+        if(this.player.position.y > 1000 && !this.levelEnded) {
+            this.winLevel();
+        }
     }
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.WHIRLPOOL2;
