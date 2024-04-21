@@ -40,7 +40,7 @@ export default class PlayerHealthHUD implements Updateable {
         this.healthBar.size = new Vec2(350, 35);
         this.healthBar.backgroundColor = Color.GREEN;
 
-        this.healthLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, updateLayer, {position: new Vec2(256*scaleX, 495*scaleY), text: `${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`, fontSize: 30, textColor: Color.BLACK});
+        this.healthLabel = <Label>this.scene.add.uiElement(UIElementType.LABEL, updateLayer, {position: new Vec2(256*scaleX, 495*scaleY), text: `${Math.round(GameStateManager.get().health)}/${GameStateManager.get().maxHealth}`, fontSize: 30, textColor: Color.BLACK});
     }
 
     public update(deltaT: number): void {
@@ -56,7 +56,7 @@ export default class PlayerHealthHUD implements Updateable {
         }
         this.healthBar.size.set(fraction * 350, 35);
         this.healthBar.position.set(this.scaleX * (255 - ((1-fraction) * 350 / 4)), 493.5*this.scaleY)
-        this.healthLabel.setText(`${GameStateManager.get().health}/${GameStateManager.get().maxHealth}`);
+        this.healthLabel.setText(`${Math.round(GameStateManager.get().health)}/${GameStateManager.get().maxHealth}`);
     }
 
 }

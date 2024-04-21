@@ -18,7 +18,8 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import CannonBallAI from "../CannonBall";
 import TorpedoAI from "../TorpedoAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import { DamageAmounts } from "../../GameConstants";
+import { DamageAmounts, DamageTimes } from "../../GameConstants";
+import { ShipDamageManager } from "../../ShipDamageManager";
 import MineAI from "../Mine";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyActor from "../../Actors/EnemyActor";
@@ -73,6 +74,8 @@ export default class PlayerAI extends ShipAI {
         if(this.controller.fireStarBoard){
             this.fire_cannon(false);
 		}
+
+        ShipDamageManager.get().onUpdate(deltaT);
         if(this.controller.placeMine) {
             this.place_mine();
         }
@@ -109,11 +112,9 @@ export default class PlayerAI extends ShipAI {
             return
         } else {
             this.isInvincible = true;
-            GameStateManager.get().health -= DamageAmounts.RAM_DAMAGE;
-            if(GameStateManager.get().health <= 0) {
-                this.emitter.fireEvent("gameLoss");
-            }
+            ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            //this.InvincibleTimer.start();
         }
     }
     public onCannonHit(): void {
@@ -121,11 +122,10 @@ export default class PlayerAI extends ShipAI {
             return
         } else {
             this.isInvincible = true;
-            GameStateManager.get().health -= DamageAmounts.CANNON_DAMAGE;
-            if(GameStateManager.get().health <= 0) {
-                this.emitter.fireEvent("gameLoss");
-            }
+
+            ShipDamageManager.get().registerHit(DamageAmounts.CANNON_DAMAGE, DamageTimes.CANNON_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            //this.InvincibleTimer.start();
         }
     }
     public onWhirlpoolKO(): void {
