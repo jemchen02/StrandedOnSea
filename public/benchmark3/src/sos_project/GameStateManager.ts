@@ -21,7 +21,7 @@ export class GameStateManager {
 
     public numRepairs : number;
 
-    public numCannon : number;
+    public numMine : number;
     public numTorpedo : number;
 
     public hasCrowsNest : boolean;
@@ -49,7 +49,7 @@ export class GameStateManager {
         this.health = 100;
         this.maxHealth = 100;
         this.numRepairs = 0;
-        this.numCannon = 0;
+        this.numMine = 0;
         this.numTorpedo = 0;
         this.hasCrowsNest = false;
         this.hasRadar = false;
@@ -139,7 +139,7 @@ export class GameStateManager {
 
         if(!includes) return false;
         if(!this.isInBounds(location)) return false;
-        this.saved = new SavedStats(this.money, this.health, this.numCannon, this.numTorpedo, this.numRepairs, this.playerLocation, this.mapOverlays.map(innerMap => innerMap.slice().map(tile => new OverlayStatus(tile.isStorm, tile.isFog, tile.isLand))));
+        this.saved = new SavedStats(this.money, this.health, this.numMine, this.numTorpedo, this.numRepairs, this.playerLocation, this.mapOverlays.map(innerMap => innerMap.slice().map(tile => new OverlayStatus(tile.isStorm, tile.isFog, tile.isLand))));
 
         //Removes fog in adjacent tiles
         //TODO account for crows nest and radar...
@@ -182,10 +182,10 @@ export class GameStateManager {
 
         return true;
     }
-    public buyCannon() : boolean {
-        if(this.money >= Costs.CANNON_COST) {
-            this.money -= Costs.CANNON_COST;
-            this.numCannon += 5;
+    public buyMine() : boolean {
+        if(this.money >= Costs.MINE_COST) {
+            this.money -= Costs.MINE_COST;
+            this.numMine += 1;
             return true;
         }
         return false;
@@ -324,7 +324,7 @@ export class GameStateManager {
     public restoreSaved(): void{
         this.money = this.saved.money;
         this.health = this.saved.health;
-        this.numCannon = this.saved.cannons;
+        this.numMine = this.saved.mines;
         this.numTorpedo = this.saved.torpedos;
         this.numRepairs = this.saved.repairs;
         this.playerLocation = this.saved.location;

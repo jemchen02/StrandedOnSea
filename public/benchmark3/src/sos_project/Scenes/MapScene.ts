@@ -178,8 +178,8 @@ export default class MapScene extends Scene {
         this.createButton("ship", new Vec2(center.x + 390, center.y - 300), "Metal", "buyMetal", 150, "design", Costs.METAL_COST, GameStateManager.get().ownedShips.includes(ShipType.METAL));
         this.createLabels("ship", "Metal", new Vec2(center.x + 390, center.y - 240), `Owned: ${GameStateManager.get().ownedShips.includes(ShipType.METAL) ? "Yes" : "No"}`, Costs.METAL_COST, "hardened, slow", true);
 
-        this.createButton("ship", new Vec2(center.x + 135, center.y - 50), "Cannon", "buyCannon", 150, "design", Costs.CANNON_COST, false);
-        this.createLabels("ship", "Cannon", new Vec2(center.x + 135, center.y + 10), `Owned: ${GameStateManager.get().numCannon}`, Costs.CANNON_COST, "Low damage", true);
+        this.createButton("ship", new Vec2(center.x + 135, center.y - 50), "Mine", "buyMine", 150, "design", Costs.MINE_COST, false);
+        this.createLabels("ship", "Mine", new Vec2(center.x + 135, center.y + 10), `Owned: ${GameStateManager.get().numMine}`, Costs.MINE_COST, "Low damage", true);
         this.createButton("ship", new Vec2(center.x + 305, center.y - 50), "Torpedo", "buyTorpedo", 150, "design", Costs.TORPEDO_COST, false);
         this.createLabels("ship", "Torpedo", new Vec2(center.x + 305, center.y + 10), `Owned: ${GameStateManager.get().numTorpedo}`, Costs.TORPEDO_COST, "High damage", true);
 
@@ -350,9 +350,9 @@ export default class MapScene extends Scene {
                 }
                 break;
             }
-            case "buyCannon": {
-                if(GameStateManager.get().buyCannon()) {
-                    this.hudLabels.get("Cannon").setText(`Owned: ${GameStateManager.get().numCannon}`);
+            case "buyMine": {
+                if(GameStateManager.get().buyMine()) {
+                    this.hudLabels.get("Mine").setText(`Owned: ${GameStateManager.get().numMine}`);
                 }
                 break;
             }
