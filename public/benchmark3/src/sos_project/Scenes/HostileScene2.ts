@@ -17,7 +17,7 @@ export default class HostileScene2 extends BattleScene {
     public override loadScene(): void {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/battle2/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap2.json");
     }
     protected override initializeHUD(): void {
         super.initializeHUD();

@@ -1,28 +1,23 @@
 {
-    "name": "SOSTorpedo",
-    "spriteSheetImage": "torpedo.png",
-    "spriteWidth": 8,
+    "name": "SOSDebrisAnimation",
+    "spriteSheetImage": "debris.png",
+    "spriteWidth": 32,
     "spriteHeight": 32,
     "leftBuffer": 0,
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "columns": 5,
-    "rows": 1,
+    "columns": 4,
+    "rows": 2,
     "durationType": "time",
     "animations": [
         {
-            "name": "IDLE",
+            "name": "EXPLOSION",
             "frames": [
                 {
                     "index": 0,
-                    "duration": 1
-                }
-            ]
-        },
-        {
-            "name": "MOVING",
-            "frames": [
+                    "duration": 10
+                },
                 {
                     "index": 1,
                     "duration": 10
@@ -37,6 +32,18 @@
                 },
                 {
                     "index": 4,
+                    "duration": 10
+                },
+                {
+                    "index": 5,
+                    "duration": 10
+                },
+                {
+                    "index": 6,
+                    "duration": 10
+                },
+                {
+                    "index": 7,
                     "duration": 10
                 }
             ]

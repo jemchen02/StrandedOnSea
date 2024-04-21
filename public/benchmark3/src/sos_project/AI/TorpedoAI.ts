@@ -5,12 +5,12 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { CollisionManager } from "../CollisionManager";
 
 export default class TorpedoAI implements AI {
     // The owner of this AI
-    protected owner: Graphic;
+    protected owner: AnimatedSprite;
 
     public static SPEED: number = 250;
 
@@ -21,7 +21,7 @@ export default class TorpedoAI implements AI {
     public shooter : GameNode;
     private emitter: Emitter;
 
-    initializeAI(owner: Graphic, options: Record<string, any>): void {
+    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.emitter = new Emitter();
     }

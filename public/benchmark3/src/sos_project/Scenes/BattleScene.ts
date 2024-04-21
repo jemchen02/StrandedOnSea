@@ -104,6 +104,7 @@ export default class BattleScene extends SosScene {
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
         this.load.image("mine", "hw4_assets/sprites/mine.png");
         this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
+        this.load.spritesheet("torpedoProjectile", "sos_assets/spritesheets/torpedo.json")
         this.load.image("repair", "hw4_assets/sprites/repair.png");
 
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
@@ -251,61 +252,69 @@ export default class BattleScene extends SosScene {
         this.enemyBattlers = [];
         this.battlerCount = 0;
         let enemies = this.load.getObject("enemies");
-        for (let i = 0; i < enemies.boats.length; i++) {
-            let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
-            npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
-            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
-            npc.speed = 10;
-            npc.health = 10;
-            npc.maxHealth = 10;
-            npc.navkey = "navmesh";
-            npc.addAI(RamAI, {player: this.player});
-            CollisionManager.get().RegisterCollider(npc);
-            this.enemyBattlers.push(npc);
-            this.battlerCount++;
-
-
-            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
-            this.healthbars.set(npc.id, healthbar);
+        if("boats" in enemies) {
+            for (let i = 0; i < enemies.boats.length; i++) {
+                let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
+                npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.speed = 10;
+                npc.health = 10;
+                npc.maxHealth = 10;
+                npc.navkey = "navmesh";
+                npc.addAI(RamAI, {player: this.player});
+                CollisionManager.get().RegisterCollider(npc);
+                this.enemyBattlers.push(npc);
+                this.battlerCount++;
+    
+    
+                let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+                this.healthbars.set(npc.id, healthbar);
+            }
         }
-        for (let i = 0; i < enemies.cannonships.length; i++) {
-            let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
-            npc.position.set(enemies.cannonships[i][0], enemies.cannonships[i][1]);
-            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
-            npc.speed = 10;
-            npc.health = 10;
-            npc.maxHealth = 10;
-            npc.navkey = "navmesh";
-            npc.addAI(CannonShipAI, {player: this.player});
-            CollisionManager.get().RegisterCollider(npc);
-            this.enemyBattlers.push(npc);
-            this.battlerCount++;
-
-
-            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
-            this.healthbars.set(npc.id, healthbar);
+        if("cannonships" in enemies) {
+            for (let i = 0; i < enemies.cannonships.length; i++) {
+                let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
+                npc.position.set(enemies.cannonships[i][0], enemies.cannonships[i][1]);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.speed = 10;
+                npc.health = 10;
+                npc.maxHealth = 10;
+                npc.navkey = "navmesh";
+                npc.addAI(CannonShipAI, {player: this.player});
+                CollisionManager.get().RegisterCollider(npc);
+                this.enemyBattlers.push(npc);
+                this.battlerCount++;
+    
+    
+                let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+                this.healthbars.set(npc.id, healthbar);
+            }
         }
-        for (let i = 0; i < enemies.towers.length; i++) {
-            let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
-            npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
-            npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
-            npc.health = 30;
-            npc.maxHealth = 30;
-            npc.addAI(TowerAI, {player: this.player});
-            CollisionManager.get().RegisterCollider(npc);
-            this.enemyBattlers.push(npc);
-            this.battlerCount++;
-
-            let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
-            this.healthbars.set(npc.id, healthbar);
+        if("towers" in enemies) {
+            for (let i = 0; i < enemies.towers.length; i++) {
+                let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
+                npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.health = 30;
+                npc.maxHealth = 30;
+                npc.addAI(TowerAI, {player: this.player});
+                CollisionManager.get().RegisterCollider(npc);
+                this.enemyBattlers.push(npc);
+                this.battlerCount++;
+    
+                let healthbar = new HealthbarHUD(this, npc, "primary", {size: npc.size.clone().scaled(2, 1/2), offset: npc.size.clone().scaled(0, -1/2)});
+                this.healthbars.set(npc.id, healthbar);
+            }
         }
-        for (let i = 0; i < enemies.whirlpools.length; i++) {
-            let npc = this.add.sprite("whirlpool_enemy", "primary");
-            npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
-            npc.scale.set(2, 2);
-            npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
-            npc.addAI(WhirlpoolAI, {player: this.player});
-
+        if("whirlpools" in enemies) {
+            for (let i = 0; i < enemies.whirlpools.length; i++) {
+                let npc = this.add.sprite("whirlpool_enemy", "primary");
+                npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
+                npc.scale.set(2, 2);
+                npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
+                npc.addAI(WhirlpoolAI, {player: this.player});
+    
+            }
         }
 
         if(enemies.mines){

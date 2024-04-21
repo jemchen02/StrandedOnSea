@@ -22,6 +22,7 @@ import { DamageAmounts, DamageTimes } from "../../GameConstants";
 import { ShipDamageManager } from "../../ShipDamageManager";
 import MineAI from "../Mine";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import EnemyActor from "../../Actors/EnemyActor";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -32,12 +33,13 @@ export default class PlayerAI extends ShipAI {
     public controller: PlayerController;
     /** The inventory object associated with the player */
     public inventory: Inventory;
-    public InvincibleTimer: Timer;
+    public invincibleTimer: number;
     public isInvincible: boolean;
     
     public initializeAI(owner: PlayerActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
         this.isInvincible = false;
+        this.invincibleTimer = 0;
         this.controller = new PlayerController(owner);
 
         // Add the players states to it's StateMachine
@@ -53,11 +55,11 @@ export default class PlayerAI extends ShipAI {
     public activate(options: Record<string, any>): void { }
 
     public update(deltaT: number): void {
-        if(this.InvincibleTimer) {
-            this.InvincibleTimer.update(deltaT);
-            if(this.InvincibleTimer.isStopped()) {
-                this.isInvincible = false;
-            }
+        if(this.invincibleTimer >= 0) {
+            this.invincibleTimer -= deltaT;
+        }
+        else {
+            this.isInvincible = false;
         }
         this.collision = this.controller.isColliding
         this.forwardAxis = this.controller.acceleration
@@ -76,6 +78,12 @@ export default class PlayerAI extends ShipAI {
         ShipDamageManager.get().onUpdate(deltaT);
         if(this.controller.placeMine) {
             this.place_mine();
+        }
+        if(this.controller.invincible) {
+            this.make_invincible();
+        }
+        if(this.controller.repair) {
+            this.repair();
         }
     }
 
@@ -104,11 +112,9 @@ export default class PlayerAI extends ShipAI {
             return
         } else {
             this.isInvincible = true;
-
             ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
-
-            this.InvincibleTimer = new Timer(2000);
-            this.InvincibleTimer.start();
+            this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            //this.InvincibleTimer.start();
         }
     }
     public onCannonHit(): void {
@@ -118,9 +124,8 @@ export default class PlayerAI extends ShipAI {
             this.isInvincible = true;
 
             ShipDamageManager.get().registerHit(DamageAmounts.CANNON_DAMAGE, DamageTimes.CANNON_TIME);
-
-            this.InvincibleTimer = new Timer(2000);
-            this.InvincibleTimer.start();
+            this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            //this.InvincibleTimer.start();
         }
     }
     public onWhirlpoolKO(): void {
@@ -150,21 +155,22 @@ export default class PlayerAI extends ShipAI {
         if(GameStateManager.get().numTorpedo <= 0) return;
         GameStateManager.get().numTorpedo --;
 
-        let topedo : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
-        topedo.visible = true;
-        topedo.addAI(TorpedoAI);
-        topedo.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
-        (<TorpedoAI>topedo._ai).shooter = this.owner;
+        let torpedo : AnimatedSprite = this.owner.getScene().add.animatedSprite(EnemyActor, "torpedoProjectile", "primary");
+        torpedo.animation.play("MOVING");
+        torpedo.visible = true;
+        torpedo.addAI(TorpedoAI);
+        torpedo.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+        (<TorpedoAI>torpedo._ai).shooter = this.owner;
 
         //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
         //cannonBall.setAIActive(true, {direction: dir});
 
-        topedo.setAIActive(true, {startingVelocity : this.owner.getLastVelocity()});
+        torpedo.setAIActive(true, {startingVelocity : this.owner.getLastVelocity()});
 
-        topedo.rotation = this.owner.rotation;
-        topedo.position = new Vec2(0, 0).add(this.owner.position);
+        torpedo.rotation = this.owner.rotation;
+        torpedo.position = new Vec2(0, 0).add(this.owner.position);
 
-        topedo.isCollidable = false;
+        torpedo.isCollidable = false;
     }
     public place_mine() : void{
         if(GameStateManager.get().numMine <= 0) return;
@@ -183,5 +189,14 @@ export default class PlayerAI extends ShipAI {
         mine.rotation = this.owner.rotation;
         mine.position = new Vec2(0, 0).add(this.owner.position);
         mine.isCollidable = false;
+    }
+    public repair(): void {
+        if(GameStateManager.get().numRepairs <= 0) return;
+        GameStateManager.get().numRepairs --;
+        GameStateManager.get().health = Math.min(GameStateManager.get().maxHealth, GameStateManager.get().health + DamageAmounts.REPAIR_DAMAGE);
+    }
+    public make_invincible(): void {
+        this.invincibleTimer = Math.max(10, this.invincibleTimer);
+        this.isInvincible = true;
     }
 }
