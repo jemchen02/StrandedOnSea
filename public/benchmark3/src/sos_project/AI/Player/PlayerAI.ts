@@ -32,12 +32,13 @@ export default class PlayerAI extends ShipAI {
     public controller: PlayerController;
     /** The inventory object associated with the player */
     public inventory: Inventory;
-    public InvincibleTimer: number;
+    public invincibleTimer: number;
     public isInvincible: boolean;
     
     public initializeAI(owner: PlayerActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
         this.isInvincible = false;
+        this.invincibleTimer = 0;
         this.controller = new PlayerController(owner);
 
         // Add the players states to it's StateMachine
@@ -53,8 +54,8 @@ export default class PlayerAI extends ShipAI {
     public activate(options: Record<string, any>): void { }
 
     public update(deltaT: number): void {
-        if(this.InvincibleTimer >= 0) {
-            this.InvincibleTimer -= deltaT;
+        if(this.invincibleTimer >= 0) {
+            this.invincibleTimer -= deltaT;
         }
         else {
             this.isInvincible = false;
@@ -112,7 +113,7 @@ export default class PlayerAI extends ShipAI {
             if(GameStateManager.get().health <= 0) {
                 this.emitter.fireEvent("gameLoss");
             }
-            this.InvincibleTimer = Math.max(2, this.InvincibleTimer);
+            this.invincibleTimer = Math.max(1, this.invincibleTimer);
         }
     }
     public onCannonHit(): void {
@@ -124,7 +125,7 @@ export default class PlayerAI extends ShipAI {
             if(GameStateManager.get().health <= 0) {
                 this.emitter.fireEvent("gameLoss");
             }
-            this.InvincibleTimer = Math.max(2, this.InvincibleTimer);
+            this.invincibleTimer = Math.max(1, this.invincibleTimer);
         }
     }
     public onWhirlpoolKO(): void {
@@ -195,8 +196,7 @@ export default class PlayerAI extends ShipAI {
         GameStateManager.get().health = Math.min(GameStateManager.get().maxHealth, GameStateManager.get().health + DamageAmounts.REPAIR_DAMAGE);
     }
     public make_invincible(): void {
-        console.log("invincible");
-        this.InvincibleTimer = Math.max(10, this.InvincibleTimer);
+        this.invincibleTimer = Math.max(10, this.invincibleTimer);
         this.isInvincible = true;
     }
 }
