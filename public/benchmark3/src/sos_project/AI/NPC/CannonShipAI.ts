@@ -37,6 +37,7 @@ export default class CannonShipAI extends ShipAI {
         this.fireCooldown = 0;
         this.receiver.subscribe("cannonHit");
         this.receiver.subscribe("torpedoHit");
+        this.receiver.subscribe("mineHit");
     }
 
     public activate(options: Record<string, any>): void { }
@@ -129,6 +130,11 @@ export default class CannonShipAI extends ShipAI {
                     this.checkDeath();
                 }
                 break;
+            case "mineHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.MINE_DAMAGE;
+                    this.checkDeath();
+                }
             default: {
                 super.handleEvent(event);
                 break;

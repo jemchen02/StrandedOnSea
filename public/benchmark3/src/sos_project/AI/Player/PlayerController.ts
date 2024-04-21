@@ -13,6 +13,7 @@ export enum PlayerInput {
     ATTACKING = "ATTACKING",
     FIRE_STARBOARD = "FIRE_STARBOARD",
     FIRE_PORT = "FIRE_PORT",
+    PLACE_MINE = "PLACE_MINE",
     PASS_LEVEL = "SKIP_LEVEL"
 }
 
@@ -56,6 +57,9 @@ export default class PlayerController {
 
     public get fireStarBoard(): boolean {
         return Input.isJustPressed(PlayerInput.FIRE_STARBOARD);
+    }
+    public get placeMine(): boolean {
+        return Input.isJustPressed(PlayerInput.PLACE_MINE);
     }
 
     /** 

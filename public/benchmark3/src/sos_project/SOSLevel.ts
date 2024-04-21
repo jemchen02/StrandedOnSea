@@ -22,15 +22,15 @@ export class OverlayStatus{
 export class SavedStats{
     public money: number;
     public health: number;
-    public cannons: number;
+    public mines: number;
     public torpedos: number;
     public repairs: number;
     public location: Vec2;
     public mapOverlays: OverlayStatus[][];
-    constructor(money: number, health: number, cannons: number, torpedos: number, repairs: number, location: Vec2, overlays: OverlayStatus[][]) {
+    constructor(money: number, health: number, mines: number, torpedos: number, repairs: number, location: Vec2, overlays: OverlayStatus[][]) {
         this.money = money;
         this.health = health;
-        this.cannons = cannons;
+        this.mines = mines;
         this.torpedos = torpedos;
         this.repairs = repairs;
         this.location = location;

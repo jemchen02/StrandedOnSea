@@ -20,6 +20,8 @@ import TorpedoAI from "../TorpedoAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import { DamageAmounts, DamageTimes } from "../../GameConstants";
 import { ShipDamageManager } from "../../ShipDamageManager";
+import MineAI from "../Mine";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -72,6 +74,9 @@ export default class PlayerAI extends ShipAI {
 		}
 
         ShipDamageManager.get().onUpdate(deltaT);
+        if(this.controller.placeMine) {
+            this.place_mine();
+        }
     }
 
     public handleEvent(event: GameEvent): void {
@@ -123,8 +128,6 @@ export default class PlayerAI extends ShipAI {
     }
 
     public fire_cannon(left : boolean) : void{
-        if(GameStateManager.get().numCannon <= 0) return;
-        GameStateManager.get().numCannon --;
 
         let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
         cannonBall.visible = true;
@@ -162,5 +165,23 @@ export default class PlayerAI extends ShipAI {
         topedo.position = new Vec2(0, 0).add(this.owner.position);
 
         topedo.isCollidable = false;
+    }
+    public place_mine() : void{
+        if(GameStateManager.get().numMine <= 0) return;
+        GameStateManager.get().numMine --;
+
+        let mine : Sprite = this.owner.getScene().add.sprite("mine", "primary");
+        mine.visible = true;
+        mine.addAI(MineAI);
+        mine.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
+        mine.scale.set(0.1, 0.1);
+        (<MineAI>mine._ai).shooter = this.owner;
+
+
+        mine.setAIActive(true,{});
+
+        mine.rotation = this.owner.rotation;
+        mine.position = new Vec2(0, 0).add(this.owner.position);
+        mine.isCollidable = false;
     }
 }
