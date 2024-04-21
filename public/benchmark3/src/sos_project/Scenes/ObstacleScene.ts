@@ -15,7 +15,7 @@ export default class ObstacleScene extends BattleScene {
     public override loadScene(): void {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/obstacle1/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/ObstacleMap.json");
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
@@ -26,5 +26,16 @@ export default class ObstacleScene extends BattleScene {
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.OBSTACLE1;
         super.winLevel(LevelRewards.OBSTACLE1);
+    }
+
+    protected override initializeNPCs(): void {
+
+        this.player.position.set(256, 2048);
+
+        super.initializeNPCs();
+
+        for(let i = 0; i < 100; i++){
+            this.spawnMine(Math.random() * 512, Math.random() * 2048);
+        }
     }
 }
