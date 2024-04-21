@@ -62,7 +62,7 @@ export default class BattleScene extends SosScene {
 
     // The position graph for the navmesh
     private graph: PositionGraph;
-    private player: PlayerActor;
+    protected player: PlayerActor;
 
     protected levelEnded: boolean;
     private lostLevel: boolean;
@@ -308,8 +308,8 @@ export default class BattleScene extends SosScene {
         if("whirlpools" in enemies) {
             for (let i = 0; i < enemies.whirlpools.length; i++) {
                 let npc = this.add.sprite("whirlpool_enemy", "primary");
-                npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
-                npc.scale.set(2, 2);
+                npc.addPhysics(new Circle(Vec2.ZERO, 50 * enemies.whirlpools[i][2]), null, false, true);
+                npc.scale.set(enemies.whirlpools[i][2], enemies.whirlpools[i][2]);
                 npc.position.set(enemies.whirlpools[i][0], enemies.whirlpools[i][1]);
                 npc.addAI(WhirlpoolAI, {player: this.player});
     
