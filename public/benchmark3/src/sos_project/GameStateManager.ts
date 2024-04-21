@@ -1,6 +1,7 @@
 import Vec2 from "../Wolfie2D/DataTypes/Vec2";
 import { OverlayStatus, SOSLevel, SavedStats } from "./SOSLevel";
 import { Costs } from "./GameConstants";
+import Emitter from "../Wolfie2D/Events/Emitter";
 
 export class GameStateManager {
     private static instance: GameStateManager;
@@ -43,6 +44,8 @@ export class GameStateManager {
 
     private saved: SavedStats;
 
+    protected emitter: Emitter;
+
     // We define starting amounts here.
     constructor(){
         this.money = 800;
@@ -60,6 +63,8 @@ export class GameStateManager {
         this.movementType = MovementType.OAR;
         this.isPaused = false;
         this.stormCanMove = false;
+
+        this.emitter = new Emitter();
 
         this.playerLocation = new Vec2(-1, 0); //Has to be 1 away for movePlayer to work right.
 
@@ -139,6 +144,8 @@ export class GameStateManager {
 
         if(!includes) return false;
         if(!this.isInBounds(location)) return false;
+        if(this.mapOverlays[location.x][location.y].isStorm) return false;
+
         this.saved = new SavedStats(this.money, this.health, this.numCannon, this.numTorpedo, this.numRepairs, this.playerLocation, this.mapOverlays.map(innerMap => innerMap.slice().map(tile => new OverlayStatus(tile.isStorm, tile.isFog, tile.isLand))));
 
         //Removes fog in adjacent tiles
@@ -329,6 +336,22 @@ export class GameStateManager {
         this.numRepairs = this.saved.repairs;
         this.playerLocation = this.saved.location;
         this.mapOverlays = this.saved.mapOverlays;
+    }
+
+    public setHealth(newHealth : number){
+        if(newHealth < 0){
+            this.health = 0;
+            //TODO add death
+        }
+
+        else if(newHealth > this.maxHealth){
+            this.health = this.maxHealth;
+            this.emitter.fireEvent("gameLoss");
+        }
+
+        else{
+            this.health = newHealth;
+        }
     }
 }
 

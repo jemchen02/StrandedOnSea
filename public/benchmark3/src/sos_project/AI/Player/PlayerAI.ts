@@ -18,7 +18,8 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import CannonBallAI from "../CannonBall";
 import TorpedoAI from "../TorpedoAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import { DamageAmounts } from "../../GameConstants";
+import { DamageAmounts, DamageTimes } from "../../GameConstants";
+import { ShipDamageManager } from "../../ShipDamageManager";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -69,6 +70,8 @@ export default class PlayerAI extends ShipAI {
         if(this.controller.fireStarBoard){
             this.fire_cannon(false);
 		}
+
+        ShipDamageManager.get().onUpdate(deltaT);
     }
 
     public handleEvent(event: GameEvent): void {
@@ -96,10 +99,9 @@ export default class PlayerAI extends ShipAI {
             return
         } else {
             this.isInvincible = true;
-            GameStateManager.get().health -= DamageAmounts.RAM_DAMAGE;
-            if(GameStateManager.get().health <= 0) {
-                this.emitter.fireEvent("gameLoss");
-            }
+
+            ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
+
             this.InvincibleTimer = new Timer(2000);
             this.InvincibleTimer.start();
         }
@@ -109,10 +111,9 @@ export default class PlayerAI extends ShipAI {
             return
         } else {
             this.isInvincible = true;
-            GameStateManager.get().health -= DamageAmounts.CANNON_DAMAGE;
-            if(GameStateManager.get().health <= 0) {
-                this.emitter.fireEvent("gameLoss");
-            }
+
+            ShipDamageManager.get().registerHit(DamageAmounts.CANNON_DAMAGE, DamageTimes.CANNON_TIME);
+
             this.InvincibleTimer = new Timer(2000);
             this.InvincibleTimer.start();
         }
