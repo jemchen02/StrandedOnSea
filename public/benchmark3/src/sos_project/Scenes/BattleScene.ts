@@ -64,7 +64,7 @@ export default class BattleScene extends SosScene {
     private graph: PositionGraph;
     private player: PlayerActor;
 
-    private levelEnded: boolean;
+    protected levelEnded: boolean;
     private lostLevel: boolean;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
