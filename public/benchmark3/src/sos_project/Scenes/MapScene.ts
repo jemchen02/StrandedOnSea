@@ -55,6 +55,7 @@ export default class MapScene extends Scene {
         this.load.image("hostile", "hw4_assets/map/hostile.png");
         this.load.image("shipwreck", "hw4_assets/map/shipwreck.png");
         this.load.image("whirlpool", "hw4_assets/map/whirlpool.png");
+        this.load.image("obstacle_icon", "hw4_assets/map/obstacle.png");
         this.load.image("land", "hw4_assets/map/land.png");
     }
 
@@ -252,6 +253,11 @@ export default class MapScene extends Scene {
                 this.createButton("map", new Vec2(x, y), "", coordString + "playLand", 100, "mapButton", 0, false);
                 const land = this.add.sprite("land", "map");
                 land.position.set(x, y);
+                break;
+            case 5:
+                this.createButton("map", new Vec2(x, y), "", coordString + "playObstacle", 100, "mapButton", 0, false);
+                const obstacle = this.add.sprite("obstacle_icon", "map");
+                obstacle.position.set(x, y);
                 break;
         }
     }

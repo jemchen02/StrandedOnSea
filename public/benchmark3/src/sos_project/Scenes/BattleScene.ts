@@ -44,6 +44,7 @@ import { BattlerEvent } from "../Events";
 import LevelEndHUD from "../GameSystems/HUD/LevelEndHUD";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import { LevelRewards } from "../GameConstants";
+import EnemyMineAI from "../AI/EnemyMineAI";
 
 
 export default class BattleScene extends SosScene {
@@ -62,7 +63,7 @@ export default class BattleScene extends SosScene {
 
     // The position graph for the navmesh
     private graph: PositionGraph;
-    private player: PlayerActor;
+    protected player: PlayerActor;
 
     protected levelEnded: boolean;
     private lostLevel: boolean;
@@ -306,6 +307,20 @@ export default class BattleScene extends SosScene {
             npc.addAI(WhirlpoolAI, {player: this.player});
 
         }
+
+        if(enemies.mines){
+            for (let i = 0; i < enemies.mines.length; i++) {
+                this.spawnMine(enemies.mines[i][0], enemies.mines[i][1])
+            }
+        }
+    }
+
+    public spawnMine(x: number, y: number){
+        let npc = this.add.sprite("mine", "primary");
+        //npc.addPhysics(new Circle(Vec2.ZERO, 100), null, false, true);
+        npc.scale.set(0.15, 0.15);
+        npc.position.set(x, y);
+        npc.addAI(EnemyMineAI, {player: this.player});
     }
 
     protected initializeNavmesh(): void {
