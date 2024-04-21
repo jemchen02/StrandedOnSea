@@ -15,7 +15,8 @@ export enum Costs {
 export enum DamageAmounts {
     CANNON_DAMAGE = 10,
     TORPEDO_DAMAGE = 25,
-    RAM_DAMAGE = 5
+    RAM_DAMAGE = 5,
+    MINE_DAMAGE = 25
 }
 export enum LevelRewards {
     HOSTILE1 = 300,
