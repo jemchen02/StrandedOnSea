@@ -18,12 +18,14 @@ export enum DamageAmounts {
     RAM_DAMAGE = 5,
     MINE_DAMAGE = 25,
     PUMP_DAMAGE = -0.2, //TODO consider moving, this is heal per second
-    REPAIR_DAMAGE = 30
+    REPAIR_DAMAGE = 30,
+    OBSTACLE_MINE = 40
 }
 export enum DamageTimes {
     CANNON_TIME = 20,
     TORPEDO_TIME = 20,
-    RAM_TIME = 10
+    RAM_TIME = 10,
+    OBSTACLE_MINE_TIME = 5
 }
 export enum LevelRewards {
     HOSTILE1 = 300,
@@ -34,4 +36,7 @@ export enum LevelRewards {
     SHIPWRECK2 = 300,
     WHIRLPOOL1 = 300,
     WHIRLPOOL2 = 500
+}
+export enum LevelData {
+    NUM_OBSTACLE_MINES = 200
 }

@@ -1,3 +1,5 @@
+import GameEvent from "../Wolfie2D/Events/GameEvent";
+import Receiver from "../Wolfie2D/Events/Receiver";
 import { DamageAmounts } from "./GameConstants";
 import { GameStateManager } from "./GameStateManager";
 
@@ -18,9 +20,14 @@ export class ShipDamageManager {
 
     hitTime : number;
 
+    receiver: Receiver;
+
     constructor(){
         this.hits = [];
         this.hitTime = 0;
+        this.receiver = new Receiver();
+
+        this.receiver.subscribe("gameend");
     }
 
     public registerHit(damage : number, time : number) : void{
@@ -28,6 +35,10 @@ export class ShipDamageManager {
     }
 
     public onUpdate(deltaTime : number){
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent());
+        }
+
         this.hitTime += deltaTime;
 
         for(let i = this.hits.length - 1; i >= 0; i--){
@@ -46,6 +57,14 @@ export class ShipDamageManager {
 
         if(GameStateManager.get().hasPump){
             GameStateManager.get().setHealth(GameStateManager.get().health - (DamageAmounts.PUMP_DAMAGE * deltaTime));
+        }
+    }
+
+    public handleEvent(event : GameEvent){
+        switch (event.type) {
+            case "gameend":
+                this.hits = [];
+                break;
         }
     }
 }
