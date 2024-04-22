@@ -329,6 +329,7 @@ export class GameStateManager {
         }
         return false;
     }
+
     public restoreSaved(): void{
         this.money = this.saved.money;
         this.health = this.saved.health;
@@ -337,6 +338,12 @@ export class GameStateManager {
         this.numRepairs = this.saved.repairs;
         this.playerLocation = this.saved.location;
         this.mapOverlays = this.saved.mapOverlays;
+    }
+
+    public generateLoot(rarity: number) {
+        this.money += Math.floor(rarity*10*Math.random())+10
+        this.numMine += Math.floor(2*Math.random())+rarity
+        this.numTorpedo += Math.floor(rarity*Math.random())
     }
 
     public setHealth(newHealth : number){

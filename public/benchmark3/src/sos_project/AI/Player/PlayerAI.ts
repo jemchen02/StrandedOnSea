@@ -98,6 +98,8 @@ export default class PlayerAI extends ShipAI {
                     this.onCannonHit();
                 }
                 break;
+            case "collectLoot":
+                GameStateManager.get().generateLoot(event.data.get('rarity'))
             default: {
                 super.handleEvent(event);
                 break;
