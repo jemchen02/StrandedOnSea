@@ -80,7 +80,7 @@ export default class MainMenu extends Scene {
         const selectBackground = this.add.sprite("menuBackgroundImage", "select");
         selectBackground.position.set(center.x, center.y - 20);
         selectBackground.scale.set(.8, 1.2);
-        this.add.uiElement(UIElementType.LABEL, "select", {position: new Vec2(center.x, center.y - 400), text: 'Select Level', fontSize: 40, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "select", {position: new Vec2(center.x, center.y - 400), text: 'Select Level (Testing Only)', fontSize: 40, textColor: Color.WHITE});
         this.createButton("select", new Vec2(center.x - 150, center.y - 300), "Hostile 1", "hostile1", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x + 150, center.y - 300), "Hostile 2", "hostile2", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x - 150, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(200, 75));

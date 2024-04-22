@@ -24,7 +24,7 @@ export default class ShipAI extends StateMachineAI {
 
     // Parameters that may change based on the ship state
 	private MIN_SPEED: number = -25;
-	private MAX_SPEED: number = 100;
+	private MAX_SPEED: number = 65;
 	private ACCELERATION: number = 1;
 	private rotationSpeed: number;
 

@@ -46,7 +46,7 @@ export default class WhirlpoolAI extends StateMachineAI {
 		const distanceToPlayer = this.player.position.distanceTo(this.owner.position);
 		if(this.checkAABBtoCircleCollision(<AABB>this.player.collisionShape, <Circle>this.owner.collisionShape)) {
 			//this.player.position = this.owner.position;
-			this.player.position.add(this.player.position.vecTo(this.owner.position).scaled(deltaT * 20 / distanceToPlayer));
+			this.player.position.add(this.player.position.vecTo(this.owner.position).scaled(deltaT * 40  / distanceToPlayer));
 		}
 		if(distanceToPlayer < 5) {
 			this.emitter.fireEvent("whirlpoolKO");
