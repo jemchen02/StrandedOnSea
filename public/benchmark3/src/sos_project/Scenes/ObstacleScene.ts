@@ -46,7 +46,7 @@ export default class ObstacleScene extends BattleScene {
             this.loseLevel();
         }
 
-        this.wavePos -= (60 * deltaT);
+        this.wavePos -= (64 * deltaT);
         this.wave.position.set(256, this.wavePos);
     }
 
@@ -54,7 +54,7 @@ export default class ObstacleScene extends BattleScene {
 
     protected override initializeNPCs(): void {
 
-        this.player.position.set(256, 2048);
+        this.player.position.set(256, 2048 - 100);
 
         super.initializeNPCs();
 
@@ -62,7 +62,7 @@ export default class ObstacleScene extends BattleScene {
             this.spawnMine(Math.random() * 512, Math.random() * 2048);
         }
 
-        this.wavePos = 2148;
+        this.wavePos = 2048 + 200;
         this.levelActive = true;
 
         this.wave = this.add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(1000, 10)});
