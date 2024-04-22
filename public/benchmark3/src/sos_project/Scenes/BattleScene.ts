@@ -477,10 +477,12 @@ export default class BattleScene extends SosScene {
     protected winLevel(rewards: number = 0): void {
         this.endLevel();
         new LevelEndHUD(this, "modal", "staticHUD", true, rewards, this.scaleFactor, this.scaleFactor);
+        this.emitter.fireEvent("gameend");
     }
     protected loseLevel(): void {
         this.endLevel();
         this.lostLevel = true;
         new LevelEndHUD(this, "modal", "staticHUD", false, 0, this.scaleFactor, this.scaleFactor);
+        this.emitter.fireEvent("gameend");
     }
 }
