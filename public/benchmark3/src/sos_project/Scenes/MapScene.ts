@@ -239,17 +239,17 @@ export default class MapScene extends Scene {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false);
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false);
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false);
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
@@ -259,7 +259,7 @@ export default class MapScene extends Scene {
                 land.position.set(x, y);
                 break;
             case 5:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false);
                 const obstacle = this.add.sprite("obstacle_icon", "map");
                 obstacle.position.set(x, y);
                 break;

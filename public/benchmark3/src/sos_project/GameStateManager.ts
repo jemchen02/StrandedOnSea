@@ -88,11 +88,11 @@ export class GameStateManager {
     private buildMap() : void{
         //THIS IS THE MAP
         const mapInit = [
-            [4, 2, 3, 2, 1],
+            [4, 2, 3, 5, 4],
             [1, 3, 2, 1, 0],
-            [5, 1, 2, 3, 2],
-            [4, 1, 2, 2, 2],
-            [0, 3, 1, 1, 4]
+            [5, 1, 4, 3, 1],
+            [4, 1, 3, 2, 5],
+            [0, 5, 5, 3, 4]
         ];
         const n = mapInit.length;
         const m = mapInit[0].length;
