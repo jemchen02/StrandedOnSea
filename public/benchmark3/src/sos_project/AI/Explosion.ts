@@ -6,19 +6,16 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Scene from "../../Wolfie2D/Scene/Scene";
 import { CollisionManager } from "../CollisionManager";
-import ExplosionAI from "./Explosion";
 
-export default class MineAI implements AI {
-    // The owner of this AI
-    protected owner: Sprite;
-
-    public shooter : GameNode;
-    private emitter: Emitter;
-
-    initializeAI(owner: Sprite, options: Record<string, any>): void {
+export default class ExplosionAI implements AI {
+    private owner: AnimatedSprite;
+    private duration: number;
+    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+        this.duration = 1;
         this.owner = owner;
-        this.emitter = new Emitter();
+        owner.animation.play("EXPLOSION", false);
     }
 
     activate(options: Record<string, any>): void {
@@ -29,18 +26,12 @@ export default class MineAI implements AI {
     }
 
     update(deltaT: number): void {
-        if(!this.owner.visible) return;
-        
-        let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
-        if(otherCollider && otherCollider != this.shooter){
-            this.emitter.fireEvent("mineHit", {"node": otherCollider});
+        this.duration -= deltaT;
+        if(this.duration <= 0) {
             this.owner.destroy();
         }
     }
 
     destroy(): void {
-        const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
-        explosion.position = this.owner.position;
-        explosion.addAI(ExplosionAI);
     }
 }

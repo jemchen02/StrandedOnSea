@@ -7,6 +7,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { CollisionManager } from "../CollisionManager";
+import ExplosionAI from "./Explosion";
 
 export default class TorpedoAI implements AI {
     // The owner of this AI
@@ -67,6 +68,8 @@ export default class TorpedoAI implements AI {
     }
 
     destroy(): void {
-        //Do nothing
+        const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
+        explosion.position = this.owner.position;
+        explosion.addAI(ExplosionAI);
     }
 }
