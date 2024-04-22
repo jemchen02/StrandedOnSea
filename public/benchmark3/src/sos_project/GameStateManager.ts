@@ -193,7 +193,7 @@ export class GameStateManager {
     public buyMine() : boolean {
         if(this.money >= Costs.MINE_COST) {
             this.money -= Costs.MINE_COST;
-            this.numMine += 1;
+            this.numMine += 5;
             return true;
         }
         return false;
@@ -201,7 +201,7 @@ export class GameStateManager {
     public buyTorpedo() : boolean {
         if(this.money >= Costs.TORPEDO_COST) {
             this.money -= Costs.TORPEDO_COST;
-            this.numTorpedo++;
+            this.numTorpedo += 5;
             return true;
         }
         return false;
@@ -209,7 +209,7 @@ export class GameStateManager {
     public buyRepair() : boolean {
         if(this.money >= Costs.REPAIR_COST) {
             this.money -= Costs.REPAIR_COST;
-            this.numRepairs++;
+            this.numRepairs += 2;
             return true;
         }
         return false;
