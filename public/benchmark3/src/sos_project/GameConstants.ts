@@ -32,8 +32,8 @@ export enum LevelRewards {
     HOSTILE2 = 500,
     OBSTACLE1 = 300,
     OBSTACLE2 = 500,
-    SHIPWRECK1 = 200,
-    SHIPWRECK2 = 300,
+    SHIPWRECK1 = 100,
+    SHIPWRECK2 = 200,
     WHIRLPOOL1 = 300,
     WHIRLPOOL2 = 500
 }

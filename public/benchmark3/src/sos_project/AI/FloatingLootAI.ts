@@ -7,7 +7,6 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 export default class FloatingLootAI extends StateMachineAI {
-    private isDead: boolean = false;
     private player: PlayerActor;
     private rarity: number;
 
@@ -29,11 +28,8 @@ export default class FloatingLootAI extends StateMachineAI {
 		// Need to handle animations when damage is taken
 	}
 	update(deltaT: number): void {
-        if (this.isDead) return;
-
         if ((<AABB>this.player.collisionShape).overlaps(<AABB> this.owner.collisionShape)){
             this.emitter.fireEvent("collectLoot", {'rarity': this.rarity})
-            this.isDead = true
             this.owner.destroy()
         }
 

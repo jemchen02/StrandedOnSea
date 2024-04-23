@@ -23,6 +23,7 @@ import { ShipDamageManager } from "../../ShipDamageManager";
 import MineAI from "../Mine";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyActor from "../../Actors/EnemyActor";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -50,6 +51,7 @@ export default class PlayerAI extends ShipAI {
         this.receiver.subscribe("ramCollision");
         this.receiver.subscribe("whirlpoolKO");
         this.receiver.subscribe("cannonHit");
+        this.receiver.subscribe("collectLoot")
     }
 
     public activate(options: Record<string, any>): void { }
@@ -129,7 +131,7 @@ export default class PlayerAI extends ShipAI {
     public fire_cannon(left : boolean) : void{
         if(this.cannonCooldown <= 0) {
             this.cannonCooldown = 0.5
-            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10,10)});
             cannonBall.visible = true;
             cannonBall.addAI(CannonBallAI);
             cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
@@ -144,6 +146,8 @@ export default class PlayerAI extends ShipAI {
             cannonBall.position = new Vec2(0, 0).add(this.owner.position);
     
             cannonBall.isCollidable = false;
+
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire", loop: false, holdReference: true});
         }
        
     }
@@ -162,12 +166,12 @@ export default class PlayerAI extends ShipAI {
         //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
         //cannonBall.setAIActive(true, {direction: dir});
 
-        torpedo.setAIActive(true, {startingVelocity : this.owner.getLastVelocity()});
-
-        torpedo.rotation = this.owner.rotation;
         torpedo.position = new Vec2(0, 0).add(this.owner.position);
+        torpedo.setAIActive(true, {});
 
         torpedo.isCollidable = false;
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire", loop: false, holdReference: true});
     }
     public place_mine() : void{
         if(GameStateManager.get().numMine <= 0) return;
@@ -180,6 +184,7 @@ export default class PlayerAI extends ShipAI {
         mine.scale.set(0.1, 0.1);
         (<MineAI>mine._ai).shooter = this.owner;
 
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mine_place", loop: false, holdReference: true});
 
         mine.setAIActive(true,{});
 
