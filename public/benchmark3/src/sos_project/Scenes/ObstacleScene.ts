@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
@@ -18,6 +19,12 @@ export default class ObstacleScene extends BattleScene {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/obstacle1/enemies.json");
         this.load.tilemap("level", "hw4_assets/tilemaps/ObstacleMap.json");
+        this.load.audio("obstacle_theme", "sos_assets/music/black_midi_kahos.mp4");
+    }
+    public startScene(): void {
+        super.startScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "obstacle_theme", loop: true, holdReference: true});
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
@@ -68,5 +75,9 @@ export default class ObstacleScene extends BattleScene {
         this.wave = this.add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(1000, 10)});
         this.wave.addPhysics();
         this.wave.position.set(256, this.wavePos);
+    }
+    unloadScene(): void {
+        super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "obstacle_theme"});
     }
 }

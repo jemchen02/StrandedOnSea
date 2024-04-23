@@ -13,6 +13,7 @@ import ShipwreckScene from "./ShipwreckScene";
 import ShipwreckScene2 from "./ShipwreckScene2";
 import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
