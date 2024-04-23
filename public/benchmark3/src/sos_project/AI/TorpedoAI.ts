@@ -12,9 +12,9 @@ export default class TorpedoAI implements AI {
     // The owner of this AI
     protected owner: AnimatedSprite;
 
-    public static SPEED: number = 250;
+    public static SPEED: number = 150;
 
-    timeLeft : number = 5;
+    timeLeft : number = 30;
 
     public startingVelocity : Vec2;
 
@@ -27,7 +27,7 @@ export default class TorpedoAI implements AI {
     }
 
     activate(options: Record<string, any>): void {
-        this.startingVelocity = options.startingVelocity
+        this.owner.rotation = this.getAngleToMouse();
     }
 
     handleEvent(event: GameEvent): void {
@@ -39,25 +39,13 @@ export default class TorpedoAI implements AI {
 
         this.timeLeft -= deltaT;
         if(this.timeLeft < 0){
-            this.owner.visible = false;
+            //this.owner.visible = false;
         }
 
-        //SOS TODO holme better
-        if(Input.getGlobalMousePosition().distanceTo(this.owner.position) < 5){
-            this.timeLeft -= (deltaT * 10);
-            return;
-        }
+        let angleToMouse = this.getAngleToMouse();
+        this.owner.rotation = this.angleLerp(this.owner.rotation, angleToMouse, deltaT * 1.25);
 
-        let mouseX = Input.getGlobalMousePosition().x;
-        let mouseY = Input.getGlobalMousePosition().y;
-
-        let deltaX = mouseX - this.owner.position.x;
-        let deltaY = mouseY - this.owner.position.y;
-        let angleToMouse = Math.atan2(deltaY, deltaX);
-
-        this.owner.rotation = angleToMouse;
-
-        this.owner.position.add((new Vec2(1, 0).rotateCCW(this.owner.rotation)).scaled(TorpedoAI.SPEED * deltaT).add(this.startingVelocity));
+        this.owner.position.add((new Vec2(0, 1).rotateCCW(this.owner.rotation)).scaled(TorpedoAI.SPEED * deltaT).mult(new Vec2(1, -1)));
 
         let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
         if(otherCollider && otherCollider != this.shooter){
@@ -65,6 +53,36 @@ export default class TorpedoAI implements AI {
             this.owner.destroy();
         }
     }
+
+    getAngleToMouse() : number{
+        let mouseX = Input.getGlobalMousePosition().x;
+        let mouseY = Input.getGlobalMousePosition().y;
+
+        let deltaX = mouseX - this.owner.position.x;
+        let deltaY = this.owner.position.y - mouseY;
+        return Math.atan2(deltaY, deltaX) - (Math.PI/2);
+    }
+
+    angleLerp(current, dest, inc) : number{
+        current = this.normalize(current);
+        dest = this.normalize(dest);
+
+        if(Math.abs(current-dest) < inc) return dest;
+
+        let positiveDiff = this.normalize(current-dest);
+        let negativeDiff = this.normalize(dest-current);
+
+        if(positiveDiff < negativeDiff){
+            return current - inc;
+        } else{
+            return current + inc;
+        }
+    }
+
+    normalize(angle : number) : number{
+        return (angle+(2*Math.PI))%(2*Math.PI);
+    }
+
 
     destroy(): void {
         //Do nothing

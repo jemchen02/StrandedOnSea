@@ -160,10 +160,8 @@ export default class PlayerAI extends ShipAI {
         //let dir = Vec2.UP.rotateCCW(this.owner.rotation);
         //cannonBall.setAIActive(true, {direction: dir});
 
-        torpedo.setAIActive(true, {startingVelocity : this.owner.getLastVelocity()});
-
-        torpedo.rotation = this.owner.rotation;
         torpedo.position = new Vec2(0, 0).add(this.owner.position);
+        torpedo.setAIActive(true, {});
 
         torpedo.isCollidable = false;
     }
