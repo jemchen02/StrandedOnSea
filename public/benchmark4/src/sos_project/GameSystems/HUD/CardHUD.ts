@@ -4,24 +4,19 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 export default class CardHUD {
     public constructor(scene: Scene, options: Record<string, any>) {
-        const start = options.start;
+        const position = options.position;
         const layer = options.layer;
         const card = options.card;
-
-        scene.add.uiElement(UIElementType.LABEL, layer, {position: start, text: card.name, fontSize: 50, textColor: Color.BLACK});
-        scene.add.uiElement(UIElementType.LABEL, layer, {position: new Vec2(start.x, start.y + 80), text: `Type: ${card.type}`, fontSize: 30, textColor: Color.BLACK});
         
-        //const icon = scene.add.sprite(card.image, layer);
-        //icon.position.set(start.x, start.y + 200);
-
-        scene.add.uiElement(UIElementType.LABEL, layer, {position: new Vec2(start.x, start.y + 480), text: card.description, fontSize: 16, textColor: Color.BLACK});
-        scene.add.uiElement(UIElementType.LABEL, layer, {position: new Vec2(start.x, start.y + 570), text: `Cost: ${card.cost}`, fontSize: 25, textColor: Color.BLACK});
+        const image = scene.add.sprite(card.image, layer);
+        image.position = position;
+        image.scale.set(0.82, 0.82);
 
         
-        const button = scene.add.uiElement(UIElementType.BUTTON, layer, {position: new Vec2(start.x, start.y + 280), text: ""});
-        button.size.set(310, 680);
+        const button = scene.add.uiElement(UIElementType.BUTTON, layer, {position, text: ""});
+        button.size.set(310, 620);
         button.borderRadius = 2;
-        button.borderWidth = 0;
+        button.borderColor = Color.TRANSPARENT;
         button.backgroundColor = Color.TRANSPARENT;
         button.onClickEventId = card.onclick;
     }

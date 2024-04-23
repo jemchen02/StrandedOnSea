@@ -10,7 +10,7 @@ export enum Costs {
     RADAR_COST = 500,
     OAR_COST = 0,
     SAIL_COST = 400,
-    MOTOR_COST = 600
+    MOTOR_COST = 800
 }
 export enum DamageAmounts {
     CANNON_DAMAGE = 10,

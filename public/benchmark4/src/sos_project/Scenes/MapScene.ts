@@ -55,7 +55,6 @@ export default class MapScene extends Scene {
         this.load.image("water", "hw4_assets/sprites/water.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
-        this.load.image("cardsBackground", "hw4_assets/sprites/CardsBackground.png");
 
         this.load.image("playerIcon", "hw4_assets/map/playerIcon.png");
         this.load.image("hidden", "hw4_assets/map/hidden.png");
@@ -65,6 +64,17 @@ export default class MapScene extends Scene {
         this.load.image("whirlpool", "hw4_assets/map/whirlpool.png");
         this.load.image("obstacle_icon", "hw4_assets/map/obstacle.png");
         this.load.image("land", "hw4_assets/map/land.png");
+
+        this.load.image("fiberglass_card", "sos_assets/cards/FiberglassCard.png");
+        this.load.image("crow_card", "sos_assets/cards/CrowCard.png");
+        this.load.image("metal_card", "sos_assets/cards/MetalCard.png");
+        this.load.image("mine_card", "sos_assets/cards/MineCard.png");
+        this.load.image("motor_card", "sos_assets/cards/MotorCard.png");
+        this.load.image("pump_card", "sos_assets/cards/PumpCard.png");
+        this.load.image("radar_card", "sos_assets/cards/RadarCard.png");
+        this.load.image("repair_card", "sos_assets/cards/RepairCard.png");
+        this.load.image("sail_card", "sos_assets/cards/SailCard.png");
+        this.load.image("torpedo_card", "sos_assets/cards/TorpedoCard.png");
 
         this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.wav");
     }
@@ -138,16 +148,12 @@ export default class MapScene extends Scene {
 
         this.shipLayer = this.addUILayer("ship");
 
-        const cardsBackground = this.add.sprite("cardsBackground", "ship");
-        cardsBackground.position.set(center.x, center.y - 20);
-        cardsBackground.scale.set(1.2, 1.28)
-
         const cards = CardManager.get().pickThree(GameStateManager.get().money);
-        new CardHUD(this, {start: new Vec2(170, 200), layer: "ship", card: cards[0]});
+        new CardHUD(this, {position: new Vec2(170, 500), layer: "ship", card: cards[0]});
         this.mapSubscriptions.push(cards[0].onclick);
-        new CardHUD(this, {start: new Vec2(510, 200), layer: "ship", card: cards[1]});
+        new CardHUD(this, {position: new Vec2(510, 500), layer: "ship", card: cards[1]});
         this.mapSubscriptions.push(cards[1].onclick);
-        new CardHUD(this, {start: new Vec2(850, 200), layer: "ship", card: cards[2]});
+        new CardHUD(this, {position: new Vec2(850, 500), layer: "ship", card: cards[2]});
         this.mapSubscriptions.push(cards[2].onclick);
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false);

@@ -39,16 +39,12 @@ export class SavedStats{
 }
 export class Card{
     public name: string;
-    public type: string;
     public image: string;
-    public description: string;
     public cost: number;
     public onclick: string;
     constructor(options: Record<string, any>) {
         this.name = options.name;
-        this.type = options.type;
         this.image = options.image;
-        this.description = options.description;
         this.cost = options.cost;
         this.onclick = options.onclick;
     }

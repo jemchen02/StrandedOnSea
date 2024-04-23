@@ -50,12 +50,12 @@ export class GameStateManager {
 
     // We define starting amounts here.
     constructor(){
-        this.money = 800;
+        this.money = 400;
         this.health = 100;
         this.maxHealth = 100;
-        this.numRepairs = 0;
-        this.numMine = 0;
-        this.numTorpedo = 0;
+        this.numRepairs = 1;
+        this.numMine = 2;
+        this.numTorpedo = 2;
         this.hasCrowsNest = false;
         this.hasRadar = false;
         this.hasPump = false;

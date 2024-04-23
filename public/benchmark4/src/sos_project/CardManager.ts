@@ -1,16 +1,16 @@
 import { Costs } from "./GameConstants";
 import { Card } from "./SOSLevel";
 const cardInit = [
-    ["Fiberglass", "Material", "fiberglass_icon", "Sturdier ship ignores 15% of attacks.", Costs.FIBER_COST, "buyFiber"],
-    ["Metal", "Material", "metal_icon", "Hardened ship ignores 25% of attacks.", Costs.METAL_COST, "buyMetal"],
-    ["Sail", "Propulsion", "sail_icon", "Increases ship speed by 20%.", Costs.FIBER_COST, "buySail"],
-    ["Motor", "Propulsion", "motor_icon", "Increases ship speed by 40%.", Costs.MOTOR_COST, "buyMotor"],
-    ["Pump", "Enhacement", "pump_icon", "Heal 1 health every 5 seconds.", Costs.PUMP_COST, "buyPump"],
-    ["Crow's Nest", "Enhacement", "crow_icon", "See one step further on map.", Costs.CROW_COST, "buyCrow"],
-    ["Radar", "Enhacement", "radar_icon", "Reveals the entire map.", Costs.RADAR_COST, "buyRadar"],
-    ["5 Mines", "Consumable", "mine_icon", "Stationary, massive damage on touch.", Costs.MINE_COST, "buyMine"],
-    ["5 Torpedoes", "Consumable", "torpedo_icon", "Guided missile dealing large damage.", Costs.TORPEDO_COST, "buyTorpedo"],
-    ["2 Repairs", "Consumable", "repair_icon", "Heals 30 hp instantly.", Costs.REPAIR_COST, "buyRepair"]
+    ["Fiberglass", "fiberglass_card", Costs.FIBER_COST, "buyFiber"],
+    ["Metal", "metal_card", Costs.METAL_COST, "buyMetal"],
+    ["Sail", "sail_card", Costs.SAIL_COST, "buySail"],
+    ["Motor", "motor_card", Costs.MOTOR_COST, "buyMotor"],
+    ["Pump", "pump_card", Costs.PUMP_COST, "buyPump"],
+    ["Crow's Nest", "crow_card", Costs.CROW_COST, "buyCrow"],
+    ["Radar", "radar_card", Costs.RADAR_COST, "buyRadar"],
+    ["5 Mines", "mine_card", Costs.MINE_COST, "buyMine"],
+    ["5 Torpedoes", "torpedo_card", Costs.TORPEDO_COST, "buyTorpedo"],
+    ["2 Repairs", "repair_card", Costs.REPAIR_COST, "buyRepair"]
 ];
 export class CardManager {
     private static instance: CardManager;
@@ -28,7 +28,7 @@ export class CardManager {
     cards : Card[]
 
     constructor(){
-      this.cards = cardInit.map((card) => new Card({name: card[0], type: card[1], image: card[2], description: card[3], cost: card[4], onclick: card[5]}));
+      this.cards = cardInit.map((card) => new Card({name: card[0], image: card[1], cost: card[2], onclick: card[3]}));
     }
 
     public pickThree(money: number): Card[] {
