@@ -24,6 +24,7 @@ import WhirlpoolScene2 from "./WhirlpoolScene2";
 import ObstacleScene2 from "./ObstacleScene2";
 import CardHUD from "../GameSystems/HUD/CardHUD";
 import { CardManager } from "../CardManager";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -64,9 +65,12 @@ export default class MapScene extends Scene {
         this.load.image("whirlpool", "hw4_assets/map/whirlpool.png");
         this.load.image("obstacle_icon", "hw4_assets/map/obstacle.png");
         this.load.image("land", "hw4_assets/map/land.png");
+
+        this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.wav");
     }
 
     public startScene(){
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
         this.viewport.setZoomLevel(1);
         this.viewport.setCenter(new Vec2(512, 512));
         this.mapSubscriptions = [];
