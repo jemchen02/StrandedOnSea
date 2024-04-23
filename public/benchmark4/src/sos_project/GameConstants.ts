@@ -28,15 +28,20 @@ export enum DamageTimes {
     OBSTACLE_MINE_TIME = 5
 }
 export enum LevelRewards {
-    HOSTILE1 = 300,
-    HOSTILE2 = 500,
-    OBSTACLE1 = 300,
-    OBSTACLE2 = 500,
-    SHIPWRECK1 = 100,
-    SHIPWRECK2 = 200,
-    WHIRLPOOL1 = 300,
-    WHIRLPOOL2 = 500
+    HOSTILE1 = 250,
+    HOSTILE2 = 400,
+    OBSTACLE1 = 250,
+    OBSTACLE2 = 400,
+    SHIPWRECK1 = 250,
+    SHIPWRECK2 = 300,
+    WHIRLPOOL1 = 250,
+    WHIRLPOOL2 = 400
 }
 export enum LevelData {
     NUM_OBSTACLE_MINES = 200
+}
+export enum Speeds {
+    OAR_SPEED = 65,
+    SAIL_SPEED = 78,
+    MOTOR_SPEED = 91
 }

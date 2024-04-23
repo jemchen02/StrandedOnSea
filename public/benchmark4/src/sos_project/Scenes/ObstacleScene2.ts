@@ -21,8 +21,7 @@ export default class ObstacleScene2 extends BattleScene {
     }
     public startScene(): void {
         super.startScene();
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "obstacle_theme", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "obstacle_theme", loop: true, holdReference: true});
     }
     protected override initializeHUD(): void {
         super.initializeHUD();

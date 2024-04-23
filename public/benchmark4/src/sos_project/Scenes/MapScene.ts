@@ -25,6 +25,7 @@ import ObstacleScene2 from "./ObstacleScene2";
 import CardHUD from "../GameSystems/HUD/CardHUD";
 import { CardManager } from "../CardManager";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -80,7 +81,8 @@ export default class MapScene extends Scene {
     }
 
     public startScene(){
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "sos_theme", loop: true, holdReference: true});
         this.viewport.setZoomLevel(1);
         this.viewport.setCenter(new Vec2(512, 512));
         this.mapSubscriptions = [];
@@ -98,6 +100,10 @@ export default class MapScene extends Scene {
         for (let subevent of this.mapSubscriptions) {
             this.receiver.subscribe(subevent);
         }
+    }
+    public unloadScene(): void {
+        super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
     }
     private initBackground() {
         const center = this.viewport.getCenter();

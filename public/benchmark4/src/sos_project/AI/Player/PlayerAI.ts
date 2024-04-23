@@ -5,7 +5,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import PlayerActor from "../../Actors/PlayerActor";
 import { ItemEvent } from "../../Events";
-import { GameStateManager } from "../../GameStateManager";
+import { GameStateManager, MovementType, ShipType } from "../../GameStateManager";
 import Inventory from "../../GameSystems/ItemSystem/Inventory";
 import Item from "../../GameSystems/ItemSystem/Item";
 import PlayerController from "./PlayerController";
@@ -18,7 +18,7 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import CannonBallAI from "../CannonBall";
 import TorpedoAI from "../TorpedoAI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import { DamageAmounts, DamageTimes } from "../../GameConstants";
+import { DamageAmounts, DamageTimes, Speeds } from "../../GameConstants";
 import { ShipDamageManager } from "../../ShipDamageManager";
 import MineAI from "../Mine";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -36,17 +36,29 @@ export default class PlayerAI extends ShipAI {
     public inventory: Inventory;
     public invincibleTimer: number;
     public cannonCooldown: number;
+    public deflectChance: number;
     
     public initializeAI(owner: PlayerActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
         this.invincibleTimer = 0;
         this.cannonCooldown = 0;
+        this.deflectChance = 0;
         this.controller = new PlayerController(owner);
 
         // Add the players states to it's StateMachine
         this.addState(ShipStateType.INVINCIBLE, new Invincible(this, this.owner as PlayerActor));
         this.addState(ShipStateType.DEAD, new Dead(this, this.owner as AnimatedSprite));
         
+        if(GameStateManager.get().movementType == MovementType.SAIL) {
+            this.MAX_SPEED = Speeds.SAIL_SPEED;
+        } else if(GameStateManager.get().movementType == MovementType.MOTOR) {
+            this.MAX_SPEED = Speeds.MOTOR_SPEED;
+        }
+        if(GameStateManager.get().shipType == ShipType.FIBERGLASS) {
+            this.deflectChance = 0.15;
+        } else if(GameStateManager.get().shipType == ShipType.METAL) {
+            this.deflectChance = 0.25;
+        }
 
         this.receiver.subscribe("ramCollision");
         this.receiver.subscribe("whirlpoolKO");
@@ -96,8 +108,11 @@ export default class PlayerAI extends ShipAI {
                 this.onWhirlpoolKO();
                 break;
             case "cannonHit":
-                if(event.data.get("node") == this.owner) {
+                if(event.data.get("node") == this.owner && Math.random() > this.deflectChance) {
                     this.onCannonHit();
+                } else {
+                    this.emitter.fireEvent(GameEventType.STOP_SOUND, {key:"hit"});
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deflect", loop: false, holdReference: true});
                 }
                 break;
             case "collectLoot":
@@ -111,9 +126,11 @@ export default class PlayerAI extends ShipAI {
     public onRamCollision(): void {
         if (this.invincibleTimer > 0) {
             return
-        } else {
+        } else if(Math.random() > this.deflectChance) {
             ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
+        } else {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deflect", loop: false, holdReference: true});
         }
     }
     public onCannonHit(): void {

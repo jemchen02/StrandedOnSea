@@ -17,8 +17,7 @@ export default class HostileScene2 extends BattleScene {
     }
     public startScene(): void {
         super.startScene();
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hostile_theme", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "hostile_theme", loop: true, holdReference: true});
     }
     public override loadScene(): void {
         super.loadScene();

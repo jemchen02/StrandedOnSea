@@ -7,6 +7,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import { Speeds } from "../GameConstants";
 import { GameStateManager, MovementType } from "../GameStateManager";
 
 import { Idle, Moving } from "./ShipStates/ShipState";
@@ -25,7 +26,7 @@ export default class ShipAI extends StateMachineAI {
 
     // Parameters that may change based on the ship state
 	private MIN_SPEED: number = -25;
-	private MAX_SPEED: number = 65;
+	public MAX_SPEED: number = Speeds.OAR_SPEED;
 	private ACCELERATION: number = 1;
 	private rotationSpeed: number;
 

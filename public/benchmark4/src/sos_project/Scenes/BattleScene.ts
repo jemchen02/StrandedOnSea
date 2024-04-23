@@ -131,6 +131,7 @@ export default class BattleScene extends SosScene {
         this.load.audio("fire2", "hw4_assets/sounds/fire2.mp3");
         this.load.audio("explode1", "hw4_assets/sounds/explode1.mp3");
         this.load.audio("hit", "hw4_assets/sounds/hit.mp3");
+        this.load.audio("deflect", "hw4_assets/sounds/deflect.wav");
 
         CollisionManager.get().ResetColliders();
     }
