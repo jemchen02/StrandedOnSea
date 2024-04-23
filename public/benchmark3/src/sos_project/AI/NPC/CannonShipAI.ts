@@ -3,6 +3,7 @@ import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import EnemyActor from "../../Actors/EnemyActor";
@@ -115,6 +116,8 @@ export default class CannonShipAI extends ShipAI {
         cannonBall.position = new Vec2(0, 0).add(this.owner.position);
 
         cannonBall.isCollidable = false;
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire2", loop: false, holdReference: true});
     }
     public handleEvent(event: GameEvent): void {
         switch(event.type) {

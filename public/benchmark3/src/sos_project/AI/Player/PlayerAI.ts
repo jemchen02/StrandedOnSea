@@ -23,6 +23,7 @@ import { ShipDamageManager } from "../../ShipDamageManager";
 import MineAI from "../Mine";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyActor from "../../Actors/EnemyActor";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 /**
  * The AI that controls the player. The players AI has been configured as a Finite State Machine (FSM)
@@ -145,6 +146,8 @@ export default class PlayerAI extends ShipAI {
             cannonBall.position = new Vec2(0, 0).add(this.owner.position);
     
             cannonBall.isCollidable = false;
+
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire", loop: false, holdReference: true});
         }
        
     }
@@ -167,6 +170,8 @@ export default class PlayerAI extends ShipAI {
         torpedo.setAIActive(true, {});
 
         torpedo.isCollidable = false;
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire", loop: false, holdReference: true});
     }
     public place_mine() : void{
         if(GameStateManager.get().numMine <= 0) return;
@@ -179,6 +184,7 @@ export default class PlayerAI extends ShipAI {
         mine.scale.set(0.1, 0.1);
         (<MineAI>mine._ai).shooter = this.owner;
 
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mine_place", loop: false, holdReference: true});
 
         mine.setAIActive(true,{});
 
