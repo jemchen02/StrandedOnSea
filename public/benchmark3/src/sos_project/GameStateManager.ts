@@ -355,12 +355,12 @@ export class GameStateManager {
     public setHealth(newHealth : number){
         if(newHealth < 0){
             this.health = 0;
+            this.emitter.fireEvent("gameLoss");
             //TODO add death
         }
 
         else if(newHealth > this.maxHealth){
             this.health = this.maxHealth;
-            this.emitter.fireEvent("gameLoss");
         }
 
         else{
