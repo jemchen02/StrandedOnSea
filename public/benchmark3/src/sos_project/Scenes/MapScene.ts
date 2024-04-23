@@ -75,7 +75,7 @@ export default class MapScene extends Scene {
         this.initMap();
         this.initHUD();
         this.initShip();
-        if(!GameStateManager.get().onLand()) {
+        if(!GameStateManager.get().prevWon) {
             this.shipLayer.disable();
             this.mapLayer.enable();
             this.mapOverlay.enable();
@@ -146,7 +146,7 @@ export default class MapScene extends Scene {
         new CardHUD(this, {start: new Vec2(850, 200), layer: "ship", card: cards[2]});
         this.mapSubscriptions.push(cards[2].onclick);
 
-        this.createButton("ship", new Vec2(center.x, center.y + 400), "Ready", "ready", 150, "design", -1, false);
+        this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false);
     }
     private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean) {
         if (bType == "design") {
@@ -221,7 +221,11 @@ export default class MapScene extends Scene {
             button.update(deltaT);
         }
     }
-
+    private returnToMap(): void {
+        this.shipLayer.disable();
+        this.mapLayer.enable();
+        this.mapOverlay.enable();
+    }
     public handleEvent(event: GameEvent): void {
 
         let encodedEvent : string = event.type;
@@ -280,57 +284,64 @@ export default class MapScene extends Scene {
                 break;
             }
             case "ready": {
-                this.shipLayer.disable();
-                this.mapLayer.enable();
-                this.mapOverlay.enable();
-                break;
-            }
-            case "buyWood": {
-                GameStateManager.get().buyWood();
+                this.returnToMap();
                 break;
             }
             case "buyFiber": {
                 GameStateManager.get().buyFiber();
+                CardManager.get().remove("Fiberglass");
+                this.returnToMap();
                 break;
             }
             case "buyMetal": {
                 GameStateManager.get().buyMetal();
+                CardManager.get().remove("Metal");
+                this.returnToMap();
                 break;
             }
             case "buyMine": {
                 GameStateManager.get().buyMine();
+                this.returnToMap();
                 break;
             }
             case "buyTorpedo": {
                 GameStateManager.get().buyTorpedo();
+                this.returnToMap();
                 break;
             }
             case "buyRepair": {
                 GameStateManager.get().buyRepair();
-                break;
-            }
-            case "buyOars": {
-                GameStateManager.get().buyOar();
+                this.returnToMap();
                 break;
             }
             case "buySail": {
                 GameStateManager.get().buySail();
+                CardManager.get().remove("Sail");
+                this.returnToMap();
                 break;
             }
             case "buyMotor": {
                 GameStateManager.get().buyMotor();
+                CardManager.get().remove("Motor");
+                this.returnToMap();
                 break;
             }
             case "buyPump": {
                 GameStateManager.get().buyPump();
+                CardManager.get().remove("Pump");
+                this.returnToMap();
                 break;
             }
             case "buyCrow": {
                 GameStateManager.get().buyCrow();
+                CardManager.get().remove("Crow's Nest");
+                this.returnToMap();
                 break;
             }
             case "buyRadar": {
                 GameStateManager.get().buyRadar();
+                CardManager.get().remove("Radar");
+                this.returnToMap();
                 break;
             }
         }

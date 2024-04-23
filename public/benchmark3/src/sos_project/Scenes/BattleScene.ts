@@ -105,6 +105,7 @@ export default class BattleScene extends SosScene {
         this.load.image("mine", "hw4_assets/sprites/mine.png");
         this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
         this.load.spritesheet("torpedoProjectile", "sos_assets/spritesheets/torpedo.json")
+        this.load.spritesheet("explosion", "sos_assets/spritesheets/explosion.json")
         this.load.image("repair", "hw4_assets/sprites/repair.png");
 
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
@@ -180,6 +181,9 @@ export default class BattleScene extends SosScene {
                 GameStateManager.get().togglePause();
                 if(this.lostLevel) {
                     GameStateManager.get().restoreSaved();
+                    GameStateManager.get().prevWon = false;
+                } else {
+                    GameStateManager.get().prevWon = true;
                 }
                 this.sceneManager.changeToScene(MapScene);
                 break;
