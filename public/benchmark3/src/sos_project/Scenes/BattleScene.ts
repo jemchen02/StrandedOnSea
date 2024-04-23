@@ -370,15 +370,16 @@ export default class BattleScene extends SosScene {
         let tilemap = this.getTilemap("Ocean")
         let size = tilemap.getDimensions()
         let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
-        while (tilemap.getTile(randCoords.x, randCoords.y) != 0){
+        while (tilemap.getTile(randCoords.x, randCoords.y) != 1){
             randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
         }
         let worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
+        
         let barrel = this.add.animatedSprite(NPCActor, "loot", "primary")
         barrel.position.set(worldCoords.x, worldCoords.y)
         barrel.scale.set(0.5, 0.5)
-        barrel.addPhysics(new AABB(Vec2.ZERO, new Vec2(barrel.size.x * barrel.scale.x / 2, barrel.size.y * barrel.scale.y/2)), null, true, true);
-        barrel.addAI(FloatingLootAI, {player: this.player, rarity:0})
+        barrel.addPhysics(new AABB(Vec2.ZERO, new Vec2(barrel.size.x * barrel.scale.x / 2, barrel.size.y * barrel.scale.y/2)), null, false, true);
+        barrel.addAI(FloatingLootAI, {player: this.player, rarity:1})
         barrel.animation.play("IDLE")
     }
 

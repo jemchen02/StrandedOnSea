@@ -29,7 +29,7 @@ export default class FloatingLootAI extends StateMachineAI {
 	}
 	update(deltaT: number): void {
 		// First clause exists here because the collisionShape is undefined for whatever reason
-        if (this.owner.collisionShape && (<AABB>this.player.collisionShape).overlaps(<AABB>this.owner.collisionShape)){
+        if ((<AABB>this.player.collisionShape).overlaps(<AABB>this.owner.collisionShape)){
             this.emitter.fireEvent("collectLoot", {'rarity': this.rarity})
             this.owner.destroy()
         }
