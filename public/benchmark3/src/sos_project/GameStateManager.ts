@@ -42,6 +42,8 @@ export class GameStateManager {
     public isPaused: boolean;
     private stormCanMove: boolean;
 
+    public prevWon: boolean;
+
     private saved: SavedStats;
 
     protected emitter: Emitter;
@@ -63,6 +65,7 @@ export class GameStateManager {
         this.movementType = MovementType.OAR;
         this.isPaused = false;
         this.stormCanMove = false;
+        this.prevWon = true;
 
         this.emitter = new Emitter();
 
@@ -88,10 +91,10 @@ export class GameStateManager {
     private buildMap() : void{
         //THIS IS THE MAP
         const mapInit = [
-            [4, 2, 3, 5, 4],
+            [4, 2, 3, 5, 3],
             [1, 3, 2, 1, 0],
-            [5, 1, 4, 3, 1],
-            [4, 1, 3, 2, 5],
+            [5, 1, 5, 3, 1],
+            [2, 1, 3, 2, 5],
             [0, 5, 5, 3, 4]
         ];
         const n = mapInit.length;
@@ -193,7 +196,7 @@ export class GameStateManager {
     public buyMine() : boolean {
         if(this.money >= Costs.MINE_COST) {
             this.money -= Costs.MINE_COST;
-            this.numMine += 1;
+            this.numMine += 5;
             return true;
         }
         return false;
@@ -201,7 +204,7 @@ export class GameStateManager {
     public buyTorpedo() : boolean {
         if(this.money >= Costs.TORPEDO_COST) {
             this.money -= Costs.TORPEDO_COST;
-            this.numTorpedo++;
+            this.numTorpedo += 5;
             return true;
         }
         return false;
@@ -209,7 +212,7 @@ export class GameStateManager {
     public buyRepair() : boolean {
         if(this.money >= Costs.REPAIR_COST) {
             this.money -= Costs.REPAIR_COST;
-            this.numRepairs++;
+            this.numRepairs += 2;
             return true;
         }
         return false;
