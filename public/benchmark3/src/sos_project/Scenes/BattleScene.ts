@@ -111,6 +111,7 @@ export default class BattleScene extends SosScene {
         this.load.image("mine", "hw4_assets/sprites/mine.png");
         this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
         this.load.spritesheet("torpedoProjectile", "sos_assets/spritesheets/torpedo.json")
+        this.load.spritesheet("explosion", "sos_assets/spritesheets/explosion.json")
         this.load.image("repair", "hw4_assets/sprites/repair.png");
 
         this.load.image("healthTab", "hw4_assets/sprites/healthTab.png");
@@ -124,6 +125,12 @@ export default class BattleScene extends SosScene {
         this.receiver.subscribe(BattlerEvent.BATTLER_KILLED);
         this.receiver.subscribe("gameLoss");
         this.receiver.subscribe("back");
+
+        this.load.audio("mine_place", "hw4_assets/sounds/mine_place.mp3");
+        this.load.audio("fire", "hw4_assets/sounds/fire.mp3");
+        this.load.audio("fire2", "hw4_assets/sounds/fire2.mp3");
+        this.load.audio("explode1", "hw4_assets/sounds/explode1.mp3");
+        this.load.audio("hit", "hw4_assets/sounds/hit.mp3");
 
         CollisionManager.get().ResetColliders();
     }
@@ -186,6 +193,9 @@ export default class BattleScene extends SosScene {
                 GameStateManager.get().togglePause();
                 if(this.lostLevel) {
                     GameStateManager.get().restoreSaved();
+                    GameStateManager.get().prevWon = false;
+                } else {
+                    GameStateManager.get().prevWon = true;
                 }
                 this.sceneManager.changeToScene(MapScene);
                 break;

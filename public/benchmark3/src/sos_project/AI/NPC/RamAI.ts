@@ -2,6 +2,7 @@ import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { CollisionManager } from "../../CollisionManager";
@@ -101,6 +102,7 @@ export default class RamAI extends ShipAI {
         if((<EnemyActor>this.owner).health <= 0) {
             this.isDead = true;
             CollisionManager.get().remove(this.owner);
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
         }
     }
 }

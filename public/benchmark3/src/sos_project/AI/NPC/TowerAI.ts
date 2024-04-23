@@ -5,6 +5,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
@@ -76,6 +77,8 @@ export default class TowerAI extends StateMachineAI {
         cannonBall.position = new Vec2(0, 0).add(this.owner.position);
 
         cannonBall.isCollidable = false;
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire2", loop: false, holdReference: true});
     }
     facePlayer(): void {
         const playerPos = this.player.position;
@@ -103,6 +106,7 @@ export default class TowerAI extends StateMachineAI {
 	}
     public checkDeath(): void {
         if((<EnemyActor>this.owner).health <= 0) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
             this.isDead = true;
             CollisionManager.get().remove(this.owner);
         }

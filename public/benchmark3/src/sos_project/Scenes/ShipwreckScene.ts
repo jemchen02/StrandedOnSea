@@ -1,6 +1,7 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
@@ -32,6 +33,12 @@ export default class ShipwreckScene extends BattleScene {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/shipwreck1/enemies.json");
         this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.audio("shipwreck_theme", "sos_assets/music/black_midi_kondracki.mp4");
+    }
+    public startScene(): void {
+        super.startScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "shipwreck_theme", loop: true, holdReference: true});
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
@@ -57,5 +64,9 @@ export default class ShipwreckScene extends BattleScene {
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.SHIPWRECK1;
         super.winLevel(LevelRewards.SHIPWRECK1);
+    }
+    unloadScene(): void {
+        super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "shipwreck_theme"});
     }
 }
