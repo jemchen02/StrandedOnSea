@@ -46,6 +46,9 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import { LevelRewards } from "../GameConstants";
 import EnemyMineAI from "../AI/EnemyMineAI";
 import BlockadeAI from "../AI/NPC/BlockadeAI";
+import FloatingLootAI from "../AI/FloatingLootAI";
+import NPCActor from "../Actors/NPCActor";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 
 export default class BattleScene extends SosScene {
@@ -99,6 +102,9 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
         this.load.spritesheet("blockade", "sos_assets/sprites/blockade.json")
+        this.load.spritesheet("loot", "sos_assets/spritesheets/loot.json")
+        this.load.spritesheet("explosion", "sos_assets/spritesheets/explosion.json")
+        this.load.spritesheet("debris", "sos_assets/spritesheets/debris.json")
 
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
@@ -348,6 +354,22 @@ export default class BattleScene extends SosScene {
         npc.scale.set(0.15, 0.15);
         npc.position.set(x, y);
         npc.addAI(EnemyMineAI, {player: this.player});
+    }
+
+    protected spawnLootBarrel(){
+        let tilemap = this.getTilemap("Ocean")
+        let size = tilemap.getDimensions()
+        let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
+        while (tilemap.getTile(randCoords.x, randCoords.y) != 0){
+            randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
+        }
+        let worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
+        let barrel = this.add.animatedSprite(NPCActor, "loot", "primary")
+        barrel.position.set(worldCoords.x, worldCoords.y)
+        barrel.scale.set(0.5, 0.5)
+        barrel.addPhysics(new AABB(Vec2.ZERO, new Vec2(barrel.size.x * barrel.scale.x / 2, barrel.size.y * barrel.scale.y/2)), null, true, true);
+        barrel.addAI(FloatingLootAI, {player: this.player, rarity:0})
+        barrel.animation.play("IDLE")
     }
 
     protected initializeNavmesh(): void {
