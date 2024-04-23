@@ -1,6 +1,7 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import EnemyActor from "../../Actors/EnemyActor";
@@ -58,6 +59,7 @@ export default class BlockadeAI extends StateMachineAI {
             this.isDead = true;
             this.owner.isCollidable = false;
             CollisionManager.get().remove(this.owner);
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
         }
     }
 } 

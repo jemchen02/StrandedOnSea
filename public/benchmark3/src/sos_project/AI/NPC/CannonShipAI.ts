@@ -148,6 +148,7 @@ export default class CannonShipAI extends ShipAI {
         if((<EnemyActor>this.owner).health <= 0) {
             this.isDead = true;
             CollisionManager.get().remove(this.owner);
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
         }
     }
 
