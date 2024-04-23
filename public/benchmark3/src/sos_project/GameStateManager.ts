@@ -265,8 +265,11 @@ export class GameStateManager {
         }
         return false;
     }
+    public hasSail(): boolean {
+        return this.ownedMovements.includes(MovementType.SAIL)
+    }
     public buySail() : boolean {
-        if(this.ownedMovements.includes(MovementType.SAIL)) {
+        if(this.hasSail()) {
             return true;
         }
         if(this.money >= Costs.SAIL_COST) {
