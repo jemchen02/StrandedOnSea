@@ -36,6 +36,5 @@ export default class ShipwreckScene extends BattleScene {
     unloadScene(): void {
         super.unloadScene();
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "shipwreck_theme"});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
     }
 }

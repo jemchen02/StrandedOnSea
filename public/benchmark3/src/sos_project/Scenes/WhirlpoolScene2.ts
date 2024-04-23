@@ -43,6 +43,5 @@ export default class WhirlpoolScene2 extends BattleScene {
     unloadScene(): void {
         super.unloadScene();
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "whirlpool_theme"});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
     }
 }

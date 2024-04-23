@@ -65,9 +65,12 @@ export default class MapScene extends Scene {
         this.load.image("whirlpool", "hw4_assets/map/whirlpool.png");
         this.load.image("obstacle_icon", "hw4_assets/map/obstacle.png");
         this.load.image("land", "hw4_assets/map/land.png");
+
+        this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.wav");
     }
 
     public startScene(){
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
         this.viewport.setZoomLevel(1);
         this.viewport.setCenter(new Vec2(512, 512));
         this.mapSubscriptions = [];
