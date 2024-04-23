@@ -120,6 +120,10 @@ export default class BattleScene extends SosScene {
         this.receiver.subscribe("gameLoss");
         this.receiver.subscribe("back");
 
+        this.load.audio("mine_place", "hw4_assets/sounds/mine_place.mp3");
+        this.load.audio("fire", "hw4_assets/sounds/fire.mp3");
+        this.load.audio("fire2", "hw4_assets/sounds/fire2.mp3");
+
         CollisionManager.get().ResetColliders();
     }
     /**
