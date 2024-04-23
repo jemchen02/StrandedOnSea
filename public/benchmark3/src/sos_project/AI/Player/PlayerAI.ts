@@ -50,6 +50,7 @@ export default class PlayerAI extends ShipAI {
         this.receiver.subscribe("ramCollision");
         this.receiver.subscribe("whirlpoolKO");
         this.receiver.subscribe("cannonHit");
+        this.receiver.subscribe("collectLoot")
     }
 
     public activate(options: Record<string, any>): void { }
@@ -98,6 +99,8 @@ export default class PlayerAI extends ShipAI {
                     this.onCannonHit();
                 }
                 break;
+            case "collectLoot":
+                GameStateManager.get().generateLoot(event.data.get('rarity'))
             default: {
                 super.handleEvent(event);
                 break;
@@ -127,7 +130,7 @@ export default class PlayerAI extends ShipAI {
     public fire_cannon(left : boolean) : void{
         if(this.cannonCooldown <= 0) {
             this.cannonCooldown = 0.5
-            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
+            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10,10)});
             cannonBall.visible = true;
             cannonBall.addAI(CannonBallAI);
             cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));

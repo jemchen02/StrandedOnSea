@@ -4,8 +4,10 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { CollisionManager } from "../CollisionManager";
+import ExplosionAI from "./Explosion";
 
 export default class MineAI implements AI {
     // The owner of this AI
@@ -37,6 +39,8 @@ export default class MineAI implements AI {
     }
 
     destroy(): void {
-        //Do nothing
+        const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
+        explosion.position = this.owner.position;
+        explosion.addAI(ExplosionAI);
     }
 }

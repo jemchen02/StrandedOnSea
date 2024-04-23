@@ -5,6 +5,7 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import Color from "../../Wolfie2D/Utils/Color";
 import { CollisionManager } from "../CollisionManager";
 
 export default class CannonBallAI implements AI {
@@ -22,6 +23,8 @@ export default class CannonBallAI implements AI {
     initializeAI(owner: Graphic, options: Record<string, any>): void {
         this.owner = owner;
         this.emitter = new Emitter();
+        this.owner.setColor(Color.BLACK)
+        this.owner.useCustomShader("CANNON_BALL")
     }
 
     activate(options: Record<string, any>): void {

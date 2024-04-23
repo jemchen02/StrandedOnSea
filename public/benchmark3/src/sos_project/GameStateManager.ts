@@ -42,6 +42,8 @@ export class GameStateManager {
     public isPaused: boolean;
     private stormCanMove: boolean;
 
+    public prevWon: boolean;
+
     private saved: SavedStats;
 
     protected emitter: Emitter;
@@ -63,6 +65,7 @@ export class GameStateManager {
         this.movementType = MovementType.OAR;
         this.isPaused = false;
         this.stormCanMove = false;
+        this.prevWon = true;
 
         this.emitter = new Emitter();
 
@@ -88,11 +91,11 @@ export class GameStateManager {
     private buildMap() : void{
         //THIS IS THE MAP
         const mapInit = [
-            [4, 2, 3, 2, 1],
+            [4, 2, 3, 5, 3],
             [1, 3, 2, 1, 0],
-            [5, 1, 2, 3, 2],
-            [4, 1, 2, 2, 2],
-            [0, 3, 1, 1, 4]
+            [5, 1, 5, 3, 1],
+            [2, 1, 3, 2, 5],
+            [0, 5, 5, 3, 4]
         ];
         const n = mapInit.length;
         const m = mapInit[0].length;
@@ -193,7 +196,7 @@ export class GameStateManager {
     public buyMine() : boolean {
         if(this.money >= Costs.MINE_COST) {
             this.money -= Costs.MINE_COST;
-            this.numMine += 1;
+            this.numMine += 5;
             return true;
         }
         return false;
@@ -201,7 +204,7 @@ export class GameStateManager {
     public buyTorpedo() : boolean {
         if(this.money >= Costs.TORPEDO_COST) {
             this.money -= Costs.TORPEDO_COST;
-            this.numTorpedo++;
+            this.numTorpedo += 5;
             return true;
         }
         return false;
@@ -209,7 +212,7 @@ export class GameStateManager {
     public buyRepair() : boolean {
         if(this.money >= Costs.REPAIR_COST) {
             this.money -= Costs.REPAIR_COST;
-            this.numRepairs++;
+            this.numRepairs += 2;
             return true;
         }
         return false;
@@ -329,6 +332,7 @@ export class GameStateManager {
         }
         return false;
     }
+
     public restoreSaved(): void{
         this.money = this.saved.money;
         this.health = this.saved.health;
@@ -337,6 +341,12 @@ export class GameStateManager {
         this.numRepairs = this.saved.repairs;
         this.playerLocation = this.saved.location;
         this.mapOverlays = this.saved.mapOverlays;
+    }
+
+    public generateLoot(rarity: number) {
+        this.money += Math.floor(rarity*10*Math.random())+10
+        this.numMine += Math.floor(2*Math.random())+rarity
+        this.numTorpedo += Math.floor(rarity*Math.random())
     }
 
     public setHealth(newHealth : number){

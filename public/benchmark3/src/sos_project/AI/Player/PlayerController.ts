@@ -54,11 +54,11 @@ export default class PlayerController {
     }
 
     public get firePort(): boolean {
-        return Input.isJustPressed(PlayerInput.FIRE_PORT);
+        return Input.isPressed(PlayerInput.FIRE_PORT);
     }
 
     public get fireStarBoard(): boolean {
-        return Input.isJustPressed(PlayerInput.FIRE_STARBOARD);
+        return Input.isPressed(PlayerInput.FIRE_STARBOARD);
     }
     public get placeMine(): boolean {
         return Input.isJustPressed(PlayerInput.PLACE_MINE);

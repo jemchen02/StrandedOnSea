@@ -2,9 +2,9 @@ export enum Costs {
     WOOD_COST = 0,
     FIBER_COST = 500,
     METAL_COST = 1000,
-    MINE_COST = 20,
-    TORPEDO_COST = 50,
-    REPAIR_COST = 100,
+    MINE_COST = 150,
+    TORPEDO_COST = 250,
+    REPAIR_COST = 200,
     PUMP_COST = 1000,
     CROW_COST = 250,
     RADAR_COST = 500,
@@ -32,8 +32,8 @@ export enum LevelRewards {
     HOSTILE2 = 500,
     OBSTACLE1 = 300,
     OBSTACLE2 = 500,
-    SHIPWRECK1 = 200,
-    SHIPWRECK2 = 300,
+    SHIPWRECK1 = 100,
+    SHIPWRECK2 = 200,
     WHIRLPOOL1 = 300,
     WHIRLPOOL2 = 500
 }

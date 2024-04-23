@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
@@ -9,8 +10,11 @@ import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
 
 export default class ShipwreckScene extends BattleScene {
+    private timer: number;
+    private timerLabel: Label;
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
+        this.timer = 30;
     }
     public override loadScene(): void {
         super.loadScene();
@@ -19,8 +23,21 @@ export default class ShipwreckScene extends BattleScene {
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Collect loot before time runs out!", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objective:", fontSize: 30, textColor: Color.WHITE});
+        this.timerLabel = <Label> this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Collect as much loot possible within "+this.timer+" seconds!", fontSize: 30, textColor: Color.WHITE});
+    }
+
+    public override update(deltaT: number): void {
+        super.update(deltaT)
+        if (this.timer>0) {
+            this.timer -= deltaT
+            this.timerLabel.text = `Collect as much loot possible within ${Math.max(this.timer,0).toFixed(2)} seconds!`
+        }
+        if (this.timer <= 0 && !this.levelEnded) {
+            this.winLevel()
+        }
+
+
     }
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.SHIPWRECK1;
