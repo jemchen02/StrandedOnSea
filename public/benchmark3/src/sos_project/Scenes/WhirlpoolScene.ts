@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
@@ -16,6 +17,12 @@ export default class WhirlpoolScene extends BattleScene {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/whirlpool1/enemies.json");
         this.load.tilemap("level", "hw4_assets/tilemaps/WhirlpoolMap1.json");
+        this.load.audio("whirlpool_theme", "sos_assets/music/oh_bright_dawn_may_public_domain.mp4");
+    }
+    public startScene(): void {
+        super.startScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "whirlpool_theme", loop: true, holdReference: true});
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
@@ -32,5 +39,10 @@ export default class WhirlpoolScene extends BattleScene {
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.WHIRLPOOL1;
         super.winLevel(LevelRewards.WHIRLPOOL1);
+    }
+    unloadScene(): void {
+        super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "whirlpool_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
     }
 }

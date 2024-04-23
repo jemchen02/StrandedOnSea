@@ -24,6 +24,7 @@ import WhirlpoolScene2 from "./WhirlpoolScene2";
 import ObstacleScene2 from "./ObstacleScene2";
 import CardHUD from "../GameSystems/HUD/CardHUD";
 import { CardManager } from "../CardManager";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens

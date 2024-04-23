@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
@@ -18,6 +19,12 @@ export default class HostileScene extends BattleScene {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/battle1/enemies.json");
         this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.audio("hostile_theme", "sos_assets/music/summoning_ancient_evil_leg_day.mp4");
+    }
+    public startScene(): void {
+        super.startScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "sos_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hostile_theme", loop: true, holdReference: true});
     }
     protected override initializeHUD(): void {
         super.initializeHUD();
@@ -35,5 +42,10 @@ export default class HostileScene extends BattleScene {
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.HOSTILE1;
         super.winLevel(LevelRewards.HOSTILE1);
+    }
+    unloadScene(): void {
+        super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "hostile_theme"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
     }
 }

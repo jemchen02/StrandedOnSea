@@ -13,6 +13,7 @@ import ShipwreckScene from "./ShipwreckScene";
 import ShipwreckScene2 from "./ShipwreckScene2";
 import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -29,9 +30,11 @@ export default class MainMenu extends Scene {
         this.load.image("controlsImage", "hw4_assets/sprites/controls.png");
         this.load.image("helpImage", "hw4_assets/sprites/help.png");
         this.load.image("menuBackgroundImage", "hw4_assets/sprites/menuBackground.png");
+        this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.wav");
     }
 
     public startScene(){
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sos_theme", loop: true, holdReference: true});
         const center = this.viewport.getCenter();
         this.menuSubscriptions = [];
 
