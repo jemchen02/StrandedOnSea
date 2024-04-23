@@ -106,6 +106,7 @@ export default class TowerAI extends StateMachineAI {
 	}
     public checkDeath(): void {
         if((<EnemyActor>this.owner).health <= 0) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
             this.isDead = true;
             CollisionManager.get().remove(this.owner);
         }

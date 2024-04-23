@@ -3,6 +3,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -51,6 +52,7 @@ export default class TorpedoAI implements AI {
         let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
         if(otherCollider && otherCollider != this.shooter){
             this.emitter.fireEvent("torpedoHit", {"node": otherCollider});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hit", loop: false, holdReference: true});
             this.owner.destroy();
         }
     }
