@@ -18,7 +18,7 @@ import { PlayerInput } from "./sos_project/AI/Player/PlayerController";
             {name: PlayerInput.TURN_RIGHT, keys: ["d"]},
             {name: PlayerInput.FIRE_STARBOARD, keys: ["e"]},
             {name: PlayerInput.FIRE_PORT, keys: ["q"]},
-            {name: PlayerInput.PLACE_MINE, keys: ["x"]},
+            {name: PlayerInput.PLACE_MINE, keys: ["f"]},
             {name: PlayerInput.PASS_LEVEL, keys: ["p"]},
             {name: PlayerInput.REPAIR, keys:["r"]},
             {name: PlayerInput.INVINCIBLE, keys:["i"]},

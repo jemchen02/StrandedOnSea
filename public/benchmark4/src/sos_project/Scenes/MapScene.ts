@@ -77,11 +77,10 @@ export default class MapScene extends Scene {
         this.load.image("sail_card", "sos_assets/cards/SailCard.png");
         this.load.image("torpedo_card", "sos_assets/cards/TorpedoCard.png");
 
-        this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.wav");
+        this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.mp4");
     }
 
     public startScene(){
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.05);
         this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "sos_theme", loop: true, holdReference: true});
         this.viewport.setZoomLevel(1);
         this.viewport.setCenter(new Vec2(512, 512));
@@ -187,17 +186,17 @@ export default class MapScene extends Scene {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false);
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false);
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false);
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
@@ -207,7 +206,7 @@ export default class MapScene extends Scene {
                 land.position.set(x, y);
                 break;
             case 5:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 5 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false);
                 const obstacle = this.add.sprite("obstacle_icon", "map");
                 obstacle.position.set(x, y);
                 break;
@@ -276,7 +275,7 @@ export default class MapScene extends Scene {
                 break;
             }
             case "playShipwreck2": {
-                this.sceneManager.changeToScene(ShipwreckScene2);
+                this.sceneManager.changeToScene(ShipwreckScene);
                 break;
             }
             case "playWhirlpool": {
@@ -292,7 +291,7 @@ export default class MapScene extends Scene {
                 break;
             }
             case "playObstacle2": {
-                this.sceneManager.changeToScene(ObstacleScene2);
+                this.sceneManager.changeToScene(ObstacleScene);
                 break;
             }
             case "playLand": {

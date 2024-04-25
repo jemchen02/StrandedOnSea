@@ -14,6 +14,7 @@ import ShipwreckScene2 from "./ShipwreckScene2";
 import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -33,6 +34,8 @@ export default class MainMenu extends Scene {
     }
 
     public startScene(){
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.05);
+
         const center = this.viewport.getCenter();
         this.menuSubscriptions = [];
 

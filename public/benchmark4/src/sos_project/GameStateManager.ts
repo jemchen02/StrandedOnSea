@@ -347,9 +347,9 @@ export class GameStateManager {
     }
 
     public generateLoot(rarity: number) {
-        this.money += Math.floor(rarity*10*Math.random())+10
-        this.numMine += Math.floor(2*Math.random())+rarity
-        this.numTorpedo += Math.floor(rarity*Math.random())
+        this.money += Math.floor(rarity*10*Math.random())+10;
+        this.numMine += Math.floor(1.5*rarity * Math.random());
+        this.numTorpedo += Math.floor(1.2 * rarity*Math.random());
     }
 
     public setHealth(newHealth : number){
