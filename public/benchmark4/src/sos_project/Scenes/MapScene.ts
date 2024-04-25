@@ -154,12 +154,12 @@ export default class MapScene extends Scene {
         this.shipLayer = this.addUILayer("ship");
 
         const cards = CardManager.get().pickThree(GameStateManager.get().money);
-        new CardHUD(this, {position: new Vec2(170, 500), layer: "ship", card: cards[0]});
-        this.mapSubscriptions.push(cards[0].onclick);
-        new CardHUD(this, {position: new Vec2(510, 500), layer: "ship", card: cards[1]});
-        this.mapSubscriptions.push(cards[1].onclick);
-        new CardHUD(this, {position: new Vec2(850, 500), layer: "ship", card: cards[2]});
-        this.mapSubscriptions.push(cards[2].onclick);
+        if(cards) {
+            for(let i = 0; i < cards.length; i++) {
+                new CardHUD(this, {position: new Vec2(170 + 340 * i, 500), layer: "ship", card: cards[i]});
+                this.mapSubscriptions.push(cards[i].onclick);
+            }
+        }
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false);
     }
