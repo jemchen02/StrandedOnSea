@@ -6,11 +6,12 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { CollisionManager } from "../../CollisionManager";
 import { ItemEvent } from "../../Events";
-import { DamageAmounts } from "../../GameConstants";
+import { DamageAmounts, Speeds } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
 import CannonBallAI from "../CannonBall";
@@ -34,6 +35,7 @@ export default class CannonShipAI extends ShipAI {
     private inFireMode: boolean;
     public initializeAI(owner: EnemyActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
+        this.MAX_SPEED = Speeds.CANNONSHIP_SPEED;
         this.player = opts.player;
         this.fireCooldown = 0;
         this.receiver.subscribe("cannonHit");
@@ -104,8 +106,8 @@ export default class CannonShipAI extends ShipAI {
     }
     public fire_cannon() : void{
         this.fireCooldown = 3;
-        let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
-        cannonBall.visible = true;
+        let cannonBall : Sprite = this.owner.getScene().add.sprite("cannonball", "primary");
+        cannonBall.scale.set(0.15, 0.15);
         cannonBall.addAI(CannonBallAI);
         cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
         (<CannonBallAI>cannonBall._ai).shooter = this.owner;

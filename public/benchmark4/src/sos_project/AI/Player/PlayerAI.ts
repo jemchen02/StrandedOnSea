@@ -148,8 +148,8 @@ export default class PlayerAI extends ShipAI {
     public fire_cannon(left : boolean) : void{
         if(this.cannonCooldown <= 0) {
             this.cannonCooldown = 0.5
-            let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10,10)});
-            cannonBall.visible = true;
+            let cannonBall : Sprite = this.owner.getScene().add.sprite("cannonball", "primary");
+            cannonBall.scale.set(0.15, 0.15);
             cannonBall.addAI(CannonBallAI);
             cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
             (<CannonBallAI>cannonBall._ai).shooter = this.owner;

@@ -6,14 +6,16 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CollisionManager } from "../CollisionManager";
 
 export default class CannonBallAI implements AI {
     // The owner of this AI
-    protected owner: Graphic;
+    protected owner: Sprite;
 
-    public static SPEED: number = 100;
+    public static SPEED: number = 200;
+    public lifetime: number = 1.2;
 
     public left : boolean;
     public startingVelocity : Vec2;
@@ -21,10 +23,9 @@ export default class CannonBallAI implements AI {
     public shooter : GameNode;
     private emitter: Emitter;
 
-    initializeAI(owner: Graphic, options: Record<string, any>): void {
+    initializeAI(owner: Sprite, options: Record<string, any>): void {
         this.owner = owner;
         this.emitter = new Emitter();
-        this.owner.setColor(Color.BLACK)
         this.owner.useCustomShader("CANNON_BALL")
     }
 
@@ -39,6 +40,12 @@ export default class CannonBallAI implements AI {
 
     update(deltaT: number): void {
         if(!this.owner.visible) return;
+        this.lifetime -= deltaT;
+        if(this.lifetime <= 0) {
+            this.owner.destroy();
+            this.destroy();
+            return;
+        }
         
         if(this.left) this.owner.position.add((new Vec2(-1, 0).rotateCCW(2 * Math.PI - this.owner.rotation)).scaled(CannonBallAI.SPEED * deltaT).add(this.startingVelocity));
         else this.owner.position.add((new Vec2(1, 0).rotateCCW(2 * Math.PI  - this.owner.rotation)).scaled(CannonBallAI.SPEED * deltaT).add(this.startingVelocity));

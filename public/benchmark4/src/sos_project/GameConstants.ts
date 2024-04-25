@@ -15,11 +15,11 @@ export enum Costs {
 export enum DamageAmounts {
     CANNON_DAMAGE = 10,
     TORPEDO_DAMAGE = 25,
-    RAM_DAMAGE = 5,
+    RAM_DAMAGE = 10,
     MINE_DAMAGE = 25,
     PUMP_DAMAGE = -0.2, //TODO consider moving, this is heal per second
     REPAIR_DAMAGE = 30,
-    OBSTACLE_MINE = 40
+    OBSTACLE_MINE = 25
 }
 export enum DamageTimes {
     CANNON_TIME = 20,
@@ -43,5 +43,7 @@ export enum LevelData {
 export enum Speeds {
     OAR_SPEED = 65,
     SAIL_SPEED = 78,
-    MOTOR_SPEED = 91
+    MOTOR_SPEED = 91,
+    RAM_SPEED = 80,
+    CANNONSHIP_SPEED = 60
 }

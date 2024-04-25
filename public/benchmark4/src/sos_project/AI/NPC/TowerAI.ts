@@ -10,6 +10,7 @@ import Receiver from "../../../Wolfie2D/Events/Receiver";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import EnemyActor from "../../Actors/EnemyActor";
 import NPCActor from "../../Actors/NPCActor";
@@ -65,8 +66,8 @@ export default class TowerAI extends StateMachineAI {
 	}
     public fire_cannon() : void{
         this.fireCooldown = 3;
-        let cannonBall : Graphic = this.owner.getScene().add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(10, 10)});
-        cannonBall.visible = true;
+        let cannonBall : Sprite = this.owner.getScene().add.sprite("cannonball", "primary");
+        cannonBall.scale.set(0.15, 0.15);
         cannonBall.addAI(CannonBallAI);
         cannonBall.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
         (<CannonBallAI>cannonBall._ai).shooter = this.owner;

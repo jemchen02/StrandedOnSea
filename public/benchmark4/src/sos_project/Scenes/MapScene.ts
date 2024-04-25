@@ -81,7 +81,7 @@ export default class MapScene extends Scene {
     }
 
     public startScene(){
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.1);
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.05);
         this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "sos_theme", loop: true, holdReference: true});
         this.viewport.setZoomLevel(1);
         this.viewport.setCenter(new Vec2(512, 512));

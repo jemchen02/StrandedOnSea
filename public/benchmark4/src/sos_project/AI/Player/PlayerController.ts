@@ -50,7 +50,7 @@ export default class PlayerController {
     }
 
     public get fireTorpedo(): boolean {
-        return Input.isMouseJustPressed()
+        return Input.isMouseJustPressed(0);
     }
 
     public get firePort(): boolean {

@@ -7,7 +7,7 @@ import EnemyActor from "../../Actors/EnemyActor";
 import PlayerActor from "../../Actors/PlayerActor";
 import { CollisionManager } from "../../CollisionManager";
 import { ItemEvent } from "../../Events";
-import { DamageAmounts } from "../../GameConstants";
+import { DamageAmounts, Speeds } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
 import ShipAI from "../ShipAI";
@@ -26,6 +26,7 @@ export default class RamAI extends ShipAI {
     private player: PlayerActor;
     public initializeAI(owner: EnemyActor, opts: Record<string, any>): void {
         super.initializeAI(owner, opts);
+        this.MAX_SPEED = Speeds.RAM_SPEED;
         this.player = opts.player;
         this.receiver.subscribe("cannonHit");
         this.receiver.subscribe("torpedoHit");

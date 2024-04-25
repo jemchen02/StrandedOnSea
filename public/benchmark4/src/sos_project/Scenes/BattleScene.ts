@@ -109,6 +109,7 @@ export default class BattleScene extends SosScene {
         this.load.image("inventorySlot", "hw4_assets/sprites/inventorySlot.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
         this.load.image("mine", "hw4_assets/sprites/mine.png");
+        this.load.image("cannonball", "hw4_assets/sprites/cannonball.png")
         this.load.image("torpedo", "hw4_assets/sprites/torpedo.png");
         this.load.spritesheet("torpedoProjectile", "sos_assets/spritesheets/torpedo.json")
         this.load.spritesheet("explosion", "sos_assets/spritesheets/explosion.json")
@@ -276,8 +277,8 @@ export default class BattleScene extends SosScene {
                 npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
                 npc.speed = 10;
-                npc.health = 10;
-                npc.maxHealth = 10;
+                npc.health = 25;
+                npc.maxHealth = 25;
                 npc.navkey = "navmesh";
                 npc.addAI(RamAI, {player: this.player});
                 CollisionManager.get().RegisterCollider(npc);
@@ -295,8 +296,8 @@ export default class BattleScene extends SosScene {
                 npc.position.set(enemies.cannonships[i][0], enemies.cannonships[i][1]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
                 npc.speed = 10;
-                npc.health = 10;
-                npc.maxHealth = 10;
+                npc.health = 20;
+                npc.maxHealth = 20;
                 npc.navkey = "navmesh";
                 npc.addAI(CannonShipAI, {player: this.player});
                 CollisionManager.get().RegisterCollider(npc);
