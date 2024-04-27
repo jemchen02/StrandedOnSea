@@ -173,7 +173,7 @@ export default class MapScene extends Scene {
         } else {
             const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
             newButton.size.set(length, 100);
-            newButton.borderColor = isHard ? Color.RED : Color.GREEN;
+            newButton.borderColor = isHard ? Color.YELLOW : Color.GREEN;
             newButton.borderWidth = 3;
             newButton.backgroundColor = Color.TRANSPARENT;
             if(clickEvent) {
