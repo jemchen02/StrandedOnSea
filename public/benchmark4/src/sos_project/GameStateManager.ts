@@ -95,7 +95,7 @@ export class GameStateManager {
             [1, 3, 2, 1, 5],
             [5, 1, 5, 3, 1],
             [2, 1, 3, 2, 5],
-            [3, 5, 5, 3, 4]
+            [3, 5, 5, 3, 6]
         ];
         const n = mapInit.length;
         const m = mapInit[0].length;
@@ -105,7 +105,7 @@ export class GameStateManager {
             [3, 3, 3, 3, 3],
             [3, 3, 3, 3, 3],
             [3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3]
+            [3, 3, 3, 3, 0]
         ];
 
         for(let i = 0; i < this.mapOverlays.length; i++){

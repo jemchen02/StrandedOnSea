@@ -65,6 +65,7 @@ export default class MapScene extends Scene {
         this.load.image("whirlpool", "hw4_assets/map/whirlpool.png");
         this.load.image("obstacle_icon", "hw4_assets/map/obstacle.png");
         this.load.image("land", "hw4_assets/map/land.png");
+        this.load.image("home", "hw4_assets/map/home.png");
 
         this.load.image("fiberglass_card", "sos_assets/cards/FiberglassCard.png");
         this.load.image("crow_card", "sos_assets/cards/CrowCard.png");
@@ -127,7 +128,7 @@ export default class MapScene extends Scene {
         this.mapOverlay = this.addUILayer("overlay");
         this.mapOverlay.disable();
 
-        this.add.uiElement(UIElementType.LABEL, "map", {position: new Vec2(center.x, 120), text: "Choose a Level", fontSize: 60, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "map", {position: new Vec2(center.x, 120), text: "Make your way home", fontSize: 60, textColor: Color.WHITE});
 
         for(let i = 0; i < n; i++) {
             let y = center.y + 120 * (n - 1) / 2 - 120 * i;
@@ -172,7 +173,8 @@ export default class MapScene extends Scene {
         } else {
             const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
             newButton.size.set(length, 100);
-            newButton.borderColor = isHard ? Color.RED : Color.WHITE;
+            newButton.borderColor = isHard ? Color.RED : Color.GREEN;
+            newButton.borderWidth = 3;
             newButton.backgroundColor = Color.TRANSPARENT;
             if(clickEvent) {
                 newButton.onClickEventId = clickEvent;
@@ -211,6 +213,11 @@ export default class MapScene extends Scene {
                 this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false, i + j >= 4);
                 const obstacle = this.add.sprite("obstacle_icon", "map");
                 obstacle.position.set(x, y);
+                break;
+            case 6:
+                this.createButton("map", new Vec2(x, y), "", coordString + "playHome", 100, "mapButton", 0, false, false);
+                const home = this.add.sprite("home", "map");
+                home.position.set(x, y);
                 break;
         }
     }
