@@ -92,10 +92,10 @@ export class GameStateManager {
         //THIS IS THE MAP
         const mapInit = [
             [4, 2, 3, 5, 3],
-            [1, 3, 2, 1, 0],
+            [1, 3, 2, 1, 5],
             [5, 1, 5, 3, 1],
             [2, 1, 3, 2, 5],
-            [0, 5, 5, 3, 4]
+            [3, 5, 5, 3, 4]
         ];
         const n = mapInit.length;
         const m = mapInit[0].length;

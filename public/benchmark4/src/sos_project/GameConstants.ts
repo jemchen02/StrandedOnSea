@@ -19,7 +19,7 @@ export enum DamageAmounts {
     MINE_DAMAGE = 25,
     PUMP_DAMAGE = -0.2, //TODO consider moving, this is heal per second
     REPAIR_DAMAGE = 30,
-    OBSTACLE_MINE = 25
+    OBSTACLE_MINE = 15
 }
 export enum DamageTimes {
     CANNON_TIME = 20,
@@ -38,7 +38,7 @@ export enum LevelRewards {
     WHIRLPOOL2 = 400
 }
 export enum LevelData {
-    NUM_OBSTACLE_MINES = 200
+    NUM_OBSTACLE_MINES = 120
 }
 export enum Speeds {
     OAR_SPEED = 65,

@@ -17,7 +17,7 @@ import ShipAI from "../ShipAI";
  * with 4 states; Idle, Moving, Invincible, and Dead.
  */
 enum RAM_ENUMS {
-    SIGHT_RANGE = 40000,
+    SIGHT_RANGE = 50000,
     ACCEPTABLE_ANGLE = 0.1 * Math.PI,
     COLLISION_RANGE = 400
 }

@@ -277,8 +277,8 @@ export default class BattleScene extends SosScene {
                 npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
                 npc.speed = 10;
-                npc.health = 25;
-                npc.maxHealth = 25;
+                npc.health = 20;
+                npc.maxHealth = 20;
                 npc.navkey = "navmesh";
                 npc.addAI(RamAI, {player: this.player});
                 CollisionManager.get().RegisterCollider(npc);
@@ -296,8 +296,8 @@ export default class BattleScene extends SosScene {
                 npc.position.set(enemies.cannonships[i][0], enemies.cannonships[i][1]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
                 npc.speed = 10;
-                npc.health = 20;
-                npc.maxHealth = 20;
+                npc.health = 10;
+                npc.maxHealth = 10;
                 npc.navkey = "navmesh";
                 npc.addAI(CannonShipAI, {player: this.player});
                 CollisionManager.get().RegisterCollider(npc);

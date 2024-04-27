@@ -24,7 +24,7 @@ import ShipAI from "../ShipAI";
 enum CANNON_SHIP_ENUMS {
     SIGHT_RANGE = 50000,
     FIRE_RANGE = 30000,
-    LEASH_RANGE = 45000,
+    LEASH_RANGE = 50000,
     ACCEPTABLE_ANGLE_MOVE = 0.1 * Math.PI,
     ACCEPTABLE_ANGLE_FIRE = 0.02 * Math.PI
 }

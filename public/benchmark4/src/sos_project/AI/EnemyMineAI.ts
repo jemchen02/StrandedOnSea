@@ -4,11 +4,13 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import PlayerActor from "../Actors/PlayerActor";
 import { CollisionManager } from "../CollisionManager";
 import { DamageAmounts, DamageTimes } from "../GameConstants";
 import { ShipDamageManager } from "../ShipDamageManager";
+import ExplosionAI from "./Explosion";
 
 export default class EnemyMineAI implements AI {
     // The owner of this AI
@@ -44,10 +46,12 @@ export default class EnemyMineAI implements AI {
             ShipDamageManager.get().registerHit(DamageAmounts.OBSTACLE_MINE, DamageTimes.OBSTACLE_MINE_TIME);
             this.owner.visible = false;
             this.exploded = true;
+            const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
+            explosion.position = this.owner.position;
+            explosion.addAI(ExplosionAI);
         }
     }
 
     destroy(): void {
-        //Do nothing
     }
 }

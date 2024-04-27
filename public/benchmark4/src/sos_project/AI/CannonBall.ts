@@ -15,7 +15,7 @@ export default class CannonBallAI implements AI {
     protected owner: Sprite;
 
     public static SPEED: number = 200;
-    public lifetime: number = 1.2;
+    public lifetime: number = 1;
 
     public left : boolean;
     public startingVelocity : Vec2;

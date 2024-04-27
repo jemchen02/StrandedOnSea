@@ -45,7 +45,7 @@ export default class TorpedoAI implements AI {
         }
 
         let angleToMouse = this.getAngleToMouse();
-        this.owner.rotation = this.angleLerp(this.owner.rotation, angleToMouse, deltaT * 1.25);
+        this.owner.rotation = this.angleLerp(this.owner.rotation, angleToMouse, deltaT * 2.5);
 
         this.owner.position.add((new Vec2(0, 1).rotateCCW(this.owner.rotation)).scaled(TorpedoAI.SPEED * deltaT).mult(new Vec2(1, -1)));
 

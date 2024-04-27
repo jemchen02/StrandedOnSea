@@ -55,9 +55,9 @@ export default class PlayerAI extends ShipAI {
             this.MAX_SPEED = Speeds.MOTOR_SPEED;
         }
         if(GameStateManager.get().shipType == ShipType.FIBERGLASS) {
-            this.deflectChance = 0.15;
-        } else if(GameStateManager.get().shipType == ShipType.METAL) {
             this.deflectChance = 0.25;
+        } else if(GameStateManager.get().shipType == ShipType.METAL) {
+            this.deflectChance = 0.40;
         }
 
         this.receiver.subscribe("ramCollision");

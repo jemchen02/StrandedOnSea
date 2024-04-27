@@ -161,16 +161,16 @@ export default class MapScene extends Scene {
             }
         }
 
-        this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false);
+        this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false, false);
     }
-    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean) {
+    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean, isHard: boolean) {
         if (bType == "design") {
             const newButton = new PurchaseButton(this, {layer, position, text, clickEvent, length, cost, owned});
             this.shopButtons.set(text, newButton);
         } else {
             const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
             newButton.size.set(length, 100);
-            newButton.borderColor = Color.WHITE;
+            newButton.borderColor = isHard ? Color.RED : Color.WHITE;
             newButton.backgroundColor = Color.TRANSPARENT;
             if(clickEvent) {
                 newButton.onClickEventId = clickEvent;
@@ -186,27 +186,27 @@ export default class MapScene extends Scene {
             case 0:
                 break;
             case 1:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playHostile" : "playHostile2"}`, 100, "mapButton", 0, false, i + j >= 4);
                 const hostile = this.add.sprite("hostile", "map");
                 hostile.position.set(x, y);
                 break;
             case 2:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playShipwreck" : "playShipwreck2"}`, 100, "mapButton", 0, false, i + j >= 4);
                 const shipwreck = this.add.sprite("shipwreck", "map");
                 shipwreck.position.set(x, y);
                 break;
             case 3:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playWhirlpool" : "playWhirlpool2"}`, 100, "mapButton", 0, false, i + j >= 4);
                 const whirlpool = this.add.sprite("whirlpool", "map");
                 whirlpool.position.set(x, y);
                 break;
             case 4:
-                this.createButton("map", new Vec2(x, y), "", coordString + "playLand", 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + "playLand", 100, "mapButton", 0, false, false);
                 const land = this.add.sprite("land", "map");
                 land.position.set(x, y);
                 break;
             case 5:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false);
+                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false, i + j >= 4);
                 const obstacle = this.add.sprite("obstacle_icon", "map");
                 obstacle.position.set(x, y);
                 break;

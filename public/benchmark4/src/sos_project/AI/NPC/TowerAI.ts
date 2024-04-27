@@ -20,7 +20,7 @@ import { DamageAmounts } from "../../GameConstants";
 import CannonBallAI from "../CannonBall";
 
 enum TOWER_ENUMS {
-    SIGHT_RANGE = 30000
+    SIGHT_RANGE = 50000
 }
 
 export default class TowerAI extends StateMachineAI {
