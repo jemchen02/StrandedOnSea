@@ -99,6 +99,7 @@ export default class BattleScene extends SosScene {
                 break;
         }
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
+        this.load.spritesheet("ram", "sos_assets/spritesheets/ram.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
         this.load.spritesheet("blockade", "sos_assets/sprites/blockade.json")
@@ -273,7 +274,7 @@ export default class BattleScene extends SosScene {
         let enemies = this.load.getObject("enemies");
         if("boats" in enemies) {
             for (let i = 0; i < enemies.boats.length; i++) {
-                let npc = this.add.animatedSprite(EnemyActor, "enemyBoat", "primary");
+                let npc = this.add.animatedSprite(EnemyActor, "ram", "primary");
                 npc.position.set(enemies.boats[i][0], enemies.boats[i][1]);
                 npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
                 npc.speed = 10;

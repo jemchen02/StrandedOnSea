@@ -71,10 +71,6 @@ export default class InventoryHUD implements Updateable {
         const scaleY = options.scaleY;
         // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
-        for (let i = 0; i < this.size; i += 1) {
-            //this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
-            //this.itemSlots[i].scale.set(0.4, 0.4);
-        }
         this.itemSlots[0] = this.scene.add.sprite(options.mineSprite, this.slotLayer);
         this.itemSlots[0].scale.set(0.4 * scaleX, 0.4 * scaleY);
         this.itemSlots[1] = this.scene.add.sprite(options.torpedoSprite, this.slotLayer);

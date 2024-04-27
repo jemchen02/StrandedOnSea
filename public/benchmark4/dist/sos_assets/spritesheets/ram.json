@@ -1,14 +1,14 @@
 {
-    "name": "SOSHostileNPC",
-    "spriteSheetImage": "hostile.png",
+    "name": "SOSRamNPC",
+    "spriteSheetImage": "ram.png",
     "spriteWidth": 32,
     "spriteHeight": 32,
     "leftBuffer": 0,
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "columns": 8,
-    "rows": 7,
+    "columns": 5,
+    "rows": 5,
     "durationType": "time",
     "animations": [
         {
@@ -108,40 +108,7 @@
                 }
             ]
         },
-        {
-            "name": "FIRE_STARBOARD",
-            "frames": [
-                {
-                    "index": 17,
-                    "duration": 10
-                },
-                {
-                    "index": 18,
-                    "duration": 10
-                },
-                {
-                    "index": 19,
-                    "duration": 10
-                }
-            ]
-        },
-        {
-            "name": "FIRE_PORT",
-            "frames": [
-                {
-                    "index": 20,
-                    "duration": 10
-                },
-                {
-                    "index": 21,
-                    "duration": 10
-                },
-                {
-                    "index": 22,
-                    "duration": 10
-                }
-            ]
-        },
+        
         {
             "name": "TAKE_DAMAGE",
             "frames": [
@@ -150,7 +117,7 @@
                     "duration": 10
                 },
                 {
-                    "index": 23,
+                    "index": 18,
                     "duration": 10
                 },
                 {
@@ -158,7 +125,7 @@
                     "duration": 10
                 },
                 {
-                    "index": 23,
+                    "index": 18,
                     "duration": 10
                 }
             ]
@@ -167,19 +134,19 @@
             "name": "SINKING",
             "frames": [
                 {
+                    "index": 21,
+                    "duration": 10
+                },
+                {
+                    "index": 22,
+                    "duration": 10
+                },
+                {
+                    "index": 23,
+                    "duration": 10
+                },
+                {
                     "index": 24,
-                    "duration": 10
-                },
-                {
-                    "index": 25,
-                    "duration": 10
-                },
-                {
-                    "index": 26,
-                    "duration": 10
-                },
-                {
-                    "index": 27,
                     "duration": 100
                 }
             ]
@@ -281,40 +248,7 @@
                 }
             ]
         },
-        {
-            "name": "SAIL_FIRE_STARBOARD",
-            "frames": [
-                {
-                    "index": 17,
-                    "duration": 10
-                },
-                {
-                    "index": 18,
-                    "duration": 10
-                },
-                {
-                    "index": 19,
-                    "duration": 10
-                }
-            ]
-        },
-        {
-            "name": "SAIL_FIRE_PORT",
-            "frames": [
-                {
-                    "index": 20,
-                    "duration": 10
-                },
-                {
-                    "index": 21,
-                    "duration": 10
-                },
-                {
-                    "index": 22,
-                    "duration": 10
-                }
-            ]
-        },
+        
         {
             "name": "SAIL_TAKE_DAMAGE",
             "frames": [
@@ -323,7 +257,7 @@
                     "duration": 10
                 },
                 {
-                    "index": 23,
+                    "index": 18,
                     "duration": 10
                 },
                 {
@@ -331,7 +265,7 @@
                     "duration": 10
                 },
                 {
-                    "index": 23,
+                    "index": 18,
                     "duration": 10
                 }
             ]
@@ -340,19 +274,19 @@
             "name": "SAIL_SINKING",
             "frames": [
                 {
+                    "index": 21,
+                    "duration": 10
+                },
+                {
+                    "index": 22,
+                    "duration": 10
+                },
+                {
+                    "index": 23,
+                    "duration": 10
+                },
+                {
                     "index": 24,
-                    "duration": 10
-                },
-                {
-                    "index": 25,
-                    "duration": 10
-                },
-                {
-                    "index": 26,
-                    "duration": 10
-                },
-                {
-                    "index": 27,
                     "duration": 100
                 }
             ]
