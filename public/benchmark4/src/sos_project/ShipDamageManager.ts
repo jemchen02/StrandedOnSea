@@ -33,6 +33,18 @@ export class ShipDamageManager {
     public registerHit(damage : number, time : number) : void{
         this.hits.push(new ShipHit(this.hitTime, damage, time));
     }
+    public healthAfterBleed(): number {
+        const currHealth = GameStateManager.get().health;
+        let totalBleed = 0;
+        for(let i = this.hits.length - 1; i >= 0; i--){
+            let hit : ShipHit = this.hits[i];
+
+            let elapsedTime = this.hitTime - hit.startTime;
+            let fractionRemaining = (hit.bleedTime - elapsedTime) / hit.bleedTime;
+            totalBleed += fractionRemaining * hit.damage;
+        }
+        return Math.max(0, currHealth - totalBleed);
+    }
 
     public onUpdate(deltaTime : number){
         while (this.receiver.hasNextEvent()) {

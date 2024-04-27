@@ -96,6 +96,7 @@ export default class InventoryHUD implements Updateable {
         const inventoryTab = this.scene.add.sprite("inventoryTab", this.staticLayer);
         inventoryTab.position.set(50 * scaleX, 250 * scaleY);
         inventoryTab.scale.set(.3 * scaleX, .3 * scaleY);
+        inventoryTab.alpha = 0.6;
     }
 
     public update(deltaT: number): void {

@@ -5,12 +5,14 @@ import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import EnemyActor from "../../Actors/EnemyActor";
+import PlayerActor from "../../Actors/PlayerActor";
 import { CollisionManager } from "../../CollisionManager";
 import { DamageAmounts } from "../../GameConstants";
 
 
 export default class BlockadeAI extends StateMachineAI {
 	private isDead: boolean = false;
+    private player: PlayerActor;
     public health: number = 50;
 
 	/**
@@ -19,6 +21,7 @@ export default class BlockadeAI extends StateMachineAI {
 	 */
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
+        this.player = options.player;
 		// SOS_TODO These parameters need to change based on the hull of the ship
         // Better alternative: have this class request parameters from enums based on the ship type and propulsion type
 
@@ -48,7 +51,10 @@ export default class BlockadeAI extends StateMachineAI {
 	}
 	update(deltaT: number): void {
 		if(this.isDead) return;
-
+        if(this.owner.collisionShape.overlaps(this.player.collisionShape)) {
+			//this.player.position = this.owner.position;
+			this.player.position.add(this.player.position.vecTo(this.owner.position).scaled(-0.08));
+		}
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
 		}

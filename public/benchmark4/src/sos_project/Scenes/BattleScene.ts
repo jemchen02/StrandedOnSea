@@ -341,9 +341,9 @@ export default class BattleScene extends SosScene {
                 npc.health = 50;
                 npc.maxHealth = 50;
                 npc.scale.set(enemies.blockades[i][2], enemies.blockades[i][3]);
-                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(npc.size.x * npc.scale.x / 2, npc.size.y * npc.scale.y/2)), null, true, true);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(64 * enemies.blockades[i][2], 64 * enemies.blockades[i][3])), null, true, true);
                 npc.position.set(enemies.blockades[i][0], enemies.blockades[i][1]);
-                npc.addAI(BlockadeAI);
+                npc.addAI(BlockadeAI, {player: this.player});
                 CollisionManager.get().RegisterCollider(npc);
                 this.enemyBattlers.push(npc);
                 this.battlerCount++;

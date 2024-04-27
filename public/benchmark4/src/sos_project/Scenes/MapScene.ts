@@ -127,6 +127,8 @@ export default class MapScene extends Scene {
         this.mapOverlay = this.addUILayer("overlay");
         this.mapOverlay.disable();
 
+        this.add.uiElement(UIElementType.LABEL, "map", {position: new Vec2(center.x, 120), text: "Choose a Level", fontSize: 60, textColor: Color.WHITE});
+
         for(let i = 0; i < n; i++) {
             let y = center.y + 120 * (n - 1) / 2 - 120 * i;
             for(let j = 0; j < m; j++) {

@@ -11,6 +11,7 @@ import { CollisionManager } from "../CollisionManager";
 import { DamageAmounts, DamageTimes } from "../GameConstants";
 import { ShipDamageManager } from "../ShipDamageManager";
 import ExplosionAI from "./Explosion";
+import PlayerAI from "./Player/PlayerAI";
 
 export default class EnemyMineAI implements AI {
     // The owner of this AI
@@ -43,7 +44,9 @@ export default class EnemyMineAI implements AI {
         this.owner.visible = this.owner.position.distanceTo(this.player.position) < 100;
 
         if(this.owner.position.distanceTo(this.player.position) < 20){
-            ShipDamageManager.get().registerHit(DamageAmounts.OBSTACLE_MINE, DamageTimes.OBSTACLE_MINE_TIME);
+            if((<PlayerAI>this.player._ai).invincibleTimer <= 0) {
+                ShipDamageManager.get().registerHit(DamageAmounts.OBSTACLE_MINE, DamageTimes.OBSTACLE_MINE_TIME);
+            }
             this.owner.visible = false;
             this.exploded = true;
             const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
