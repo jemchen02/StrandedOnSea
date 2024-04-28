@@ -28,6 +28,8 @@ export class GameStateManager {
     public hasCrowsNest : boolean;
     public hasRadar : boolean;
     public hasPump : boolean;
+    public hasSpike: boolean;
+    public hasRapidFire: boolean;
 
     public ownedShips: ShipType[];
     public shipType : ShipType;
@@ -59,6 +61,8 @@ export class GameStateManager {
         this.hasCrowsNest = false;
         this.hasRadar = false;
         this.hasPump = false;
+        this.hasSpike = false;
+        this.hasRapidFire = false;
         this.ownedShips = [ShipType.WOOD];
         this.shipType = ShipType.WOOD;
         this.ownedMovements = [MovementType.OAR];
@@ -196,7 +200,15 @@ export class GameStateManager {
     public buyMine() : boolean {
         if(this.money >= Costs.MINE_COST) {
             this.money -= Costs.MINE_COST;
-            this.numMine += 5;
+            this.numMine += 6;
+            return true;
+        }
+        return false;
+    }
+    public buyMine2() : boolean {
+        if(this.money >= Costs.MINE_COST_2) {
+            this.money -= Costs.MINE_COST_2;
+            this.numMine += 20;
             return true;
         }
         return false;
@@ -209,10 +221,26 @@ export class GameStateManager {
         }
         return false;
     }
+    public buyTorpedo2() : boolean {
+        if(this.money >= Costs.TORPEDO_COST_2) {
+            this.money -= Costs.TORPEDO_COST_2;
+            this.numTorpedo += 10;
+            return true;
+        }
+        return false;
+    }
     public buyRepair() : boolean {
         if(this.money >= Costs.REPAIR_COST) {
             this.money -= Costs.REPAIR_COST;
             this.numRepairs += 2;
+            return true;
+        }
+        return false;
+    }
+    public buyRepair2() : boolean {
+        if(this.money >= Costs.REPAIR_COST_2) {
+            this.money -= Costs.REPAIR_COST_2;
+            this.numRepairs += 6;
             return true;
         }
         return false;
@@ -237,6 +265,8 @@ export class GameStateManager {
             this.money -= Costs.FIBER_COST;
             this.shipType = ShipType.FIBERGLASS;
             this.ownedShips.push(ShipType.FIBERGLASS);
+            this.health += 25;
+            this.maxHealth += 25;
             return true;
         }
         return false;
@@ -249,6 +279,8 @@ export class GameStateManager {
             this.money -= Costs.METAL_COST;
             this.shipType = ShipType.METAL;
             this.ownedShips.push(ShipType.METAL);
+            this.health += 50;
+            this.maxHealth += 50;
             return true;
         }
         return false;
@@ -299,6 +331,28 @@ export class GameStateManager {
         if(this.money >= Costs.PUMP_COST) {
             this.money -= Costs.PUMP_COST;
             this.hasPump = true;
+            return true;
+        }
+        return false;
+    }
+    public buySpike() : boolean {
+        if(this.hasSpike) {
+            return true;
+        }
+        if(this.money >= Costs.SPIKE_COST) {
+            this.money -= Costs.SPIKE_COST;
+            this.hasSpike = true;
+            return true;
+        }
+        return false;
+    }
+    public buyRapidFire() : boolean {
+        if(this.hasRapidFire) {
+            return true;
+        }
+        if(this.money >= Costs.RAPID_FIRE_COST) {
+            this.money -= Costs.RAPID_FIRE_COST;
+            this.hasRapidFire = true;
             return true;
         }
         return false;

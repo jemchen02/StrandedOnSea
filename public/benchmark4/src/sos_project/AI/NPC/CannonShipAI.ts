@@ -22,6 +22,7 @@ import ShipAI from "../ShipAI";
  * with 4 states; Idle, Moving, Invincible, and Dead.
  */
 enum CANNON_SHIP_ENUMS {
+    COLLISION_RANGE = 400,
     SIGHT_RANGE = 50000,
     FIRE_RANGE = 30000,
     LEASH_RANGE = 50000,
@@ -41,6 +42,7 @@ export default class CannonShipAI extends ShipAI {
         this.receiver.subscribe("cannonHit");
         this.receiver.subscribe("torpedoHit");
         this.receiver.subscribe("mineHit");
+        this.receiver.subscribe("explosionHit");
     }
 
     public activate(options: Record<string, any>): void { }
@@ -64,6 +66,12 @@ export default class CannonShipAI extends ShipAI {
                 this.turnDirection = 0;
             }
             this.fireCooldown -= deltaT;
+            if(this.owner.position.distanceSqTo(playerPos) < CANNON_SHIP_ENUMS.COLLISION_RANGE) {
+                if(GameStateManager.get().hasSpike) {
+                    (<EnemyActor>this.owner).health -= DamageAmounts.SPIKE_DAMAGE * deltaT;
+                    this.checkDeath();
+                }
+            }
             super.update(deltaT);
         }
         
@@ -138,6 +146,11 @@ export default class CannonShipAI extends ShipAI {
             case "mineHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.MINE_DAMAGE;
+                    this.checkDeath();
+                }
+            case "explosionHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= event.data.get("damage");
                     this.checkDeath();
                 }
             default: {

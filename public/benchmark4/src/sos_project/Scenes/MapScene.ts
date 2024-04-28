@@ -71,12 +71,17 @@ export default class MapScene extends Scene {
         this.load.image("crow_card", "sos_assets/cards/CrowCard.png");
         this.load.image("metal_card", "sos_assets/cards/MetalCard.png");
         this.load.image("mine_card", "sos_assets/cards/MineCard.png");
+        this.load.image("mine_card_2", "sos_assets/cards/MineCard2.png");
         this.load.image("motor_card", "sos_assets/cards/MotorCard.png");
+        this.load.image("spike_card", "sos_assets/cards/SpikeCard.png");
         this.load.image("pump_card", "sos_assets/cards/PumpCard.png");
         this.load.image("radar_card", "sos_assets/cards/RadarCard.png");
         this.load.image("repair_card", "sos_assets/cards/RepairCard.png");
+        this.load.image("repair_card_2", "sos_assets/cards/RepairCard2.png");
         this.load.image("sail_card", "sos_assets/cards/SailCard.png");
         this.load.image("torpedo_card", "sos_assets/cards/TorpedoCard.png");
+        this.load.image("torpedo_card_2", "sos_assets/cards/TorpedoCard2.png");
+        this.load.image("rapid_fire_card", "sos_assets/cards/RapidFireCard.png");
 
         this.load.audio("sos_theme", "sos_assets/music/1023_illuminakicks.mp4");
     }
@@ -320,6 +325,7 @@ export default class MapScene extends Scene {
             case "buyMetal": {
                 GameStateManager.get().buyMetal();
                 CardManager.get().remove("Metal");
+                CardManager.get().remove("Fiberglass");
                 this.returnToMap();
                 break;
             }
@@ -328,13 +334,28 @@ export default class MapScene extends Scene {
                 this.returnToMap();
                 break;
             }
+            case "buyMine2": {
+                GameStateManager.get().buyMine2();
+                this.returnToMap();
+                break;
+            }
             case "buyTorpedo": {
                 GameStateManager.get().buyTorpedo();
                 this.returnToMap();
                 break;
             }
+            case "buyTorpedo2": {
+                GameStateManager.get().buyTorpedo2();
+                this.returnToMap();
+                break;
+            }
             case "buyRepair": {
                 GameStateManager.get().buyRepair();
+                this.returnToMap();
+                break;
+            }
+            case "buyRepair2": {
+                GameStateManager.get().buyRepair2();
                 this.returnToMap();
                 break;
             }
@@ -347,6 +368,7 @@ export default class MapScene extends Scene {
             case "buyMotor": {
                 GameStateManager.get().buyMotor();
                 CardManager.get().remove("Motor");
+                CardManager.get().remove("Sail");
                 this.returnToMap();
                 break;
             }
@@ -365,6 +387,19 @@ export default class MapScene extends Scene {
             case "buyRadar": {
                 GameStateManager.get().buyRadar();
                 CardManager.get().remove("Radar");
+                CardManager.get().remove("Crow's Nest");
+                this.returnToMap();
+                break;
+            }
+            case "buySpike": {
+                GameStateManager.get().buySpike();
+                CardManager.get().remove("Spiked Armor");
+                this.returnToMap();
+                break;
+            }
+            case "buyRapidFire": {
+                GameStateManager.get().buyRapidFire();
+                CardManager.get().remove("Rapid Fire");
                 this.returnToMap();
                 break;
             }

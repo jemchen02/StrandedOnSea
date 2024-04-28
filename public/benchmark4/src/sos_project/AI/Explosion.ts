@@ -8,14 +8,17 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import { CollisionManager } from "../CollisionManager";
+import { DamageAmounts } from "../GameConstants";
 
 export default class ExplosionAI implements AI {
     private owner: AnimatedSprite;
     private duration: number;
+    private emitter: Emitter;
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.duration = 1;
         this.owner = owner;
         owner.animation.play("EXPLOSION", false);
+        this.emitter = new Emitter();
     }
 
     activate(options: Record<string, any>): void {
@@ -30,6 +33,13 @@ export default class ExplosionAI implements AI {
         if(this.duration <= 0) {
             this.owner.destroy();
         }
+        if(this.owner.collisionShape) {
+            let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
+            if(otherCollider){
+                this.emitter.fireEvent("explosionHit", {"node": otherCollider, "damage": deltaT * DamageAmounts.SPLASH_DAMAGE});
+            }
+        }
+        
     }
 
     destroy(): void {

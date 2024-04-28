@@ -8,9 +8,14 @@ const cardInit = [
     ["Pump", "pump_card", Costs.PUMP_COST, "buyPump"],
     ["Crow's Nest", "crow_card", Costs.CROW_COST, "buyCrow"],
     ["Radar", "radar_card", Costs.RADAR_COST, "buyRadar"],
-    ["5 Mines", "mine_card", Costs.MINE_COST, "buyMine"],
+    ["Spiked Armor", "spike_card", Costs.SPIKE_COST, "buySpike"],
+    ["Rapid Fire", "rapid_fire_card", Costs.RAPID_FIRE_COST, "buyRapidFire"],
+    ["6 Mines", "mine_card", Costs.MINE_COST, "buyMine"],
+    ["20 Mines", "mine_card_2", Costs.MINE_COST_2, "buyMine2"],
     ["5 Torpedoes", "torpedo_card", Costs.TORPEDO_COST, "buyTorpedo"],
-    ["2 Repairs", "repair_card", Costs.REPAIR_COST, "buyRepair"]
+    ["10 Torpedoes", "torpedo_card_2", Costs.TORPEDO_COST_2, "buyTorpedo2"],
+    ["2 Repairs", "repair_card", Costs.REPAIR_COST, "buyRepair"],
+    ["6 Repairs", "repair_card_2", Costs.REPAIR_COST_2, "buyRepair2"]
 ];
 export class CardManager {
     private static instance: CardManager;
@@ -32,7 +37,10 @@ export class CardManager {
     }
 
     public pickThree(money: number): Card[] {
-        const cardChoices = this.cards.filter(card => card.cost <= money);
+        let cardChoices = this.cards.filter(card => card.cost <= money);
+        if(money >= 450) {
+          cardChoices = cardChoices.filter(card => card.cost >= 400);
+        }
         const shuffled = cardChoices.sort(() => Math.random() - 0.5);
         return shuffled.slice(0, 3);
     }

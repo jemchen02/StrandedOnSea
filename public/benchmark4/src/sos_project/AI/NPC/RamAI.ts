@@ -31,6 +31,7 @@ export default class RamAI extends ShipAI {
         this.receiver.subscribe("cannonHit");
         this.receiver.subscribe("torpedoHit");
         this.receiver.subscribe("mineHit");
+        this.receiver.subscribe("explosionHit");
 
     }
 
@@ -70,6 +71,10 @@ export default class RamAI extends ShipAI {
         super.update(deltaT);
         if(this.owner.position.distanceSqTo(playerPos) < RAM_ENUMS.COLLISION_RANGE) {
             this.emitter.fireEvent("ramCollision");
+            if(GameStateManager.get().hasSpike) {
+                (<EnemyActor>this.owner).health -= DamageAmounts.SPIKE_DAMAGE * deltaT;
+                this.checkDeath();
+            }
         }
 
     }
@@ -91,6 +96,11 @@ export default class RamAI extends ShipAI {
             case "mineHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.MINE_DAMAGE;
+                    this.checkDeath();
+                }
+            case "explosionHit":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health -= event.data.get("damage");
                     this.checkDeath();
                 }
             default: {

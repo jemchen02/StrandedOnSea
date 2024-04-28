@@ -1,4 +1,5 @@
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import Emitter from "../../Wolfie2D/Events/Emitter";
@@ -91,5 +92,6 @@ export default class TorpedoAI implements AI {
         const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
         explosion.position = this.owner.position;
         explosion.addAI(ExplosionAI);
+        explosion.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 16)), null, false, false);
     }
 }

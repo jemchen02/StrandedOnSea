@@ -147,7 +147,11 @@ export default class PlayerAI extends ShipAI {
 
     public fire_cannon(left : boolean) : void{
         if(this.cannonCooldown <= 0) {
-            this.cannonCooldown = 0.5
+            if(GameStateManager.get().hasRapidFire) {
+                this.cannonCooldown = 0.3;
+            } else {
+                this.cannonCooldown = 0.5;
+            }
             let cannonBall : Sprite = this.owner.getScene().add.sprite("cannonball", "primary");
             cannonBall.scale.set(0.15, 0.15);
             cannonBall.addAI(CannonBallAI);
