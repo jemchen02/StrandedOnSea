@@ -14,6 +14,7 @@ import { ItemEvent } from "../../Events";
 import { DamageAmounts, Speeds } from "../../GameConstants";
 import { GameStateManager } from "../../GameStateManager";
 import Item from "../../GameSystems/ItemSystem/Item";
+import BattleScene from "../../Scenes/BattleScene";
 import CannonBallAI from "../CannonBall";
 import ShipAI from "../ShipAI";
 
@@ -163,6 +164,7 @@ export default class CannonShipAI extends ShipAI {
         if((<EnemyActor>this.owner).health <= 0) {
             this.isDead = true;
             CollisionManager.get().remove(this.owner);
+            (<BattleScene>this.owner.getScene()).spawnLootBarrel(true, this.owner.position);
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
         }
     }

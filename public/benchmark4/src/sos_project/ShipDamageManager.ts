@@ -60,6 +60,11 @@ export class ShipDamageManager {
             let percentageTime = deltaTime / hit.bleedTime;
 
             if(elapsedTime > hit.bleedTime){
+
+                if(hit.damage > 0 && GameStateManager.get().hasPump){
+                    this.registerHit((-hit.damage/4), hit.bleedTime)
+                }
+
                 this.hits.splice(i, 1);
                 continue;
             }
@@ -67,9 +72,9 @@ export class ShipDamageManager {
             GameStateManager.get().setHealth(GameStateManager.get().health - (hit.damage * percentageTime));
         }
 
-        if(GameStateManager.get().hasPump){
-            GameStateManager.get().setHealth(GameStateManager.get().health - (DamageAmounts.PUMP_DAMAGE * deltaTime));
-        }
+        //if(GameStateManager.get().hasPump){
+            //GameStateManager.get().setHealth(GameStateManager.get().health - (DamageAmounts.PUMP_DAMAGE * deltaTime));
+        //}
     }
 
     public handleEvent(event : GameEvent){

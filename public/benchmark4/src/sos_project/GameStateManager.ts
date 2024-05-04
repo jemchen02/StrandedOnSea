@@ -94,12 +94,18 @@ export class GameStateManager {
     //TODO REALLY BAD HACK THIS SHOULD BE CHANGED
     private buildMap() : void{
         //THIS IS THE MAP
-        const mapInit = [
-            [4, 2, 3, 5, 3],
-            [1, 3, 2, 1, 5],
+        // 1 is hostile
+        // 2 is treasure
+        // 3 is whirlpool
+        // 4 is start
+        // 5 is obstacle
+        // 6 is end
+        const mapInit = [    
+            [3, 5, 5, 3, 6],
+            [2, 1, 3, 1, 5],
             [5, 1, 5, 3, 1],
-            [2, 1, 3, 2, 5],
-            [3, 5, 5, 3, 6]
+            [1, 3, 2, 1, 5],
+            [4, 2, 3, 5, 2]
         ];
         const n = mapInit.length;
         const m = mapInit[0].length;
@@ -125,7 +131,7 @@ export class GameStateManager {
 
         for(let i = 0; i < this.gameMap.length; i++){
             for(let j = 0; j < this.gameMap.length; j++){
-                this.gameMap[i][j].iconType = mapInit[i][j];
+                this.gameMap[i][j].iconType = mapInit[(this.gameMap.length - 1) - i][j];
             }
         }
     }
@@ -401,7 +407,7 @@ export class GameStateManager {
     }
 
     public generateLoot(rarity: number) {
-        this.money += Math.floor(rarity*10*Math.random())+10;
+        this.money += Math.floor(rarity*10*Math.random())+25;
         this.numMine += Math.floor(1.5*rarity * Math.random());
         this.numTorpedo += Math.floor(1.2 * rarity*Math.random());
     }

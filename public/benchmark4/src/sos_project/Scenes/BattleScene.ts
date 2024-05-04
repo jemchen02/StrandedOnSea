@@ -369,14 +369,20 @@ export default class BattleScene extends SosScene {
         npc.addAI(EnemyMineAI, {player: this.player});
     }
 
-    protected spawnLootBarrel(){
+    public spawnLootBarrel(hasPos : boolean = false, spawnPos : Vec2 = new Vec2(0,0)){
         let tilemap = this.getTilemap("Ocean")
         let size = tilemap.getDimensions()
-        let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
-        while (tilemap.getTile(randCoords.x, randCoords.y) != 1){
-            randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
+
+        let worldCoords : Vec2;
+        if(!hasPos){
+            let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
+            while (tilemap.getTile(randCoords.x, randCoords.y) != 1){
+                randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
+            }
+            worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
+        } else {
+            worldCoords = spawnPos;
         }
-        let worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
         
         let barrel = this.add.animatedSprite(NPCActor, "loot", "primary")
         barrel.position.set(worldCoords.x, worldCoords.y)
