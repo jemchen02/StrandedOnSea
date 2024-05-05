@@ -101,7 +101,7 @@ export default class RamAI extends ShipAI {
                 }
             case "explosionHit":
                 if(event.data.get("node") == this.owner) {
-                    (<EnemyActor>this.owner).health -= event.data.get("damage");
+                    (<EnemyActor>this.owner).health -= DamageAmounts.SPLASH_DAMAGE;
                     this.checkDeath();
                 }
             default: {
