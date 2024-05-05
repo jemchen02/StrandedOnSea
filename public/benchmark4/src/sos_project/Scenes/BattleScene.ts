@@ -517,6 +517,7 @@ export default class BattleScene extends SosScene {
     }
     protected winLevel(rewards: number = 0): void {
         this.endLevel();
+        GameStateManager.get().setHealth(GameStateManager.get().health + 10);
         new LevelEndHUD(this, "modal", "staticHUD", true, rewards, this.scaleFactor, this.scaleFactor);
         this.emitter.fireEvent("gameend");
     }
