@@ -159,7 +159,7 @@ export default class CannonShipAI extends ShipAI {
                 break;
             case "whirlpoolKO":
                 if(event.data.get("node") == this.owner) {
-                    (<EnemyActor>this.owner).health -= 0;
+                    (<EnemyActor>this.owner).health = 0;
                     this.checkDeath();
                 }
                 break;
