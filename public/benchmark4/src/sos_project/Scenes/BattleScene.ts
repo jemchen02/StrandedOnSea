@@ -314,7 +314,7 @@ export default class BattleScene extends SosScene {
             for (let i = 0; i < enemies.towers.length; i++) {
                 let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
                 npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
-                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, true);
                 npc.health = 30;
                 npc.maxHealth = 30;
                 npc.addAI(TowerAI, {player: this.player});

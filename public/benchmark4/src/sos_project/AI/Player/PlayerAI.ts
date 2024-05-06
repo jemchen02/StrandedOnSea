@@ -105,7 +105,9 @@ export default class PlayerAI extends ShipAI {
                 this.onRamCollision();
                 break;
             case "whirlpoolKO":
-                this.onWhirlpoolKO();
+                if(event.data.get("node") == this.owner) {
+                    this.onWhirlpoolKO();
+                }
                 break;
             case "cannonHit":
                 if(event.data.get("node") == this.owner && Math.random() > this.deflectChance) {

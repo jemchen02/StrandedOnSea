@@ -33,7 +33,7 @@ export default class RamAI extends ShipAI {
         this.receiver.subscribe("torpedoHit");
         this.receiver.subscribe("mineHit");
         this.receiver.subscribe("explosionHit");
-
+        this.receiver.subscribe("whirlpoolKO");
     }
 
     public activate(options: Record<string, any>): void { }
@@ -99,11 +99,19 @@ export default class RamAI extends ShipAI {
                     (<EnemyActor>this.owner).health -= DamageAmounts.MINE_DAMAGE;
                     this.checkDeath();
                 }
+                break;
             case "explosionHit":
                 if(event.data.get("node") == this.owner) {
                     (<EnemyActor>this.owner).health -= DamageAmounts.SPLASH_DAMAGE;
                     this.checkDeath();
                 }
+                break;
+            case "whirlpoolKO":
+                if(event.data.get("node") == this.owner) {
+                    (<EnemyActor>this.owner).health = 0;
+                    this.checkDeath();
+                }
+                break;
             default: {
                 super.handleEvent(event);
                 break;
