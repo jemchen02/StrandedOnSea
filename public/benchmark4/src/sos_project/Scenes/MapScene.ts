@@ -304,7 +304,7 @@ export default class MapScene extends Scene {
                 break;
             }
             case "playShipwreck2": {
-                this.sceneManager.changeToScene(ShipwreckScene);
+                this.sceneManager.changeToScene(ShipwreckScene2);
                 break;
             }
             case "playWhirlpool": {
