@@ -3,6 +3,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -20,10 +21,13 @@ export default class EnemyMineAI implements AI {
 
     private exploded : boolean;
 
+    private emitter : Emitter;
+
     initializeAI(owner: Sprite, options: Record<string, any>): void {
         this.owner = owner;
         this.player = options.player;
         this.exploded = false;
+        this.emitter = new Emitter();
 
         if(this.owner.position.distanceTo(this.player.position) < 100){
             this.exploded = true;
@@ -52,6 +56,9 @@ export default class EnemyMineAI implements AI {
             const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
             explosion.position = this.owner.position;
             explosion.addAI(ExplosionAI);
+
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mine_boom", loop: false, holdReference: true});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire2", loop: false, holdReference: true});
         }
     }
 
