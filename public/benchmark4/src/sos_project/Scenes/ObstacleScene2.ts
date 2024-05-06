@@ -1,12 +1,15 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
-import { LevelRewards } from "../GameConstants";
+import { DamageAmounts, DamageTimes, LevelData, LevelRewards } from "../GameConstants";
 import { GameStateManager } from "../GameStateManager";
+import { ShipDamageManager } from "../ShipDamageManager";
 import BattleScene from "./BattleScene";
 
 export default class ObstacleScene2 extends BattleScene {
@@ -15,9 +18,9 @@ export default class ObstacleScene2 extends BattleScene {
     }
     public override loadScene(): void {
         super.loadScene();
-        this.load.object("enemies", "hw4_assets/data/enemies/obstacle2/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
-        this.load.audio("hostile_theme", "sos_assets/music/black_midi_kahos.mp4");
+        this.load.object("enemies", "hw4_assets/data/enemies/obstacle1/enemies.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/ObstacleMap.json");
+        this.load.audio("obstacle_theme", "sos_assets/music/black_midi_kahos.mp4");
     }
     public startScene(): void {
         super.startScene();
@@ -26,12 +29,72 @@ export default class ObstacleScene2 extends BattleScene {
     protected override initializeHUD(): void {
         super.initializeHUD();
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 25*this.scaleFactor), text: "Objectives:", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Avoid obstacles", fontSize: 30, textColor: Color.WHITE});
-        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Reach destination", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 45*this.scaleFactor), text: "Avoid mines", fontSize: 30, textColor: Color.WHITE});
+        this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Head north", fontSize: 30, textColor: Color.WHITE});
     }
     protected override winLevel(): void {
         GameStateManager.get().money += LevelRewards.OBSTACLE2;
         super.winLevel(LevelRewards.OBSTACLE2);
+    }
+
+    waveIndex : number;
+    wavePos : number[];
+    waves : Graphic[];
+
+    levelActive : boolean
+
+    public override updateScene(deltaT : number) : void{
+        super.updateScene(deltaT);
+
+        if(this.player.position.y < 50 && this.levelActive){
+            this.levelActive = false;
+            this.winLevel();
+        }
+
+        //if(this.player.position.y > this.wavePos && this.levelActive){
+            //this.levelActive = false;
+            //this.loseLevel();
+        //}
+
+        for(let i = 0; i < 10; i++){
+            this.wavePos[i] -= (64 * deltaT);
+            this.waves[i].position.set(256, this.wavePos[i]);
+
+            if(this.player.position.y > this.wavePos[i]){
+                if(this.waveIndex == i){
+                    ShipDamageManager.get().registerHit(DamageAmounts.WAVE_DAMAGE, DamageTimes.WAVE_TIME);
+                    this.waveIndex++;
+                }
+            }
+        }
+    }
+
+    //wave : Graphic;
+
+    protected override initializeNPCs(): void {
+
+        this.player.position.set(256, 2048 - 100);
+
+        super.initializeNPCs();
+
+        for(let i = 0; i < LevelData.NUM_ADV_OBSTACLE_MINES; i++){
+            this.spawnMine(Math.random() * 512, Math.random() * 2048);
+        }
+
+        this.wavePos = [];
+        this.waves = [];
+        this.waveIndex = 0;
+
+        for(let i = 0; i < 10; i++){
+            this.wavePos.push(2048 + 200 + (i * 200));
+
+            let wave = this.add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(1000, 10)});
+            wave.addPhysics();
+            wave.position.set(256, 2048 + 200 + (i * 200));
+            this.waves.push(wave)
+        }
+
+        this.levelActive = true;
     }
     unloadScene(): void {
         super.unloadScene();

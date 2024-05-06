@@ -26,6 +26,7 @@ import CardHUD from "../GameSystems/HUD/CardHUD";
 import { CardManager } from "../CardManager";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import ObstacleScene3 from "./ObstacleScene3";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -171,7 +172,7 @@ export default class MapScene extends Scene {
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false, false);
     }
-    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean, isHard: boolean) {
+    private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean, isHard: boolean, isBoss: boolean = false) {
         if (bType == "design") {
             const newButton = new PurchaseButton(this, {layer, position, text, clickEvent, length, cost, owned});
             this.shopButtons.set(text, newButton);
@@ -179,6 +180,7 @@ export default class MapScene extends Scene {
             const newButton = this.add.uiElement(UIElementType.BUTTON, layer, {position, text});
             newButton.size.set(length, 100);
             newButton.borderColor = isHard ? Color.YELLOW : Color.GREEN;
+            if(isBoss) newButton.borderColor = Color.RED;
             newButton.borderWidth = 3;
             newButton.backgroundColor = Color.TRANSPARENT;
             if(clickEvent) {
@@ -215,7 +217,11 @@ export default class MapScene extends Scene {
                 land.position.set(x, y);
                 break;
             case 5:
-                this.createButton("map", new Vec2(x, y), "", coordString + `${i + j < 4 ? "playObstacle" : "playObstacle2"}`, 100, "mapButton", 0, false, i + j >= 4);
+                let difficulty : string = "playObstacle";
+                if(i + j >= 4) difficulty = "playObstacle2";
+                if(i > 2 && j > 2) difficulty = "playObstacle3";
+
+                this.createButton("map", new Vec2(x, y), "", coordString + `${difficulty}`, 100, "mapButton", 0, false, i + j >= 4, (i > 2 && j > 2));
                 const obstacle = this.add.sprite("obstacle_icon", "map");
                 obstacle.position.set(x, y);
                 break;
@@ -234,10 +240,12 @@ export default class MapScene extends Scene {
         else if(overlay.isStorm){
             const storm = this.add.sprite("storm", "map");
             storm.position.set(x, y);
+            storm.scale = new Vec2(1.1, 1.1);
         }
         else if(overlay.isFog){
             const hidden = this.add.sprite("hidden", "map");
             hidden.position.set(x, y);
+            hidden.scale = new Vec2(1.1, 1.1);
         }
     }
     public updateScene(deltaT: number){
@@ -305,7 +313,11 @@ export default class MapScene extends Scene {
                 break;
             }
             case "playObstacle2": {
-                this.sceneManager.changeToScene(ObstacleScene);
+                this.sceneManager.changeToScene(ObstacleScene2);
+                break;
+            }
+            case "playObstacle3": {
+                this.sceneManager.changeToScene(ObstacleScene3);
                 break;
             }
             case "playLand": {
