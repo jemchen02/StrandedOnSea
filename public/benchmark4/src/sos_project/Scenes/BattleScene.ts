@@ -314,7 +314,7 @@ export default class BattleScene extends SosScene {
             for (let i = 0; i < enemies.towers.length; i++) {
                 let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
                 npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
-                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, true);
                 npc.health = 30;
                 npc.maxHealth = 30;
                 npc.addAI(TowerAI, {player: this.player});
@@ -374,12 +374,14 @@ export default class BattleScene extends SosScene {
         let size = tilemap.getDimensions()
 
         let worldCoords : Vec2;
+        let timer = null;
         if(!hasPos){
             let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
             while (tilemap.getTile(randCoords.x, randCoords.y) != 1){
                 randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
             }
             worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
+            timer = 15
         } else {
             worldCoords = spawnPos;
         }
@@ -388,7 +390,7 @@ export default class BattleScene extends SosScene {
         barrel.position.set(worldCoords.x, worldCoords.y)
         barrel.scale.set(0.5, 0.5)
         barrel.addPhysics(new AABB(Vec2.ZERO, new Vec2(barrel.size.x * barrel.scale.x / 2, barrel.size.y * barrel.scale.y/2)), null, false, true);
-        barrel.addAI(FloatingLootAI, {player: this.player, rarity:1})
+        barrel.addAI(FloatingLootAI, {player: this.player, rarity:1, timer: timer})
         barrel.animation.play("IDLE")
     }
 
@@ -517,6 +519,7 @@ export default class BattleScene extends SosScene {
     }
     protected winLevel(rewards: number = 0): void {
         this.endLevel();
+        GameStateManager.get().setHealth(GameStateManager.get().health + 10);
         new LevelEndHUD(this, "modal", "staticHUD", true, rewards, this.scaleFactor, this.scaleFactor);
         this.emitter.fireEvent("gameend");
     }

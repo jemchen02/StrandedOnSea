@@ -27,6 +27,7 @@ import { CardManager } from "../CardManager";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import ObstacleScene3 from "./ObstacleScene3";
+import MainMenu from "./MainMenu";
 
 export default class MapScene extends Scene {
     // Layers, for multiple main menu screens
@@ -40,6 +41,7 @@ export default class MapScene extends Scene {
     private mapLayer: Layer;
     private mapOverlay: Layer;
     private shipLayer: Layer;
+    private endLayer: Layer;
     
     private healthHUD: PlayerHealthHUD;
     private coinHUD: CoinHUD;
@@ -53,6 +55,7 @@ export default class MapScene extends Scene {
         this.load.spritesheet("player_metal", "sos_assets/spritesheets/player_metal.json");
 
         this.load.image("backgroundBlue", "hw4_assets/sprites/backgroundBlue.png");
+        this.load.image("endImage", "hw4_assets/sprites/HomeDocks.png")
         this.load.image("coinTab", "hw4_assets/sprites/coinStorage.png");
         this.load.image("water", "hw4_assets/sprites/water.png");
         this.load.image("inventoryTab", "hw4_assets/sprites/inventoryTab.png");
@@ -97,6 +100,7 @@ export default class MapScene extends Scene {
         this.initMap();
         this.initHUD();
         this.initShip();
+        this.initEnd();
         if(!GameStateManager.get().prevWon) {
             this.shipLayer.disable();
             this.mapLayer.enable();
@@ -172,6 +176,19 @@ export default class MapScene extends Scene {
 
         this.createButton("ship", new Vec2(center.x, center.y + 400), "Buy None", "ready", 150, "design", -1, false, false);
     }
+
+    private initEnd() : void {
+        this.endLayer = this.addUILayer("end");
+        this.endLayer.disable();
+
+        const center = this.viewport.getCenter();
+        const endImage = this.add.sprite("endImage", "end");
+        endImage.position.set(center.x, center.y);
+        endImage.scale.set(1.23, 1.45);
+
+        this.createButton("end", new Vec2(center.x, center.y + 300), "Back to Menu", "game_win", 180, "design", -1, false, false);
+    }
+  
     private createButton(layer: string, position: Vec2, text: string, clickEvent: string, length: number, bType: string, cost: number, owned: boolean, isHard: boolean, isBoss: boolean = false) {
         if (bType == "design") {
             const newButton = new PurchaseButton(this, {layer, position, text, clickEvent, length, cost, owned});
@@ -297,7 +314,7 @@ export default class MapScene extends Scene {
                 break;
             }
             case "playShipwreck2": {
-                this.sceneManager.changeToScene(ShipwreckScene);
+                this.sceneManager.changeToScene(ShipwreckScene2);
                 break;
             }
             case "playWhirlpool": {
@@ -320,13 +337,16 @@ export default class MapScene extends Scene {
                 this.sceneManager.changeToScene(ObstacleScene3);
                 break;
             }
-            case "playLand": {
-                this.sceneManager.changeToScene(MapScene);
+            case "playHome": {
+                this.endLayer.enable();
                 break;
             }
             case "ready": {
                 this.returnToMap();
                 break;
+            }
+            case "game_win": {
+                this.sceneManager.changeToScene(MainMenu);
             }
             case "buyFiber": {
                 GameStateManager.get().buyFiber();

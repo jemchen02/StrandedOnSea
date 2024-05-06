@@ -36,7 +36,7 @@ export default class ExplosionAI implements AI {
         if(this.owner.collisionShape) {
             let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
             if(otherCollider){
-                this.emitter.fireEvent("explosionHit", {"node": otherCollider, "damage": deltaT * DamageAmounts.SPLASH_DAMAGE});
+                this.emitter.fireEvent("explosionHit", {"node": otherCollider});
             }
         }
         

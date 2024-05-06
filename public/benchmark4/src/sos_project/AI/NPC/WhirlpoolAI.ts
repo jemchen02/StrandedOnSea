@@ -7,11 +7,13 @@ import Debug from "../../../Wolfie2D/Debug/Debug";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../../Wolfie2D/Events/Receiver";
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import PlayerActor from "../../Actors/PlayerActor";
+import { CollisionManager } from "../../CollisionManager";
 import CannonBallAI from "../CannonBall";
 
 export default class WhirlpoolAI extends StateMachineAI {
@@ -43,13 +45,15 @@ export default class WhirlpoolAI extends StateMachineAI {
 		if(this.isDead) return;
 
         this.owner.rotation += deltaT;
-		const distanceToPlayer = this.player.position.distanceTo(this.owner.position);
-		if(this.checkAABBtoCircleCollision(<AABB>this.player.collisionShape, <Circle>this.owner.collisionShape)) {
-			//this.player.position = this.owner.position;
-			this.player.position.add(this.player.position.vecTo(this.owner.position).scaled(deltaT * 40  / distanceToPlayer));
-		}
-		if(distanceToPlayer < 5) {
-			this.emitter.fireEvent("whirlpoolKO");
+		let otherColliders : GameNode[] = CollisionManager.get().GetHitsCircle(<Circle>this.owner.collisionShape);
+		for (const collider of otherColliders) {
+			const distanceToCollider = this.owner.position.distanceTo(collider.position);
+			if (!collider.isStatic) {
+				collider.position.add(collider.position.vecTo(this.owner.position).scaled(deltaT * 40  / distanceToCollider));
+				if(distanceToCollider < 5) {
+					this.emitter.fireEvent("whirlpoolKO", {"node": collider});
+				}
+			}	
 		}
 
 		while(this.receiver.hasNextEvent()){
@@ -59,18 +63,5 @@ export default class WhirlpoolAI extends StateMachineAI {
         // SOS_TODO Add events for firing cannons on port side and starboard side
 
 		// Animations
-	}
-	checkAABBtoCircleCollision(aabb: AABB, circle: Circle): boolean {
-		// Your code goes here:
-		const c_x = circle.center.x;
-		const c_y = circle.center.y;
-		const aabb_x_low = aabb.topLeft.x;
-		const aabb_x_high = aabb.bottomRight.x;
-		const aabb_y_low = aabb.topLeft.y;
-		const aabb_y_high = aabb.bottomRight.y;
-		const closest_x = Math.min(Math.max(c_x, aabb_x_low), aabb_x_high);
-		const closest_y = Math.min(Math.max(c_y, aabb_y_low), aabb_y_high);
-		const vec_closest = new Vec2(closest_x, closest_y);
-		return circle.containsPoint(vec_closest);
 	}
 } 

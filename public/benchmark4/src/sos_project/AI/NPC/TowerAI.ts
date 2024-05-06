@@ -95,6 +95,8 @@ export default class TowerAI extends StateMachineAI {
             if(this.fireCooldown <= 0) {
                 this.fire_cannon();
             }
+        } else {
+            this.owner.rotation -= deltaT / 5;
         }
         this.fireCooldown -= deltaT;
 		while(this.receiver.hasNextEvent()){

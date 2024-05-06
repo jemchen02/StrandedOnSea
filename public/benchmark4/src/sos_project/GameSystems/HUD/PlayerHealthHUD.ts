@@ -53,6 +53,7 @@ export default class PlayerHealthHUD implements Updateable {
         const fraction = GameStateManager.get().health / GameStateManager.get().maxHealth;
         const afterBleedFraction = ShipDamageManager.get().healthAfterBleed() / GameStateManager.get().maxHealth;
         this.afterBleedBar.visible = fraction != afterBleedFraction;
+        this.afterBleedBar.backgroundColor = fraction > afterBleedFraction ? Color.RED : Color.GREEN;
         if(fraction > .67) {
             this.healthBar.setBackgroundColor(Color.GREEN);
         } else if(fraction > .33) {
