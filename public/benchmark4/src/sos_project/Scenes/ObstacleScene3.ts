@@ -12,7 +12,7 @@ import { GameStateManager } from "../GameStateManager";
 import { ShipDamageManager } from "../ShipDamageManager";
 import BattleScene from "./BattleScene";
 
-export default class ObstacleScene extends BattleScene {
+export default class ObstacleScene3 extends BattleScene {
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
     }
@@ -33,8 +33,8 @@ export default class ObstacleScene extends BattleScene {
         this.add.uiElement(UIElementType.LABEL, "staticHUD", {position: new Vec2(260*this.scaleFactor, 65*this.scaleFactor), text: "Head north", fontSize: 30, textColor: Color.WHITE});
     }
     protected override winLevel(): void {
-        GameStateManager.get().money += LevelRewards.OBSTACLE1;
-        super.winLevel(LevelRewards.OBSTACLE1);
+        GameStateManager.get().money += LevelRewards.OBSTACLE3;
+        super.winLevel(LevelRewards.OBSTACLE3);
     }
 
     waveIndex : number;
@@ -57,7 +57,7 @@ export default class ObstacleScene extends BattleScene {
         //}
 
         for(let i = 0; i < 10; i++){
-            this.wavePos[i] -= (56 * deltaT);
+            this.wavePos[i] -= (80 * deltaT);
             this.waves[i].position.set(256, this.wavePos[i]);
 
             if(this.player.position.y > this.wavePos[i]){
@@ -77,7 +77,7 @@ export default class ObstacleScene extends BattleScene {
 
         super.initializeNPCs();
 
-        for(let i = 0; i < LevelData.NUM_OBSTACLE_MINES; i++){
+        for(let i = 0; i < LevelData.NUM_ADV_OBSTACLE_MINES; i++){
             this.spawnMine(Math.random() * 512, Math.random() * 2048);
         }
 
