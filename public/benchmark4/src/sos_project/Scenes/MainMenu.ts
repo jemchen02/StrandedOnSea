@@ -15,6 +15,7 @@ import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import ObstacleScene3 from "./ObstacleScene3";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -87,8 +88,9 @@ export default class MainMenu extends Scene {
         this.add.uiElement(UIElementType.LABEL, "select", {position: new Vec2(center.x, center.y - 400), text: 'Select Level (Testing Only)', fontSize: 40, textColor: Color.WHITE});
         this.createButton("select", new Vec2(center.x - 150, center.y - 300), "Hostile 1", "hostile1", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x + 150, center.y - 300), "Hostile 2", "hostile2", new Vec2(200, 75));
-        this.createButton("select", new Vec2(center.x - 150, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(200, 75));
-        this.createButton("select", new Vec2(center.x + 150, center.y - 150), "Obstacle 2", "obstacle2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x - 175, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(150, 75));
+        this.createButton("select", new Vec2(center.x, center.y - 150), "Obstacle 2", "obstacle2", new Vec2(150, 75));
+        this.createButton("select", new Vec2(center.x + 175, center.y - 150), "Obstacle 3", "obstacle3", new Vec2(150, 75));
         this.createButton("select", new Vec2(center.x - 150, center.y), "Shipwreck 1", "shipwreck1", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x + 150, center.y), "Shipwreck 2", "shipwreck2", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x - 150, center.y + 150), "Whirlpool 1", "whirlpool1", new Vec2(200, 75));
@@ -170,6 +172,10 @@ export default class MainMenu extends Scene {
             }
             case "obstacle2": {
                 this.sceneManager.changeToScene(ObstacleScene2);
+                break;
+            }
+            case "obstacle3": {
+                this.sceneManager.changeToScene(ObstacleScene3);
                 break;
             }
             case "shipwreck1": {
