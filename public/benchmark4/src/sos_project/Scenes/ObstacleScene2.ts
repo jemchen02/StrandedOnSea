@@ -2,6 +2,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
@@ -19,7 +20,7 @@ export default class ObstacleScene2 extends BattleScene {
     public override loadScene(): void {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/obstacle1/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/ObstacleMap.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/ObstacleMap2.json");
         this.load.audio("obstacle_theme", "sos_assets/music/black_midi_kahos.mp4");
     }
     public startScene(): void {
@@ -39,7 +40,7 @@ export default class ObstacleScene2 extends BattleScene {
 
     waveIndex : number;
     wavePos : number[];
-    waves : Graphic[];
+    waves : AnimatedSprite[];
 
     levelActive : boolean
 
@@ -57,7 +58,7 @@ export default class ObstacleScene2 extends BattleScene {
         //}
 
         for(let i = 0; i < 10; i++){
-            this.wavePos[i] -= (64 * deltaT);
+            this.wavePos[i] -= (70 * deltaT);
             this.waves[i].position.set(256, this.wavePos[i]);
 
             if(this.player.position.y > this.wavePos[i]){
@@ -88,10 +89,11 @@ export default class ObstacleScene2 extends BattleScene {
         for(let i = 0; i < 10; i++){
             this.wavePos.push(2048 + 200 + (i * 200));
 
-            let wave = this.add.graphic(GraphicType.RECT, "primary", {position: new Vec2(0, 0), size: new Vec2(1000, 10)});
-            wave.addPhysics();
+            let wave = this.add.animatedSprite(AnimatedSprite, "wave", "primary");
+            wave.scale = new Vec2(62, 3);
             wave.position.set(256, 2048 + 200 + (i * 200));
             this.waves.push(wave)
+            wave.animation.play("IDLE", true)
         }
 
         this.levelActive = true;

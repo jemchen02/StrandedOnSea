@@ -1,0 +1,24 @@
+{
+    "name": "wave",
+        "spriteSheetImage": "wave.png",
+        "spriteWidth": 8,
+        "spriteHeight": 8,
+        "columns": 3,
+        "rows": 3,
+        "durationType": "time",
+        "animations": [
+            { 
+                "name": "IDLE",
+                "frames": [
+                    {"index": 0, "duration": 5},
+                    {"index": 1, "duration": 5},
+                    {"index": 2, "duration": 5},
+                    {"index": 3, "duration": 5},
+                    {"index": 4, "duration": 5},
+                    {"index": 5, "duration": 5},
+                    {"index": 6, "duration": 5},
+                    {"index": 7, "duration": 5}
+                 ]
+            }
+        ]
+    }

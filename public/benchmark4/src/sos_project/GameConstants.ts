@@ -49,7 +49,7 @@ export enum LevelRewards {
 }
 export enum LevelData {
     NUM_OBSTACLE_MINES = 120,
-    NUM_ADV_OBSTACLE_MINES = 200
+    NUM_ADV_OBSTACLE_MINES = 160
 }
 export enum Speeds {
     OAR_SPEED = 65,

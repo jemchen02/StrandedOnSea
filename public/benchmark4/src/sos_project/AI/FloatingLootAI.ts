@@ -5,6 +5,7 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class FloatingLootAI extends StateMachineAI {
     private player: PlayerActor;
@@ -36,6 +37,7 @@ export default class FloatingLootAI extends StateMachineAI {
 		// First clause exists here because the collisionShape is undefined for whatever reason
         if ((<AABB>this.player.collisionShape).overlaps(<AABB>this.owner.collisionShape)){
             this.emitter.fireEvent("collectLoot", {'rarity': this.rarity})
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "treasure", loop: false, holdReference: true});
             this.owner.destroy()
         }
 
