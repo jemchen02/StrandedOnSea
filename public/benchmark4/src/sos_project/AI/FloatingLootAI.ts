@@ -9,6 +9,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 export default class FloatingLootAI extends StateMachineAI {
     private player: PlayerActor;
     private rarity: number;
+	private timer: number;
 
     /**
 	 * @param owner The owner of this AI - i.e. the player
@@ -18,6 +19,7 @@ export default class FloatingLootAI extends StateMachineAI {
 		this.owner = owner;
         this.player = options.player;
         this.rarity = options.rarity;
+		this.timer = options.timer;
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
 	}
@@ -28,11 +30,18 @@ export default class FloatingLootAI extends StateMachineAI {
 		// Need to handle animations when damage is taken
 	}
 	update(deltaT: number): void {
+		if (this.timer != null) {
+			this.timer -= deltaT;
+		}
 		// First clause exists here because the collisionShape is undefined for whatever reason
         if ((<AABB>this.player.collisionShape).overlaps(<AABB>this.owner.collisionShape)){
             this.emitter.fireEvent("collectLoot", {'rarity': this.rarity})
             this.owner.destroy()
         }
+
+		if (this.timer != null && this.timer <= 0) {
+			this.owner.destroy()
+		}
 
         while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());

@@ -374,12 +374,14 @@ export default class BattleScene extends SosScene {
         let size = tilemap.getDimensions()
 
         let worldCoords : Vec2;
+        let timer = null;
         if(!hasPos){
             let randCoords = new Vec2( Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
             while (tilemap.getTile(randCoords.x, randCoords.y) != 1){
                 randCoords.set(Math.round(size.x * Math.random()), Math.round(size.y * Math.random()))
             }
             worldCoords = tilemap.getWorldPosition(randCoords.x, randCoords.y)
+            timer = 15
         } else {
             worldCoords = spawnPos;
         }
@@ -388,7 +390,7 @@ export default class BattleScene extends SosScene {
         barrel.position.set(worldCoords.x, worldCoords.y)
         barrel.scale.set(0.5, 0.5)
         barrel.addPhysics(new AABB(Vec2.ZERO, new Vec2(barrel.size.x * barrel.scale.x / 2, barrel.size.y * barrel.scale.y/2)), null, false, true);
-        barrel.addAI(FloatingLootAI, {player: this.player, rarity:1})
+        barrel.addAI(FloatingLootAI, {player: this.player, rarity:1, timer: timer})
         barrel.animation.play("IDLE")
     }
 

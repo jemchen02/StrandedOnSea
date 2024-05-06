@@ -12,7 +12,7 @@ import { LevelRewards } from "../GameConstants";
 import { GameStateManager } from "../GameStateManager";
 import BattleScene from "./BattleScene";
 
-export default class ShipwreckScene extends BattleScene {
+export default class SalvageScene extends BattleScene {
     private timer: number;
     private timerLabel: Label;
     private checkpoint: number
@@ -31,7 +31,7 @@ export default class ShipwreckScene extends BattleScene {
     public override loadScene(): void {
         super.loadScene();
         this.load.object("enemies", "hw4_assets/data/enemies/shipwreck1/enemies.json");
-        this.load.tilemap("level", "hw4_assets/tilemaps/BattleMap1.json");
+        this.load.tilemap("level", "hw4_assets/tilemaps/SalvageMap1.json");
         this.load.audio("shipwreck_theme", "sos_assets/music/black_midi_kondracki.mp4");
     }
     public startScene(): void {
