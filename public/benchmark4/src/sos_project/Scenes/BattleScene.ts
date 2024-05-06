@@ -510,6 +510,7 @@ export default class BattleScene extends SosScene {
         if (battler) {
             battler.battlerActive = false;
             this.healthbars.get(id).visible = false;
+            this.enemyBattlers = this.enemyBattlers.filter(b => b.id != id);
             this.battlerCount--;
         }
         
