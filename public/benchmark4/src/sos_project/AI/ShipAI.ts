@@ -9,6 +9,8 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { Speeds } from "../GameConstants";
 import { GameStateManager, MovementType } from "../GameStateManager";
+import Dead from "./ShipStates/Dead";
+import Dying from "./ShipStates/Dying";
 
 import { Idle, Moving } from "./ShipStates/ShipState";
 import { ShipStateType } from "./ShipStates/ShipState";
@@ -22,7 +24,8 @@ export default class ShipAI extends StateMachineAI {
     protected frictionConstant: number = 0.02;
     protected collision: boolean = false;
 	private speed: number;
-	private hasSail: boolean = false;
+	protected damageState = false;
+
 
     // Parameters that may change based on the ship state
 	private MIN_SPEED: number = -25;
@@ -58,6 +61,22 @@ export default class ShipAI extends StateMachineAI {
 		return GameStateManager.get().hasSail() ? "SAIL_" : "";
 	}
 
+	public justTookDamage() {
+		this.damageState = true;
+	}
+
+	public get isJustTookDamage() {
+		if (this.damageState){
+			this.damageState = false
+			return true
+		}
+		return false
+	}
+
+	public get checkDead() {
+		return this.isDead
+	}
+
 	/**
 	 * This method initializes all variables inside of this AI class, and sets
 	 * up anything we need it do.
@@ -83,6 +102,8 @@ export default class ShipAI extends StateMachineAI {
 
 		this.addState(ShipStateType.IDLE, new Idle(this, this.owner as AnimatedSprite));
         this.addState(ShipStateType.MOVING, new Moving(this, this.owner as AnimatedSprite));
+		this.addState(ShipStateType.DYING, new Dying(this, this.owner as AnimatedSprite));
+		this.addState(ShipStateType.DEAD, new Dead(this, this.owner as AnimatedSprite));
         this.initialize(ShipStateType.IDLE);
 
 	}

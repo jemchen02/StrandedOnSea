@@ -116,6 +116,8 @@ export default class RamAI extends ShipAI {
             CollisionManager.get().remove(this.owner);
             (<BattleScene>this.owner.getScene()).spawnLootBarrel(true, this.owner.position);
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode1", loop: false, holdReference: true});
+        } else {
+            this.justTookDamage()
         }
     }
 }

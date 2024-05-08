@@ -1,6 +1,7 @@
 import Actor from "../../../Wolfie2D/DataTypes/Interfaces/Actor";
 import State from "../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import Receiver from "../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import ShipAI from "../ShipAI";
 
@@ -29,16 +30,25 @@ export enum ShipStateType {
 export default abstract class ShipState extends State {
     protected parent: ShipAI;
     protected owner: AnimatedSprite;
+    protected receiver: Receiver;
 
     public constructor(parent: ShipAI, owner: AnimatedSprite) {
         super(parent);
         this.owner = owner;
+        this.receiver = new Receiver();
     }
 
     public override onEnter(options: Record<string, any>): void {}
     public override onExit(): Record<string, any> { return {}; }
     public override update(deltaT: number): void {
-        
+        if (this.parent.checkDead) {
+            this.finished(ShipStateType.DEAD)
+            return
+        }
+        if (this.parent.isJustTookDamage){
+            this.finished(ShipStateType.DYING)
+            return
+        }
     }
     public override handleInput(event: GameEvent): void {
         switch(event.type) {

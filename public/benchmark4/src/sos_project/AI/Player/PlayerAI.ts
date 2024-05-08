@@ -102,6 +102,7 @@ export default class PlayerAI extends ShipAI {
         switch(event.type) {
             // Add events here
             case "ramCollision":
+                this.justTookDamage()
                 this.onRamCollision();
                 break;
             case "whirlpoolKO":
@@ -109,6 +110,7 @@ export default class PlayerAI extends ShipAI {
                 break;
             case "cannonHit":
                 if(event.data.get("node") == this.owner && Math.random() > this.deflectChance) {
+                    this.justTookDamage()
                     this.onCannonHit();
                 } else {
                     this.emitter.fireEvent(GameEventType.STOP_SOUND, {key:"hit"});
