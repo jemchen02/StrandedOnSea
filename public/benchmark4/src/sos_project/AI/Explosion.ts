@@ -14,10 +14,12 @@ export default class ExplosionAI implements AI {
     private owner: AnimatedSprite;
     private duration: number;
     private emitter: Emitter;
+    private isSplash: boolean;
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.duration = 1;
         this.owner = owner;
         owner.animation.play("EXPLOSION", false);
+        this.isSplash = options.isSplash;
         this.emitter = new Emitter();
     }
 
@@ -33,7 +35,7 @@ export default class ExplosionAI implements AI {
         if(this.duration <= 0) {
             this.owner.destroy();
         }
-        if(this.owner.collisionShape) {
+        if(this.isSplash && this.owner.collisionShape) {
             let otherCollider : GameNode = CollisionManager.get().GetHits(this.owner.collisionShape);
             if(otherCollider){
                 this.emitter.fireEvent("explosionHit", {"node": otherCollider});

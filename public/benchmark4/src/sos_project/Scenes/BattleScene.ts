@@ -62,6 +62,9 @@ export default class BattleScene extends SosScene {
     private enemyBattlers: Battler[];
     protected battlerCount: number;
 
+    public flashLayer: Layer;
+    private flashTimer: number;
+
     // The wall layer of the tilemap
     private walls: OrthogonalTilemap;
 
@@ -104,6 +107,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("wave", "sos_assets/spritesheets/wave.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
         this.load.spritesheet("blockade", "sos_assets/sprites/blockade.json")
+        this.load.image("red_flash", "sos_assets/sprites/red_flash.png")
         this.load.spritesheet("loot", "sos_assets/spritesheets/loot.json")
         this.load.spritesheet("explosion", "sos_assets/spritesheets/explosion.json")
         this.load.spritesheet("debris", "sos_assets/spritesheets/debris.json")
@@ -128,6 +132,7 @@ export default class BattleScene extends SosScene {
         this.receiver.subscribe(BattlerEvent.BATTLER_KILLED);
         this.receiver.subscribe("gameLoss");
         this.receiver.subscribe("back");
+        this.receiver.subscribe("player_hit");
 
         this.load.audio("mine_place", "hw4_assets/sounds/mine_place.mp3");
         this.load.audio("fire", "hw4_assets/sounds/fire.mp3");
@@ -174,6 +179,12 @@ export default class BattleScene extends SosScene {
         if(Input.isPressed(PlayerInput.PASS_LEVEL) && !this.levelEnded) {
             this.winLevel();
         }
+        if(this.flashTimer > 0) {
+            this.flashTimer -= deltaT;
+            if(this.flashTimer <= 0) {
+                this.flashLayer.disable();
+            }
+        }
         this.inventoryHud.update(deltaT);
         this.coinHUD.update(deltaT);
         this.healthHUD.update(deltaT);
@@ -186,6 +197,10 @@ export default class BattleScene extends SosScene {
      */
     public handleEvent(event: GameEvent): void {
         switch (event.type) {
+            case "player_hit":
+                this.flashLayer.enable();
+                this.flashTimer = 0.5;
+                break;
             case "pause":
                 GameStateManager.get().togglePause();
                 break;
@@ -220,6 +235,9 @@ export default class BattleScene extends SosScene {
         this.addUILayer("staticHUD");
         this.addUILayer("slots");
         this.addUILayer("updateHUD");
+        this.flashLayer = this.addUILayer("flashHUD");
+        this.flashLayer.disable();
+        //this.flashLayer.disable();
         this.getLayer("staticHUD").setDepth(1);
         this.getLayer("slots").setDepth(2);
         this.getLayer("updateHUD").setDepth(3);
@@ -269,6 +287,11 @@ export default class BattleScene extends SosScene {
         this.healthHUD = new PlayerHealthHUD(this, "healthTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
         this.coinHUD = new CoinHUD(this, "coinTab", "staticHUD", "updateHUD", this.scaleFactor, this.scaleFactor);
         this.pauseHUD = new PauseHUD(this, "pause", "staticHUD", this.scaleFactor, this.scaleFactor);
+
+        const flash = this.add.sprite("red_flash", "flashHUD");
+        flash.position.set(256 * this.scaleFactor, 256 * this.scaleFactor);
+        flash.scale.set(8 * this.scaleFactor, 8 * this.scaleFactor);
+        this.flashTimer = 0;
     }
 
     protected initializeNPCs(): void {

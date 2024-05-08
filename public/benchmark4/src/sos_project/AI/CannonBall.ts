@@ -6,9 +6,11 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CollisionManager } from "../CollisionManager";
+import ExplosionAI from "./Explosion";
 
 export default class CannonBallAI implements AI {
     // The owner of this AI
@@ -54,11 +56,14 @@ export default class CannonBallAI implements AI {
         if(otherCollider && otherCollider != this.shooter){
             this.emitter.fireEvent("cannonHit", {"node": otherCollider});
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hit", loop: false, holdReference: true});
+            const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "debris", "player");
+            explosion.position = this.owner.position;
+            explosion.scale.set(0.6, 0.6);
+            explosion.addAI(ExplosionAI, {isSplash: false});
             this.owner.destroy();
         }
     }
 
     destroy(): void {
-        //Do nothing
     }
 }

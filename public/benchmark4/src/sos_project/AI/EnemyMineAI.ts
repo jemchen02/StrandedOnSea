@@ -50,13 +50,14 @@ export default class EnemyMineAI implements AI {
         if(this.owner.position.distanceTo(this.player.position) < 20){
             if((<PlayerAI>this.player._ai).invincibleTimer <= 0) {
                 ShipDamageManager.get().registerHit(DamageAmounts.OBSTACLE_MINE, DamageTimes.OBSTACLE_MINE_TIME);
+                (<PlayerAI>this.player._ai).justTookDamage();
             }
             this.owner.visible = false;
             this.exploded = true;
             const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
             explosion.position = this.owner.position;
-            explosion.addAI(ExplosionAI);
-
+            explosion.addAI(ExplosionAI, {isSplash:false});
+            this.emitter.fireEvent("player_hit");
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mine_boom", loop: false, holdReference: true});
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "fire2", loop: false, holdReference: true});
         }

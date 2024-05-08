@@ -8,6 +8,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
+import PlayerAI from "../AI/Player/PlayerAI";
 import { DamageAmounts, DamageTimes, LevelData, LevelRewards } from "../GameConstants";
 import { GameStateManager } from "../GameStateManager";
 import { ShipDamageManager } from "../ShipDamageManager";
@@ -64,6 +65,8 @@ export default class ObstacleScene3 extends BattleScene {
             if(this.player.position.y > this.wavePos[i]){
                 if(this.waveIndex == i){
                     ShipDamageManager.get().registerHit(DamageAmounts.WAVE_DAMAGE, DamageTimes.WAVE_TIME);
+                    this.emitter.fireEvent("player_hit");
+                    (<PlayerAI>this.player._ai).justTookDamage();
                     this.waveIndex++;
                 }
             }

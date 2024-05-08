@@ -138,6 +138,7 @@ export default class PlayerAI extends ShipAI {
         } else if(Math.random() > this.deflectChance) {
             ShipDamageManager.get().registerHit(DamageAmounts.RAM_DAMAGE, DamageTimes.RAM_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            this.emitter.fireEvent("player_hit");
         } else {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "deflect", loop: false, holdReference: true});
         }
@@ -148,6 +149,7 @@ export default class PlayerAI extends ShipAI {
         } else {
             ShipDamageManager.get().registerHit(DamageAmounts.CANNON_DAMAGE, DamageTimes.CANNON_TIME);
             this.invincibleTimer = Math.max(1, this.invincibleTimer);
+            this.emitter.fireEvent("player_hit");
         }
     }
     public onWhirlpoolKO(): void {
@@ -210,8 +212,8 @@ export default class PlayerAI extends ShipAI {
         let mine : Sprite = this.owner.getScene().add.sprite("mine", "primary");
         mine.visible = true;
         mine.addAI(MineAI);
-        mine.addPhysics(new AABB(Vec2.ZERO, new Vec2(1, 1)));
-        mine.scale.set(0.1, 0.1);
+        mine.addPhysics(new AABB(Vec2.ZERO, new Vec2(4, 4)));
+        mine.scale.set(0.15, 0.15);
         (<MineAI>mine._ai).shooter = this.owner;
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mine_place", loop: false, holdReference: true});

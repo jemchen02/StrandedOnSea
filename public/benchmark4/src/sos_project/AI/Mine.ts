@@ -40,9 +40,9 @@ export default class MineAI implements AI {
     }
 
     destroy(): void {
-        const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "primary");
+        const explosion = this.owner.getScene().add.animatedSprite(AnimatedSprite, "explosion", "player");
         explosion.position = this.owner.position;
-        explosion.addAI(ExplosionAI);
+        explosion.addAI(ExplosionAI, {isSplash: true});
         explosion.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 16)), null, false, false);
     }
 }
