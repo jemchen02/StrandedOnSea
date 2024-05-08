@@ -22,10 +22,13 @@ export class ShipDamageManager {
 
     receiver: Receiver;
 
+    public isInvincible: boolean;
+
     constructor(){
         this.hits = [];
         this.hitTime = 0;
         this.receiver = new Receiver();
+        this.isInvincible = false;
 
         this.receiver.subscribe("gameend");
     }
@@ -68,8 +71,9 @@ export class ShipDamageManager {
                 this.hits.splice(i, 1);
                 continue;
             }
-            
-            GameStateManager.get().setHealth(GameStateManager.get().health - (hit.damage * percentageTime));
+            if(!this.isInvincible) {
+                GameStateManager.get().setHealth(GameStateManager.get().health - (hit.damage * percentageTime));
+            }
         }
 
         //if(GameStateManager.get().hasPump){

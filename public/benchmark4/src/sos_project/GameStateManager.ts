@@ -101,8 +101,8 @@ export class GameStateManager {
         // 5 is obstacle
         // 6 is end
         const mapInit = [    
-            [3, 5, 5, 3, 6],
-            [2, 1, 3, 1, 5],
+            [3, 5, 1, 3, 6],
+            [2, 1, 3, 5, 1],
             [5, 1, 5, 3, 1],
             [1, 3, 2, 1, 5],
             [4, 2, 3, 5, 2]

@@ -34,7 +34,7 @@ export default class HostileScene extends BattleScene {
     public override update(deltaT: number): void {
         super.update(deltaT);
         this.enemiesLeftLabel.setText(`Enemies left: ${this.battlerCount}`);
-        if(this.battlerCount == 0 && !this.levelEnded) {
+        if(this.battlerCount <= 0 && !this.levelEnded) {
             this.winLevel();
         }
     }

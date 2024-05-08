@@ -101,6 +101,7 @@ export default class BattleScene extends SosScene {
         this.load.spritesheet("enemyBoat", "sos_assets/spritesheets/hostile.json");
         this.load.spritesheet("ram", "sos_assets/spritesheets/ram.json");
         this.load.spritesheet("tower", "sos_assets/spritesheets/tower.json");
+        this.load.spritesheet("wave", "sos_assets/spritesheets/wave.json");
         this.load.image("whirlpool_enemy", "hw4_assets/sprites/whirlpool_enemy.png")
         this.load.spritesheet("blockade", "sos_assets/sprites/blockade.json")
         this.load.spritesheet("loot", "sos_assets/spritesheets/loot.json")
@@ -134,6 +135,8 @@ export default class BattleScene extends SosScene {
         this.load.audio("explode1", "hw4_assets/sounds/explode1.mp3");
         this.load.audio("hit", "hw4_assets/sounds/hit.mp3");
         this.load.audio("deflect", "hw4_assets/sounds/deflect.wav");
+        this.load.audio("treasure", "hw4_assets/sounds/treasure.mp3");
+        this.load.audio("mine_boom", "hw4_assets/sounds/mine_boom.mp3");
 
         CollisionManager.get().ResetColliders();
     }
@@ -314,7 +317,7 @@ export default class BattleScene extends SosScene {
             for (let i = 0; i < enemies.towers.length; i++) {
                 let npc = this.add.animatedSprite(EnemyActor, "tower", "primary");
                 npc.position.set(enemies.towers[i][0], enemies.towers[i][1]);
-                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, false);
+                npc.addPhysics(new AABB(Vec2.ZERO, new Vec2(7, 7)), null, true);
                 npc.health = 30;
                 npc.maxHealth = 30;
                 npc.addAI(TowerAI, {player: this.player});
@@ -507,6 +510,7 @@ export default class BattleScene extends SosScene {
         if (battler) {
             battler.battlerActive = false;
             this.healthbars.get(id).visible = false;
+            this.enemyBattlers = this.enemyBattlers.filter(b => b.id != id);
             this.battlerCount--;
         }
         

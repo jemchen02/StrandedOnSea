@@ -15,6 +15,8 @@ import WhirlpoolScene from "./WhirlpoolScene";
 import WhirlpoolScene2 from "./WhirlpoolScene2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import ObstacleScene3 from "./ObstacleScene3";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
@@ -31,6 +33,7 @@ export default class MainMenu extends Scene {
         this.load.image("controlsImage", "hw4_assets/sprites/controls.png");
         this.load.image("helpImage", "hw4_assets/sprites/help.png");
         this.load.image("menuBackgroundImage", "hw4_assets/sprites/menuBackground.png");
+        this.load.spritesheet("menuBackground", "sos_assets/spritesheets/menu_background.json")
     }
 
     public startScene(){
@@ -41,24 +44,26 @@ export default class MainMenu extends Scene {
 
         this.background = this.addUILayer("background");
 
-        const background = this.add.sprite("backgroundBlue", "background");
+        const background = this.add.animatedSprite(AnimatedSprite, "menuBackground", "background");
         background.position.set(center.x, center.y);
-        background.scale.set(1.1, 1.4);
+        background.scale.set(8, 8);
+        background.animation.play("IDLE");
 
         this.mainMenu = this.addUILayer("mainMenu");
 
 
         const gameTitle = this.add.sprite("gameTitle", "mainMenu");
-        gameTitle.position.set(center.x, center.y - 200);
-        gameTitle.scale.set(0.8, 0.8);
+        gameTitle.position.set(center.x + 35, center.y - 170);
+        gameTitle.scale.set(1.2, 1.2);
 
-        this.createButton("mainMenu", new Vec2(center.x, center.y - 100), "Start Game", "play", new Vec2(300, 75));
+        this.createButton("mainMenu", new Vec2(center.x, center.y - 200), "Start Game", "play", new Vec2(300, 75));
 
-        this.createButton("mainMenu", new Vec2(center.x, center.y), "Controls", "controls", new Vec2(300, 75));
+        this.createButton("mainMenu", new Vec2(center.x, center.y - 50), "Select Level", "select", new Vec2(300, 75));
 
-        this.createButton("mainMenu", new Vec2(center.x, center.y + 100), "Help", "help", new Vec2(300, 75));
+        this.createButton("mainMenu", new Vec2(center.x, center.y + 100), "Controls", "controls", new Vec2(300, 75));
 
-        this.createButton("mainMenu", new Vec2(center.x, center.y + 200), "Select Level", "select", new Vec2(300, 75));
+        this.createButton("mainMenu", new Vec2(center.x, center.y + 250), "Help", "help", new Vec2(300, 75));
+
 
         this.controlLayer = this.addUILayer("controls");
 
@@ -87,8 +92,9 @@ export default class MainMenu extends Scene {
         this.add.uiElement(UIElementType.LABEL, "select", {position: new Vec2(center.x, center.y - 400), text: 'Select Level (Testing Only)', fontSize: 40, textColor: Color.WHITE});
         this.createButton("select", new Vec2(center.x - 150, center.y - 300), "Hostile 1", "hostile1", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x + 150, center.y - 300), "Hostile 2", "hostile2", new Vec2(200, 75));
-        this.createButton("select", new Vec2(center.x - 150, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(200, 75));
-        this.createButton("select", new Vec2(center.x + 150, center.y - 150), "Obstacle 2", "obstacle2", new Vec2(200, 75));
+        this.createButton("select", new Vec2(center.x - 175, center.y - 150), "Obstacle 1", "obstacle1", new Vec2(150, 75));
+        this.createButton("select", new Vec2(center.x, center.y - 150), "Obstacle 2", "obstacle2", new Vec2(150, 75));
+        this.createButton("select", new Vec2(center.x + 175, center.y - 150), "Obstacle 3", "obstacle3", new Vec2(150, 75));
         this.createButton("select", new Vec2(center.x - 150, center.y), "Shipwreck 1", "shipwreck1", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x + 150, center.y), "Shipwreck 2", "shipwreck2", new Vec2(200, 75));
         this.createButton("select", new Vec2(center.x - 150, center.y + 150), "Whirlpool 1", "whirlpool1", new Vec2(200, 75));
@@ -108,8 +114,7 @@ export default class MainMenu extends Scene {
         newButton.size.set(size.x, size.y);
         newButton.borderWidth = 2;
         newButton.borderColor = Color.WHITE;
-        newButton.backgroundColor = Color.TRANSPARENT;
-
+        newButton.backgroundColor = Color.fromStringHex("0900FF");
         newButton.onClickEventId = clickEvent;
         this.menuSubscriptions.push(clickEvent);
     }
@@ -170,6 +175,10 @@ export default class MainMenu extends Scene {
             }
             case "obstacle2": {
                 this.sceneManager.changeToScene(ObstacleScene2);
+                break;
+            }
+            case "obstacle3": {
+                this.sceneManager.changeToScene(ObstacleScene3);
                 break;
             }
             case "shipwreck1": {
